@@ -1,0 +1,1704 @@
+QUESTIONS
+LAST TIME:
+ - Trees III
+ - Random numbers
+ - Program 3 return
+TODAY:
+ - Administrivia
+ - Trees IV
+ - Trees, other uses
+ - Parsing I
+
+HOMEWORK:  PC++P Ch 24, 20
+   Program 4 DUE MON APR 24 1PM - ONE HOUR AGO
+   Program 5 spec out before I sleep again
+
+AIDX n. /aydkz/ n. Derogatory term for IBM's perverted version of
+  UNIX, AIX, especially for the AIX 3.? used in the IBM RS/6000
+series. A victim of the dreaded "hybridism" disease, this attempt
+to combine the two main currents of the UNIX stream (BSD and USG
+   UNIX) became a monstrosity to haunt system administrators'
+dreams. For example, if new accounts are created while many users
+  are logged on, the load average jumps quickly over 20 due to
+ silly implementation of the user databases. For a quite similar
+		    disease, compare HP-SUX.
+ADMINISTRIVIA - HERE ON OUT
+
+  WHEN 	       	       	  DISTANCE     WHAT
+MON   4/24 1PM    PAST     -1h        Program 4 in
+TUE   4/25 <9AM           <19h        Program 5 out
+FRI   5/05 2PM             11d 	      Last day of class
+MON   5/08 5PM             14d3h      Program 5 in
+THU   5/11 5PM             17d3h      Program 5 latest turnin
+FRI   5/12 12:30PM-2:30PM  17d22.5h   Final exam
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PROGRAM 3 GRADE BASIS
+ Grade based on `effective level' and style/code read.
+  Effective level is basically the highest level at which
+  your code tested successfully.  Specifically:
+  (1) the testing results on TBN
+  (2) the testing results on TBN2. (1) is weighted more than
+      (2) but both count.
+  (3) the `effective level' can be raised *somewhat* based on
+      the code read---e.g., if the code only tested to level 3
+      but there was only a tiny bug preventing it from testing
+      to level 5, the effective level may be raised to 4, etc.
++-----------------------+ Extra credit levels                     
+|Effective Grade Range  |+------+----------+----------+----------+
+|  Level   min-mid-max  ||levels|total     |tiny      |real bugs,|
+|    6     84  95 100  	||imple-|ultimate  |bug(s) or |believable|
+|    5     76  87  92 	||mented|perfection|inelegance|big effort|
+|    4     68  79  84 	||7     | +5       |+2-3      |+0-1      |
+|    3     60  71  76 	||7&8   | +15      |+8-12     |+2-4      |
+|    2     55  65  69 	||7&8&9 | +30      |+18-24    |+5-8      |
+|    1     45  55  59 	|+---------------------------------------+
+|    0     35  45  49	| Results before time penalties
+|    n      0  20  39  	|   n = 78     Max: 123	       	 
++-----------------------+ 	       Avg:  79.4     
+				       Min:  10     
+BINARY SEARCH TREES - Insertion
+//Rt5.C
+#include <stdlib.h>       /* for s/rand() */
+#include <time.h>         /* for time() */
+int RND() { return rand()%1000; }
+int main() {
+  srand(time(0));
+  Tree * root = new Tree(RND(),NULL,NULL);
+  for (int i = 1; i<7; ++i) root->Insert(RND());
+  root->Print(0);
+  return 0;
+}
+
+ .96 01      ...178 00   .306 01     153 01         ..218 00
+ ..99 00     ..385 10    ..512 00    .183 01        .634 11
+ 218 11      .434 10     560 11      ..309 01       ..723 00
+ .735 01     754 11      ..608 00    ...624 01      776 11
+ ..795 01    .755 01     .615 11     .....700 00    ..812 00
+ ...869 01   ..824 01    ...875 00   ....775 11     .932 11
+ ....964 00  ...954 00   ..921 10    .....893 00    ..956 00
+       	       	       	       	       	       	      ^^^^
+						   (I made that
+       	       	       	       	       	       	   one up by hand)
+
+BINARY SEARCH TREES - Depth
+
+For the numbers 1 3 4 8 10 12, which is a better BST?
+
+For N numbers, how deep is the shallowest possible BST?
+
+   N   	  min depth
+   0   	     -
+   1   	     0 -----> a
+   2   	     1 -------------------->  a	       	 b
+   3   	     1 ----->  b	       \ 	/
+   4   	     2 	      / \	     	b      a
+   5   	     2 	     a   c
+   6   	     2
+   7   	     2 ------------------------->  d
+   8   	     3 ----->  a       	       	 /   \
+   9   	     3	      / \	       	b     f
+  10	     3	     b   c	       / \   / \
+   .	      	    / \ / \           a	  c e  	g
+   .   	      	   d  e f  g
+  |log  N |  	       	 \
+  |   2	  |    	       	  h
+  --   	 --
+('floor of log base 2 of N')
+BINARY SEARCH TREES - Lookup
+
+#include <iomanip.h>          /* for setw */
+struct Tree {
+  int label;
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  bool Find(int num) {
+    if (num<label)
+      if (left) return left->Find(num); else return false;
+    if (num>label)
+      if (right) return right->Find(num); else return false;
+    return num==label;
+  }
+  void Insert(int n) {
+    if (n<label) {
+      if (!left) left = new Tree(n,NULL,NULL);
+      else left->Insert(n);
+    } else if (n> label) {
+      if (!right) right = new Tree(n,NULL,NULL);
+      else right->Insert(n);
+    }
+  }
+
+BINARY SEARCH TREES - Lookup
+
+For various values of N, insert N random numbers, then
+run 1,000,000 Find's and see how long it takes.
+
+g++ -Wall -pedantic Rt6.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.17  2  0.693147   2.88539  0.245258
+       8  0.32  5   2.07944   2.40449  0.153887
+      32  0.48  9   3.46574   2.59685  0.138499
+     128  0.83 16   4.85203   3.29759  0.171062
+     512  1.19 21   6.23832   3.36629  0.190756
+    2048  1.36 24   7.62462    3.1477   0.17837
+    8192  1.72 32   9.01091   3.55125   0.19088
+   32768  1.98 35   10.3972   3.36629  0.190436
+  131072   2.4 39   11.7835   3.30971  0.203675
+  524288  2.94 48   13.1698    3.6447  0.223238
+ 2097152  3.28 48   14.5561   3.29759  0.225335
+ 8388608  3.24 49   15.9424   3.07357  0.203232
+
+
+
+
+
+BINARY SEARCH TREES - Lookup
+g++ -Wall -pedantic Rt6.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.17  2  0.693147   2.88539  0.245258
+       8  0.32  5   2.07944   2.40449  0.153887
+      32  0.48  9   3.46574   2.59685  0.138499
+     128  0.83 16   4.85203   3.29759  0.171062
+     512  1.19 21   6.23832   3.36629  0.190756
+    2048  1.36 24   7.62462    3.1477   0.17837
+    8192  1.72 32   9.01091   3.55125   0.19088
+   32768  1.98 35   10.3972   3.36629  0.190436
+  131072   2.4 39   11.7835   3.30971  0.203675
+  524288  2.94 48   13.1698    3.6447  0.223238
+ 2097152  3.28 48   14.5561   3.29759  0.225335
+ 8388608  3.24 49   15.9424   3.07357  0.203232
+
+g++ -Wall -pedantic Rt7.C -o foo;./foo
+
+
+
+
+
+
+
+BINARY SEARCH TREES - Lookup
+g++ -Wall -pedantic Rt6.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.17  2  0.693147   2.88539  0.245258
+       8  0.32  5   2.07944   2.40449  0.153887
+      32  0.48  9   3.46574   2.59685  0.138499
+     128  0.83 16   4.85203   3.29759  0.171062
+     512  1.19 21   6.23832   3.36629  0.190756
+    2048  1.36 24   7.62462    3.1477   0.17837
+    8192  1.72 32   9.01091   3.55125   0.19088
+   32768  1.98 35   10.3972   3.36629  0.190436
+  131072   2.4 39   11.7835   3.30971  0.203675
+  524288  2.94 48   13.1698    3.6447  0.223238
+ 2097152  3.28 48   14.5561   3.29759  0.225335
+ 8388608  3.24 49   15.9424   3.07357  0.203232
+
+g++ -Wall -pedantic Rt7.C -o foo;./foo
+       N     t
+       2  0.18
+       8  0.16
+      32  0.45
+
+
+
+BINARY SEARCH TREES - Lookup
+g++ -Wall -pedantic Rt6.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.17  2  0.693147   2.88539  0.245258
+       8  0.32  5   2.07944   2.40449  0.153887
+      32  0.48  9   3.46574   2.59685  0.138499
+     128  0.83 16   4.85203   3.29759  0.171062
+     512  1.19 21   6.23832   3.36629  0.190756
+    2048  1.36 24   7.62462    3.1477   0.17837
+    8192  1.72 32   9.01091   3.55125   0.19088
+   32768  1.98 35   10.3972   3.36629  0.190436
+  131072   2.4 39   11.7835   3.30971  0.203675
+  524288  2.94 48   13.1698    3.6447  0.223238
+ 2097152  3.28 48   14.5561   3.29759  0.225335
+ 8388608  3.24 49   15.9424   3.07357  0.203232
+
+g++ -Wall -pedantic Rt7.C -o foo;./foo
+       N     t
+       2  0.18
+       8  0.16
+      32  0.45
+     128  6.51
+
+
+BINARY SEARCH TREES - Lookup
+g++ -Wall -pedantic Rt6.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.17  2  0.693147   2.88539  0.245258
+       8  0.32  5   2.07944   2.40449  0.153887
+      32  0.48  9   3.46574   2.59685  0.138499
+     128  0.83 16   4.85203   3.29759  0.171062
+     512  1.19 21   6.23832   3.36629  0.190756
+    2048  1.36 24   7.62462    3.1477   0.17837
+    8192  1.72 32   9.01091   3.55125   0.19088
+   32768  1.98 35   10.3972   3.36629  0.190436
+  131072   2.4 39   11.7835   3.30971  0.203675
+  524288  2.94 48   13.1698    3.6447  0.223238
+ 2097152  3.28 48   14.5561   3.29759  0.225335
+ 8388608  3.24 49   15.9424   3.07357  0.203232
+
+g++ -Wall -pedantic Rt7.C -o foo;./foo
+       N     t
+       2  0.18
+       8  0.16
+      32  0.45
+     128  6.51
+     512 54.66
+
+BINARY SEARCH TREES - Lookup
+g++ -Wall -pedantic Rt6.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.17  2  0.693147   2.88539  0.245258
+       8  0.32  5   2.07944   2.40449  0.153887
+      32  0.48  9   3.46574   2.59685  0.138499
+     128  0.83 16   4.85203   3.29759  0.171062
+     512  1.19 21   6.23832   3.36629  0.190756
+    2048  1.36 24   7.62462    3.1477   0.17837
+    8192  1.72 32   9.01091   3.55125   0.19088
+   32768  1.98 35   10.3972   3.36629  0.190436
+  131072   2.4 39   11.7835   3.30971  0.203675
+  524288  2.94 48   13.1698    3.6447  0.223238
+ 2097152  3.28 48   14.5561   3.29759  0.225335
+ 8388608  3.24 49   15.9424   3.07357  0.203232
+
+g++ -Wall -pedantic Rt7.C -o foo;./foo
+       N     t  d    log(N)  d/log(N)  t/log(N)
+       2  0.18  2  0.693147   2.88539  0.259685
+       8  0.16  8   2.07944   3.84719 0.0769437
+      32  0.45 32   3.46574   9.23325  0.129843
+     128  6.51128   4.85203   26.3807   1.34171
+     512 54.66512   6.23832   82.0733   8.76197
+
+BINARY SEARCH TREES - Lookup
+
+[ackley@dave lectures]$ diff Rt6.C Rt7.C
+35c35
+< //Rt6.C
+---
+> //Rt7.C
+54c54
+<     for (int i = 1; i<test; ++i) root->Insert(RND());
+---
+>     for (int i = 1; i<test; ++i) root->Insert(i);
+[ackley@dave lectures]$
+
+			      1
+			       \
+                              	2
+				 \
+				  3
+				   \
+				    4
+				     \
+				      5
+				       \
+
+BINARY SEARCH TREES - Lookup
+
+//Rt6.C
+#include <stdlib.h>       /* for s/rand() */
+#include <time.h>         /* for time() */
+#include <sys/resource.h> /* for getrusage() */
+#include <math.h>         /* for log() */
+int RND() { return rand()%1000000; }
+int main() {
+  srand(time(0));
+
+  cout << setw(8) << "N"
+       << setw(6) << "t"
+       << setw(3) << "d"
+       << setw(10) << "log(N)"
+       << setw(10) << "d/log(N)"
+       << setw(10) << "t/log(N)"
+       << endl;
+
+  for (int test = 2; test < 10000000; test <<= 2) {
+    Tree * root = new Tree(RND(),NULL,NULL);
+    for (int i = 1; i<test; ++i) root->Insert(RND());
+
+..
+BINARY SEARCH TREES - Lookup
+..
+    struct rusage start, stop;
+    getrusage(RUSAGE_SELF,&start);
+
+    for (int i = 1; i<1000000; ++i) root->Find(i);
+
+    getrusage(RUSAGE_SELF,&stop);
+    double time = ((stop.ru_utime.tv_sec*1000000+
+		    stop.ru_utime.tv_usec) -
+		   (start.ru_utime.tv_sec*1000000+
+		    start.ru_utime.tv_usec))/1000000.0;
+    cout << setw(8) << test
+	 << setw(6) << time
+	 << setw(3) << root->MaxDepth(1)
+         << setw(10) << log(test)
+         << setw(10) << root->MaxDepth(1)/log(test)
+         << setw(10) << time/log(test)
+	 << endl;
+    delete root;
+  }
+  return 0;
+}
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+ - For BALANCED trees (where max depth == log N), Lookup is
+   O(log N).  That's the BEST CASE.    	     2
+
+ - In the WORST CASE, the max depth is N-1, and Lookup is O(N).
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+ - For BALANCED trees (where max depth == log N), Lookup is
+   O(log N).  That's the BEST CASE.    	     2
+
+ - In the WORST CASE, the max depth is N-1, and Lookup is O(N).
+
+ - Is there a way to make a binary search tree that provides
+   O(log N) Lookup in the worst case?
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+ - For BALANCED trees (where max depth == log N), Lookup is
+   O(log N).  That's the BEST CASE.    	     2
+
+ - In the WORST CASE, the max depth is N-1, and Lookup is O(N).
+
+ - Is there a way to make a binary search tree that provides
+   O(log N) Lookup in the worst case?
+
+   = Would have to somehow keep the tree from getting unbalanced,
+     no matter what the order of insertions.
+
+
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+ - For BALANCED trees (where max depth == log N), Lookup is
+   O(log N).  That's the BEST CASE.    	     2
+
+ - In the WORST CASE, the max depth is N-1, and Lookup is O(N).
+
+ - Is there a way to make a binary search tree that provides
+   O(log N) Lookup in the worst case?
+
+   = Would have to somehow keep the tree from getting unbalanced,
+     no matter what the order of insertions.
+   = But can't do too much work while doing that or we might blow
+     our O(log N) while `rebalancing'.  Is it possible?
+
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+ - For BALANCED trees (where max depth == log N), Lookup is
+   O(log N).  That's the BEST CASE.    	     2
+
+ - In the WORST CASE, the max depth is N-1, and Lookup is O(N).
+
+ - Is there a way to make a binary search tree that provides
+   O(log N) Lookup in the worst case?
+
+   = Would have to somehow keep the tree from getting unbalanced,
+     no matter what the order of insertions.
+   = But can't do too much work while doing that or we might blow
+     our O(log N) while `rebalancing'.  Is it possible?
+   = Oh my yes.
+
+BINARY SEARCH TREES
+
+ - Can be used to store ordered data and then look it up later.
+
+ - The minimum possible depth of a tree with N nodes is log N,
+   the maximum is N-1.					   2
+
+ - The resulting depth of a tree depends on the order the
+   elements were inserted.
+
+ - For BALANCED trees (where max depth == log N), Lookup is
+   O(log N).  That's the BEST CASE.    	     2
+
+ - In the WORST CASE, the max depth is N-1, and Lookup is O(N).
+
+ - Is there a way to make a binary search tree that provides
+   O(log N) Lookup in the worst case?
+
+   = Would have to somehow keep the tree from getting unbalanced,
+     no matter what the order of insertions.
+   = But can't do too much work while doing that or we might blow
+     our O(log N) while `rebalancing'.  Is it possible?
+   = Oh my yes.  But not in this class.
+
+TREES - Other uses
+		  
+
+		       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+ 		       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+                   pass 251	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+                   pass 251	 
+       	       	   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+       	       	       	       
+E.g., and-or trees	       
+		       	       	 
+                   pass 251    	 
+		   / (or) \    	     
+       	       	  /    	   \   	 
+	       honestly     dishonestly
+       	       /(and)\	       
+	      /	  |   \	       
+	    pass  pass pass    
+       	    tests quiz projects
+
+
+
+
+			     
+			     
+			     
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+                   pass 251	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	       /(and)\ 	       	
+	      /	  |   \	       	
+	    pass  pass pass    	
+       	    tests quiz projects	
+	   /  ..       	 .     	
+	pass 	   .	 .     	
+       test1	   .	 .  
+       	       	   .   	    
+			    
+			    
+			    
+
+
+
+
+
+TREES - Other uses
+       	       	       	       	   
+E.g., and-or trees		   
+		       	       	   
+                   pass 251	   
+		   / (or) \    	     
+       	       	  /    	   \	   
+	       honestly     dishonestly
+       	       /(and)\	       	 |(or) \-----------\
+	      /	  |   \	       	 |    	      	   |
+	    pass  pass pass    	 change grade in  posthypnotic
+       	    tests quiz projects	 UNM computers 	  suggestion on
+	   /  ..       	 .     	          	  professor      
+	pass 	   .	 .   
+       test1	   .	 .   
+       	       	   .   	     
+			     
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+                   pass 251	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	       /(and)\	       	 |(or) \-----------\
+	      /	  |   \	       	 |    	      	   |
+       	    pass  pass pass    	 change grade in  posthypnotic
+       	    tests quiz projects	 UNM computers 	  suggestion on
+	   /  ..       	 .     	 / (or) \	  professor      
+	pass 	   .	 .	/        \	  
+       test1	   .	 .   break in  	  break	   
+       	       	   .   	     via network  into 	   
+			       	   	  building 
+						   
+						   
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+                   pass 251	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	       /(and)\	       	 |(or) \-----------\
+	      /	  |   \	       	 |    	      	   |
+	    pass  pass pass    	 change grade in  posthypnotic
+       	    tests quiz projects	 UNM computers 	  suggestion on
+	   /  ..       	 .     	 / (or) \	  professor      
+       	pass   	   .   	 .     	/        \     	     |(and) \ ..\
+       test1	   .	 .   break in  	  break	     |	     \	 -
+       	       	   .   	     via network  into 	    buy	    go to
+			       	   	  building  pocket  office
+					       	    watch   hours 
+					       	    with 
+						    chain
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+	       	       	       	 
+                   pass 251    	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	       /(and)\ 	         |(or) \-----------\
+	      /	  |   \	       	 |     	       	   |   	       	  
+	    pass  pass pass    	 change grade in  posthypnotic	  
+       	    tests quiz projects	 UNM computers 	  suggestion on	  
+       	   /  ..       	 .     	 / (or) \      	  professor
+       	pass   	   .   	 .     	/        \     	     |(and) \ ..\
+       test1	   .	 .   break in  	  break	     |	     \	 -
+       	.80    	   .   	.72  via network  into 	    buy	    go to
+	       	  .9   	       .02     	  building  pocket  office
+				       	    .4 	    watch   hours 
+					       	    with     1.0 
+					      	    chain	 
+					       	     .95       	 
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+       	       	       	       	 
+                   pass 251    	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	    .72/(and)\ 	         |(or) \-----------\
+	      /	  |   \	       	 |     	       	   |   	       	  
+	    pass  pass pass    	 change grade in  posthypnotic	  
+       	    tests quiz projects	 UNM computers 	  suggestion on	  
+       	   /  ..       	 .     	 / (or) \      	  professor
+       	pass   	   .   	 .     	/        \     	     |(and) \ ..\
+       test1	   .	 .   break in  	  break	     |	     \	 -
+       	.80    	   .   	.72  via network  into 	    buy	    go to
+	       	  .9   	       .02     	  building  pocket  office
+				       	    .4 	    watch   hours 
+					       	    with     1.0 
+					      	    chain	 
+					       	     .95       	 
+
+
+
+TREES - Other uses
+       	       	  
+E.g., and-or trees
+	       	       	       	 
+                   pass 251    	 
+		   / (or) \    	     
+       	       	  /    	   \  	 
+	       honestly     dishonestly
+       	    .72/(and)\ 	         |(or) \-----------\
+	      /	  |   \	       	 |     	       	   |   	       	  
+	    pass  pass pass    	 change grade in  posthypnotic	  
+       	    tests quiz projects	 UNM computers 	  suggestion on	  
+       	   /  ..       	 .     	 / (or) \.4    	  professor
+       	pass   	   .   	 .     	/        \     	     |(and) \ ..\
+       test1	   .	 .   break in  	  break	     |	     \	 -
+       	.80    	   .   	.72  via network  into 	    buy	    go to
+	       	  .9   	       .02     	  building  pocket  office
+				       	    .4 	    watch   hours 
+					       	    with     1.0 
+					      	    chain	 
+					       	     .95       	 
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+               .72 pass 251    	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	    .72/(and)\ 	       .4|(or) \-----------\
+	      /	  |   \	       	 |     	       	   |   	       	  
+	    pass  pass pass    	 change grade in  posthypnotic	  
+       	    tests quiz projects	 UNM computers 	  suggestion on	  
+       	   /  ..       	 .     	 / (or) \.4    	  professor(.0001)
+       	pass   	   .   	 .     	/        \     	     |(and) \ ..\
+       test1	   .	 .   break in  	  break	     |	     \	 -
+       	.80    	   .   	.72  via network  into 	    buy	    go to
+	       	  .9   	       .02     	  building  pocket  office
+				       	    .4 	    watch   hours 
+					       	    with     1.0 
+					      	    chain	 
+					       	     .95       	 
+
+
+
+TREES - Other uses
+		  
+
+		       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+       	  |	       |
+       	 verb 	  noun phrase
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+       	  |	       |
+       	 verb	  noun phrase
+               	   /       \ 
+             	   |   	   |  
+             	 article noun 
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+       	  |	       |
+       	 verb	  noun phrase
+               	   /       \ 
+             	   |   	   |  
+             	 article noun 
+               	    	   |   
+                         BUCKET
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+       	  |	       |
+       	 verb	  noun phrase
+       	       	   /       \ 
+      	     	   |   	   |  
+       	     	 article noun 
+       	       	   |	   |   
+                  THE    BUCKET
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+   |   	  |	       |
+ noun  	 verb	  noun phrase
+               	   /       \ 
+             	   |   	   |  
+             	 article noun 
+               	   |	   |   
+                  THE    BUCKET
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+   |   	  |	       |
+ noun  	 verb	  noun phrase
+   |  	  |    	   /       \ 
+   |  	  |  	   |   	   |  
+   |   	  |  	 article noun 
+   |   	  |    	   |	   |   
+ JOHN   FILLED    THE    BUCKET
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+   |   	  |	       |
+ noun  	 verb	  noun phrase
+   |  	  |    	   /       \ 
+   |  	  |  	   |   	   |  
+   |   	  |  	 article noun 
+   |   	  |    	   |	   |   
+ DAVE   KICKED    THE    BUCKET
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0;		   
+}
+
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0;		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+
+
+
+
+
+
+
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+       	   
+	   
+	   
+	   
+	   
+       	   
+	       	op*  
+       	       /   \ 
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+      
+      
+      
+      
+       	     	   op/
+       	       	  / \  
+	       	op*  \ 
+       	       /   \  \
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+	      op+   
+	     / 	 \ 
+	    / 	  \
+	   | 	   op/
+       	   |   	  / \  
+	   |   	op*  \ 
+       	   |   /   \  \
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+     
+      op<<
+     / 	  \--\
+     | 	      op+   
+     | 	     / 	 \ 
+     | 	    / 	  \
+     | 	   | 	   op/
+     | 	   |   	  / \  
+     | 	   |   	op*  \ 
+     | 	   |   /   \  \
+     | 	  num num num num
+     |	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {  
+  	      op<<
+  	     / 	 \
+     	/---- 	  ----------\
+      op<<		    |
+     / 	  \--\		    |
+     | 	      op+   	    |
+     | 	     / 	 \ 	    |
+     | 	    / 	  \	    |
+     | 	   | 	   op/	    |
+     | 	   |   	  / \  	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     |	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {  
+       	      op<<
+       	     / 	 \ 
+     	/---- 	  ----------\
+      op<<     		    |
+     / 	  \--\  	    |
+     | 	      op+   	    |
+     | 	     / 	 \  	    |
+     | 	    /  	  \   	    |
+     | 	   |   	   op/	    |
+     | 	   |    36/ \  	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     | 	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {  
+  	      op<<
+       	     / 	 \ 
+       	/----  	  ----------\
+      op<<     		    |
+     / 	  \--\  	    |
+     | 	      op+   	    |
+     | 	     / 	 \  	    |
+     | 	    /  	  \7  	    |
+     | 	   |   	   op/	    |
+     | 	   |    36/ \5 	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     | 	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+       	       	  
+E.g., parse trees 
+  		       	       	 
+#include <iostream.h>
+int main() {  	  
+  	      op<<
+       	     / 	 \ 
+     	/---- 	  ----------\
+      op<<     		    |
+     / 	  \--\ 8	    |
+     | 	      op+   	    |
+     | 	     / 	 \  	    |
+     | 	   1/  	  \7  	    |
+     | 	   |   	   op/	    |
+     | 	   |    36/ \5 	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     | 	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {   	   
+  	      op<< 
+       	     / 	 \ 
+     	/---- 	  ----------\
+print op<<     		    |
+ 8   / 	  \--\ 8	    |
+     | 	      op+   	    |
+     | 	     / 	 \  	    |
+     | 	   1/  	  \7  	    |
+     | 	   |   	   op/	    |
+     | 	   |    36/ \5 	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     | 	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {  
+  	      op<< print newline
+       	     / 	 \ 
+     	/---- 	  ----------\
+print op<<     		    |
+ 8   / 	  \--\ 8	    |
+     | 	      op+   	    |
+     | 	     / 	 \  	    |
+     | 	   1/  	  \7  	    |
+     | 	   |   	   op/	    |
+     | 	   |    36/ \5 	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     | 	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+	      op+   
+	     / 	 \ 
+	    / 	  \
+	   | 	   op/
+       	   |   	  / \  
+	   |   	op*  \ 
+       	   |   /   \  \
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+		    
+	       	op* 
+	       /   \ 
+	      /	    \ 
+	     / 	     \ 	 
+	    op+	    op/	 
+	   /   \   /   \ 
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0;		   
+}
+
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+		5      
+	       	op*    
+	       /   \   
+	      /	    \  
+	    5/ 	     \1	 
+	    op+	    op/	 
+       	  1/   \4 9/   \5
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0;		   
+}
+
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {
+  	
+  
+  
+  
+
+		5      
+	       	op*    
+	       /   \   
+	      /	    \  
+	    5/ 	     \1	 
+	    op+	    op/	 
+       	  1/   \4 9/   \5
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0;		   
+}
+5 ?
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	     op<<   
+#include <iostream.h>		    /  	 \  
+int main() {			   | 	 op-
+       	       	       	       	   |   	  | 
+  				   |   	 num
+  				   |	  | 
+       	       	       	       	cout << - 1;
+
+		5      
+	       	op*    
+	       /   \   
+	      /	    \  
+	    5/ 	     \1	 
+	    op+	    op/	 
+       	  1/   \4 9/   \5
+       	  num num num num
+	   |   |   |   |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0;		   
+}
+5 ?     ..No. That's an incorrect parse tree for the expression.
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+
+
+ 
+
+
+
+
+
+  
+
+
+
+
+
+       	     			    
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+
+
+
+
+
+  
+
+
+
+
+
+       	     			    
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 1
+ Rule:
+  FOO <- "hello"
+
+ Start symbol == FOO
+  
+
+
+
+
+
+       	     			    
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 1
+ Rule:
+  FOO <- "hello"
+
+ Start symbol == FOO
+       	  
+       	      FOO      FOO	FOO	   FOO
+       	       |       	|      	/  \	    | 
+	     hello    gabbo   bing bang	   FOO
+       	       	       			    | 
+       	                             	  hello
+       	     			     
+       	       	       	       	     
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 1
+ Rule:
+  FOO <- "hello"
+
+ Start symbol == FOO
+  
+       	      FOO      FOO	FOO	   FOO
+       	       |       	|      	/  \	    | 
+	     hello    gabbo   bing bang	   FOO
+       	       	       			    | 
+       	     (legal)  (no)      (no)	  hello
+       	     			    
+       	       	       	       	       	   (no)
+
+
+
+

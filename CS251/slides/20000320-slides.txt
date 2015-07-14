@@ -1,0 +1,2555 @@
+QUESTIONS
+
+LAST TIME:
+ - Bignum sample			   char ch;
+ - Linked lists, recursion, etc		    cin.get(ch)	  
+	                                    cin.putback(ch)       		       
+	       		       			   
+TODAY:	       		       		   char * p = new char;
+ - Bug fixes					       	       
+ - Bignum questions	       
+ - Linked lists
+ - Recursion   	      
+
+
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365)	   
+	       			      	   
+
+   Program 3 due: 5PM THU Mar 30, 2000
+
+
+
+
+
+
+BUG FIXES
+
+
+
+
+
+
+	    	 
+
+
+
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+BUG FIXES
+
+----- 		 
+ TestBignum.C, line 816, should be:
+--cut here--	 
+#if TESTLEVEL>=4 
+--cut here--	    
+	    	 
+ If in your copy of TestBignum.C, line 816 reads
+#if TESTLEVEL>=3       	       	       	       	
+ you'll want to fix it.
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+BUG FIXES
+
+----- 		 
+ TestBignum.C, line 816, should be:
+--cut here--	 
+#if TESTLEVEL>=4 
+--cut here--	    
+	    	 
+ If in your copy of TestBignum.C, line 816 reads
+#if TESTLEVEL>=3       	       	       	       	
+ you'll want to fix it.
+		 
+----- 		 
+ The originally-posted lecture notes for Mar 10,2000
+ (20000310-slides.txt) contained two instances of 
+ 'return * this;' that should have been 'return o;'
+ in this context:
+--cut here--
+  friend ostream & operator<<(ostream&o,const Foo & f) {
+    f.Backward(o);   					
+    return o;      // bogusly was 'return * this;'
+  }	    	     
+--cut here--	    				
+
+BIGNUM QUESTIONS 
+		 
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BIGNUM STATUS SURVEY
+ 		 
+`Clean frontier' (highest test level passed) is:
+   level 0: 5 
+   level 1: 0 
+   level 2: 6    
+   level 3: 0
+   level 4: 1
+   level 5: 0
+   level 6: 0		
+   level 7: 0
+   level 8: 0    
+   level 9: 1    	      
+None of 
+ the above: oo
+
+
+
+
+
+
+
+
+
+PROGRAM 3  Bignum
+		 
+  LEVEL 0	 
+    Bignum();                       
+    Bignum(const int n);            
+    Bignum & operator=(const int n);
+    ~Bignum();                     
+		 
+  LEVEL 1	 
+    friend ostream & operator<<(ostream &,const Bignum &);
+		 
+  LEVEL 2	 
+    Bignum & operator=(const Bignum & i);
+    Bignum(const Bignum & i);            
+		 
+  LEVEL 3	 
+    Bignum & operator=(const char * p);  
+    Bignum(const char * p);              
+    friend istream & operator>>(istream &, Bignum &);
+
+
+
+
+
+PROGRAM 3  Bignum
+		 
+  LEVEL 4
+    Bignum & operator+=(const Bignum & i);  
+    Bignum operator+(const Bignum &b) const;
+    bool operator!=(const Bignum &b) const; 
+    bool operator==(const Bignum &b) const; 
+
+  LEVEL 5
+    Bignum & operator-=(const Bignum & i);  
+    Bignum operator-(const Bignum &b) const;
+
+  LEVEL 6
+    bool operator<(const Bignum &b)  const; 
+    bool operator<=(const Bignum &b) const; 
+    bool operator>(const Bignum &b)  const; 
+    bool operator>=(const Bignum &b) const; 
+
+Level 6 concludes the required testing levels.  Levels 7-9
+represent a sequence of increasing extra credit opportunities.
+
+
+
+
+PROGRAM 3  Bignum
+						  
+  LEVEL 7 (multiplication)                    
+    Bignum & operator*=(const Bignum &b);      	 	      	
+    Bignum operator*(const Bignum &b) const;   	       	       	
+					       	 	      
+  LEVEL 8 (negative Bignums)	               	 	      
+    Bignum operator-();		       	       	       	      
+					      
+  LEVEL 9 (division)			      
+    Bignum & operator/=(const Bignum & b)     
+    Bignum & operator%=(const Bignum & b)     
+    Bignum operator/(const Bignum & b) const  
+    Bignum operator%(const Bignum & b) const  
+					      
+					      
+Extra credit only if levels ARE correct (not just TEST correct):
+
+ Level 7 only:         up to +5%  overall
+ Levels 7 & 8:         up to +15% overall	       
+ Levels 7 & 8 & 9:     up to +30% overall	       	        
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+				   
+ListElt * _head        	       	             (e.g.)           
+ +-------+			    _head = new ListElt;
+ |    ---\ 			    (*_head)._data = 87;      
+ +-------+\  			    (*_head)._next = NULL;    
+       	   \   		     	             (or)             
+ 	    >+-------+		    _head = new ListElt;  
+  	     |     87|		    _head->_data = 87;        
+       	     |-------| 	       	    _head->_next = NULL;      
+       	     |   NULL| 	       	    	   (or better)	      
+       	     +-------+ 	ListElt::ListElt(int item,ListElt * ptr) {
+			   _data = item;      	       	       
+			   _next = ptr;	 		
+			}      	       			
+			..	       			
+			_head = new ListElt(87,NULL);  	
+			
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head        	
+ +-------+		
+ |    ---\ 		
+ +-------+\  		
+       	   \   		
+ 	    >+-------+	
+       	     |     87|	
+       	     |-------| 	
+       	     |   NULL| 	
+       	     +-------+ 	
+			
+
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..			
+_head = new ListElt(23,_head);    // magic!
+			
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+     	       	       	    
+ |    -----------------\     	    
+ +-------+	       	\      	      
+       	       	       	 \     	       
+ 	   ->+-------+	  \->+-------+                           
+       	  /  |     87| 	     |     23|       Step 3: The = happens
+	  |  |-------|	     |-------|         _head = new...
+	  |  |   NULL| 	  /-------   | 	       (new returns the
+	  \  +-------+	 /   +-------+	       	pointer to the 
+	   \		/  			newly constructed
+	    \----------/ 			object)	       	 
+       	       	    
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+     vvv   
+_head = new ListElt(23,_head);    // magic!  
+     ^^^   
+USING DYNAMIC OBJECTS: Linked list
+//Stack.h      	       //Stack.C
+class Stack {	       #include "Stack.h"
+public:	       	       #include <stddef.h>  /* for NULL */    
+  Stack();	       
+  ~Stack();	       Stack::_Elt::_Elt(int i,_Elt * p) {
+  void Insert(int);      data = i;                              
+  int Remove();	         next = p;                              
+private:       	       }                                         
+  class _Elt {                                                   
+  public:     	       Stack::_Elt::~_Elt() { }                  
+    _Elt(int,_Elt *);                                            
+    ~_Elt();	       Stack::Stack() { _head = NULL; }          
+    int data;	                                                 
+    _Elt * next;       Stack::Insert(int i) {
+  };	 	         _head = new _Elt(i,_head);
+	 	       }       	       	       	   
+  _Elt * _head;	         
+};	 	       int Stack::Remove() {
+       	       	       	   ??? 	       	    
+		       }      
+       	       	       Stack::~Stack() {
+			   ??? 	       	
+		       }      
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 		  _Elt * temp 
+ +-------+     	       	  +---------+
+ |   NULL|		  |     NULL|
+ +-------+		  +---------+
+       	  		       	   
+       	  
+    	  
+       	  
+       	  
+#include <assert.h>
+...    	  	   
+    
+int Stack::Remove() {  	       	       	       	    
+   assert(_head);       // stack must not be empty
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?        ..yes..
+USING DYNAMIC OBJECTS: Linked list 	      
+
+Stack::~Stack() {
+  while (_head) Remove();         // Flush til empty...
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+  When a function (or procedure) calls itself. Such a function is
+  called "recursive". If the call is via one or more other
+  functions then this group of functions are called "mutually
+  recursive".
+
+              -- from The Free On-line Dictionary of Computing,
+                 http://foldoc.doc.ic.ac.uk/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+  When a function (or procedure) calls itself. Such a function is
+  called "recursive". If the call is via one or more other
+  functions then this group of functions are called "mutually
+  recursive".
+
+              -- from The Free On-line Dictionary of Computing,
+                 http://foldoc.doc.ic.ac.uk/
+
+
+
+
+  RECURSION  n. See recursion. See also tail recursion.
+
+	      -- from the Jargon File,
+                 http://www.tuxedo.org/~esr/jargon/
+
+
+
+
+
+
+
+RECURSION
+#include <iostream.h>
+class Foo {
+public:
+  friend ostream & operator<<(ostream&,Foo&);
+private:
+  int _x, _y;
+};
+
+ostream & operator<<(ostream & o, Foo & f)
+{
+  o << "Foo(" << f << ")";
+  return o;
+}
+
+int main() {
+  Foo bar;
+  cout << bar << endl;
+  return 0;
+}
+
+
+
+
+RECURSION
+#include <iostream.h>
+class Foo {
+public:
+  friend ostream & operator<<(ostream&,Foo&);
+private:
+  int _x, _y;
+};
+
+ostream & operator<<(ostream & o, Foo & f)
+{
+  o << "Foo(" << f << ")";
+  return o;
+}
+
+int main() {
+  Foo bar;
+  cout << bar << endl;
+  return 0;
+}
+% ./foo
+Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(F\
+oo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Fo\
+o(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo\
+RECURSION
+#include <iostream.h>
+class Foo {
+public:
+  friend ostream & operator<<(ostream&,Foo&);
+private:
+  int _x, _y;
+};    
+     /-------------------------------------------ostream&
+ostr/am & operator<<(ostream & o, Foo & f)		 
+{  /							 
+  o << "Foo(" << f << ")";     	       	       	       	 
+  return o;    \  \  
+}		\  \----------------------------Foo&
+       	       	 \     	     
+int main() {	  \----------------operator<<
+  Foo bar;		     		     
+  cout << bar << endl;	     
+  return 0;
+}
+% ./foo
+Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(F\
+oo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Fo\
+o(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo\
+RECURSION
+#include <iostream.h>
+class Foo {
+public:
+  friend ostream & operator<<(ostream&,Foo&);
+private:
+  int _x, _y;
+};    
+     /-------------------------------------------ostream&
+ostr/am & operator<<(ostream & o, Foo & f)		 
+{  /							 
+  o << "Foo(" << f << ")";     	       	       	       	 
+  return o;    \  \  
+}		\  \----------------------------Foo&
+		 \
+int main() {	  \----------------operator<<
+  Foo bar;				     
+  cout << bar << endl;		   so... operator<<(ostream&,Foo&)
+  return 0;
+}
+% ./foo
+Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(F\
+oo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Fo\
+o(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo\
+RECURSION
+#include <iostream.h>
+class Foo {
+public:
+  friend ostream & operator<<(ostream&,Foo&);
+private:
+  int _x, _y;
+};    
+     /-------------------------------------------ostream&
+ostr/am & operator<<(ostream & o, Foo & f)<----------\	 
+{  /						      \	 
+  o << "Foo(" << f << ")";     	       	       	       \ 
+  return o;    \  \  					\
+}      	       	\  \----------------------------Foo&   	|
+		 \					|
+int main() {	  \----------------operator<<		|
+  Foo bar;				     		|
+  cout << bar << endl;		   so... operator<<(ostream&,Foo&)
+  return 0;
+}
+% ./foo
+Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(F\
+oo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Fo\
+o(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo(Foo\
+RECURSION
+
+Need a 'base case' that does NOT involve calling oneself!
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+Need a 'base case' that does NOT involve calling oneself!
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+Need a 'base case' that does NOT involve calling oneself!
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  
+   
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<9;++i) 
+    cout << "fact(" << i << ") = " << fact(i) << endl;
+  return 0;	    				      
+}		    
+
+
+
+
+
+
+
+
+
+RECURSION
+
+Need a 'base case' that does NOT involve calling oneself!
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}      	       	       	  
+   
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<9;++i) 
+    cout << "fact(" << i << ") = " << fact(i) << endl;
+  return 0;	    				      
+}		    
+fact(0) = 1
+fact(1) = 1
+fact(2) = 2
+fact(3) = 6
+fact(4) = 24
+fact(5) = 120
+fact(6) = 720
+fact(7) = 5040
+fact(8) = 40320
+RECURSION
+
+Memory and addresses.
+	      ------		    (This is just a sample; 
+	     0|    |		     different machines and 
+	      |    |		     operating systems can    
+	      |----|		     lay out memory in        
+	      |    |global space     different ways.)
+	      |    |     	    	      
+	      |----|     	    	      
+	      |    |  	    	      
+	      |    |  	    	      
+	      |    |heap space      	      
+	      |    |	    	      
+	      |    |	    	      
+	      |    |	    	    
+	      |----|	    	    
+       	      |    |	   	  
+       	      |    |   	       	  
+	      |    |stack space	  
+              |    |
+2,147,483,648 |    |
+	      ------
+
+RECURSION
+
+Memory and addresses.
+	      ------		    (This is just a sample; 
+	     0|    |		     different machines and 
+	      |    |		     operating systems can    
+	      |----|		     lay out memory in        
+	      |    |global space     different ways.)
+	      |    |     	    	      
+	      |----|     	    	      
+	      |    |  	    	      
+	      |    |  	    	      
+	      |    |heap space      	      
+	      |    |	    	      
+	      |    |	    	      
+	      |    |	    	    
+	      |----|   	       	 \  
+       	      |    |	   	  \
+       	      |    |   	       	   \
+	      |    |stack space	    \ 
+              |    |		    / Recursion lives in here
+2,147,483,648 |    |		   / 			     
+	      ------		  /			     
+
+RECURSION - Stack space
+		       
+     . 	       	       
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    		         if (n==0) return 1;     
+ |    	  |    		         else return n*fact(n-1);
+ |    	  |    		       }                         
+ |    	  |    						 
+ |        |    
+ |        |    
+ |        |    
+ |        |    
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	     	       
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |		         if (n==0) return 1;     
+ |        |		         else return n*fact(n-1);
+ |     	  |		       }                         
+ |    	  |						 
+ |        |    	       	       int main() {    	       	 
+ |        | 	    	      	 cout << fact(2) << endl;
+ |        |    	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	     	       
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |		         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |		       }                         
+ |    	  |						 
+ |--------|    	       	    >> int main() {    	       	 
+ |        | 	    	      	 cout << fact(2) << endl;
+ |        |    	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	     	       
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |		         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |		  				 
+ |--------|    	       	       int main() {    	       	 
+ |        | 	    	     >>	 cout << fact(2) << endl;
+ |        |    	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	     	       
+     . 	       	       	     >>int fact(int n) {         
+ |   . 	  |		         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	       	       	    
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |		     >>  if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	       	       	    
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |    	  |
+ |    	  |  	      
+ |    	  |  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	       	       	    
+     . 	       	       	     >>int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact	  |
+ | n == 1 |  	      
+ |--------|  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	       	       	    
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	     >>  if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact	  |
+ | n == 1 |  	      
+ |--------|  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	       	       	    
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact	  |
+ | n == 1 |  	      
+ |--------|  	      
+ |    	  |  	    
+ |    	  |  	    
+ |    	  | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+		       
+     . 	       	       	    
+     . 	       	       	     >>int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact	  |
+ | n == 1 |  	      
+ |--------|  	      
+ |fact	  |  	    
+ | n == 0 |  	    
+ |--------| 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	     >>  if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact	  |
+ | n == 1 |  	      
+ |--------|  	      
+ |fact	  |  	    
+ | n == 0 |  	    
+ |--------| 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	     >>  if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact	  |
+ | n == 1 |  	      
+ |--------|  	      
+ |(return |  	    
+ |  == 1) | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |fact    |
+ | n == 1 |  	      
+ |return n|  	      
+ |  * 1   |  	    
+ |        | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ |--------|	    	       }       	  
+ |(return |
+ | 1 * 1  |  	      
+ | = 1)   |  	      
+ |        |  	    
+ |        | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |fact    | 	    	       	 cout << fact(2) << endl;
+ | n == 2 |    	       	       	 return 0;		  
+ | return |	    	       }       	  
+ | n * 1  |
+ |        |  	      
+ |        |  	      
+ |        |  	    
+ |        | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |(return | 	    	       	 cout << fact(2) << endl;
+ |  2 * 1 |    	       	       	 return 0;		  
+ |  = 2)  |	    	       }       	  
+ |        |
+ |        |  	      
+ |        |  	      
+ |        |  	    
+ |        | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |(tmp==2)|    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |        | 	    	     >>	 cout << fact(2) << endl;
+ |        |    	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |        |
+ |        |  	      
+ |        |  	      
+ |        |  	    
+ |        | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |<<(ost&o| 	    	     >>	 cout << fact(2) << endl;
+ |   int i|    	       	       	 return 0;		  
+ |o==cout |	    	       }       	  
+ |i==2    |
+ |--------|  	      
+ |        |  	      
+ |        |  	    
+ |        | 	    
+ |        | 	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |<<(ost&o| 	    	     >>	 cout << fact(2) << endl;
+ |   int i|    	       	       	 return 0;		  
+ |o==cout |	    	       }       	  
+ |i==2    |
+ |--------|  	      
+ |        |  	      
+ | (Etc)  |  	    
+ |   .    | 	    
+ |   .    | 	  
+ |   .    |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |<<(ost&o| 	    	     >>	 cout << fact(2) << endl;
+ |   int i|    	       	       	 return 0;		  
+ |o==cout |	    	       }       	  
+ |i==2    |
+ |--------|  	      
+ |        |  	      
+ | (Etc)  |       Prints:     	    
+ |   .    |       2          	    
+ |   .    |        ^         	  
+ |   .    |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |(returns| 	    	     >>	 cout << fact(2) << endl;
+ | ostream|    	       	       	 return 0;		  
+ | it got | 	    	       }       	  
+ |== cout)|   	  
+ |        |  	      
+ |        |  	      
+ |        |  	  Prints:
+ |        |    	  2    	 
+ |        |    	   ^   	    
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .	
+     .	
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |(returns| 	    	     >>	 cout << fact(2) << endl;
+ |o== cout|   	       	       	 return 0;		  
+ |)       |	    	       }       	  
+ |        |
+ |        |  	      
+ |        |  	      
+ |        |       Prints:     	    
+ |        |       2          	    
+ |        |        ^         	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |        | 	    	     >>	 cout << fact(2) << endl;
+ |        |   	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |        |
+ |        |  	      
+ |        |  	      
+ |        |       Prints:     	    
+ |        |       2         
+ |        |        ^        
+ |        |      
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |<<(ost&o| 	    	     >>	 cout << fact(2) << endl;
+ |   ioma)|   	       	       	 return 0;		  
+ |cout,   |	    	       }       	  
+ |endl    |
+ |--------|  	      
+ |        |  	      
+ |        |       Prints:     	    
+ |        |       2          	    
+ |        |        ^         	  
+ |        |	       	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |<<(ost&o|    	    	     >>	 cout << fact(2) << endl;
+ |   ioma)|   	       	       	 return 0;		  
+ |cout,   |	    	       }       	  
+ |endl    |	    
+ |--------|  	      
+ |   .    |  	      
+ |   .    |       Prints:     	    
+ |  Etc   |       2          	    
+ |   .    |        
+ |   .    |	  ^    	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main 	  |    	       	       }                         
+ |    	  |    	       	       				 
+ |--------|    	       	       int main() {    	       	 
+ |(returns|    	    	     >>	 cout << fact(2) << endl;
+ |  cout) |   	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |        |	    
+ |        |  	      
+ |        |  	      
+ |        |       Prints:     	    
+ |        |       2          	    
+ |        |        
+ |        |	  ^    	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |(returns|    	       	       }                         
+ |   0)	  |    	       	       				 
+ |        |    	       	       int main() {    	       	 
+ |        |    	    	       	 cout << fact(2) << endl;
+ |        |    	       	     >>	 return 0;		  
+ |        |	    	       }       	  
+ |        |	    
+ |        |  	      
+ |        |  	      
+ |        |       Prints:     	    
+ |        |       2          	    
+ |        |        
+ |        |	  ^    	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |        |		         else return n*fact(n-1);
+ |        |    	       	       }                         
+ |     	  |    	       	       				 
+ |        |    	       	       int main() {    	       	 
+ |        |    	    	       	 cout << fact(2) << endl;
+ |        |    	       	       	 return 0;		  
+ |        |	    	       }       	  
+ |        |	    
+ |        |  	      
+ |        |  	      
+ |        |       Prints:     	    
+ |        |       2          	    
+ |        |        
+ |        |	  ^    	  
+ |    	  |
+ |    	  |
+ |   .	  |
+     .
+     .
+RECURSION
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  
+   
+#include <iostream.h>
+int main() {
+  cout << "fact(-1)" << fact(-1) << endl;
+  return 0;	    			 	      
+}		    
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  
+   
+#include <iostream.h>
+int main() {
+  cout << "fact(-1)" << fact(-1) << endl;
+  return 0;	    			 	      
+}		    
+
+% ./foo
+Segmentation fault (core dumped)
+%      
+
+
+
+
+
+
+
+
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main    |    	       	       }                         
+ |--------|    	       	       				 
+ |	  |    	       	       int main() {    	       	 
+ |     	  |    	       	     >>	 cout << fact(-1) << endl;
+ |	  |    	       	       	 return 0;		  
+ |	  |	    	       }       	  
+ |	  |	    
+ |	  |  	      
+ |	  |  	      
+ |	  |
+ |	  |
+ |	  |        
+ |	  |  
+ |	  |
+ |	  |
+ |	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	     >>int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		         else return n*fact(n-1);
+ |main    |    	       	       }                         
+ |--------|    	       	       				 
+ |fact    |    	       	       int main() {    	       	 
+ | n==-1  |    	    	       	 cout << fact(-1) << endl;
+ |--------|    	       	       	 return 0;		  
+ |	  |	    	       }       	  
+ |	  |	    
+ |	  |  	      
+ |	  |  	      
+ |	  |
+ |	  |
+ |	  |        
+ |	  |  
+ |	  |
+ |	  |
+ |	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|		     >>  else return n*fact(n-1);
+ |main    |    	       	       }                         
+ |--------|    	       	       				 
+ |fact    |    	       	       int main() {    	       	 
+ | n==-1  |    	    	       	 cout << fact(-1) << endl;
+ |--------|    	       	       	 return 0;		  
+ |fact    |	    	       }       	  
+ | n==-2  |	    
+ |--------|  	      
+ |	  |  	      
+ |	  |
+ |	  |
+ |	  |        
+ |	  |  
+ |	  |
+ |	  |
+ |	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|    	       	     >>  else return n*fact(n-1);
+ |main    |    	       	       }                         
+ |--------|    	       	       				 
+ |fact    |    	       	       int main() {    	       	 
+ | n==-1  |    	    	       	 cout << fact(-1) << endl;
+ |--------|    	       	       	 return 0;		  
+ |fact    |	    	       }       	  
+ | n==-2  |	    	       
+ |--------|  	      	       
+ |fact    |  	      
+ | n==-3  |
+ |--------|
+ |	  |        
+ |	  |  
+ |	  |
+ |	  |
+ |	  |
+     .
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|    	       	     >>  else return n*fact(n-1);
+ |main    |    	       	       }                         
+ |--------|    	       	       				 
+ |fact    |    	       	       int main() {    	       	 
+ | n==-1  |    	    	       	 cout << fact(-1) << endl;
+ |--------|    	       	       	 return 0;		  
+ |fact    |	    	       }       	  
+ | n==-2  |	    
+ |--------|  	      
+ |fact    |  	      
+ | n==-3  |
+ |--------|
+ |fact    |        
+ | n==-4  |  
+ |--------|
+ |	  |
+ |	  |
+     . 	 
+     .
+RECURSION - Stack space
+       	       	       	     
+     . 	       	       	     
+     . 	       	       	       int fact(int n) {         
+ |   . 	  |    	       	         if (n==0) return 1;     
+ |--------|	       	     >>  else return n*fact(n-1);
+ |main    |    	       	       }                         
+ |--------|    	       	       				 
+ |fact    |    	       	       int main() {    	       	 
+ | n==-1  |    	    	       	 cout << fact(-1) << endl;
+ |--------|    	       	       	 return 0;		  
+ |fact    |	    	       }       	  
+ | n==-2  |	    
+ |--------|  	      
+ |fact    |  	      
+ | n==-3  |
+ |--------|
+ |fact    |        
+ | n==-4  |  
+ |--------|
+ |fact 	  |
+ | n==-5  |
+  (halp!)
+     .
+RECURSION
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  
+   
+#include <iostream.h>
+int main() {
+  cout << "fact(-1)" << fact(-1) << endl;
+  return 0;	    			 	      
+}		    
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+int fact(int n) {
+  if (n<=0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  	
+   	
+#include <iostream.h>
+int main() {
+  cout << "fact(-1)" << fact(-1) << endl;
+  return 0;	    			 	      
+}		    
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION
+
+#include <assert.h>
+int fact(int n) {  
+  assert(n>=0);	
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}  	
+   	
+#include <iostream.h>
+int main() {
+  cout << "fact(-1)" << fact(-1) << endl;
+  return 0;	    			 	      
+}		    
+
+
+
+
+
+
+
+
+
+
+RECURSION VS ITERATION
+		      
+#include <assert.h>
+int factr(int n) {  
+  assert(n>=0);	    
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}  						 
+int facti(int n) {
+  assert(n>=0);	  				 
+  int result = 1;    
+  for (int i = n; i>0; --i) result *= i;       	    
+  return result;	   
+}
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<9;++i)
+    if (factr(i)!=facti(i)) cout << "Mismatch on " << i << endl;
+  return 0;
+}
+
+
+
+
+RECURSION VS ITERATION
+		      
+#include <assert.h>
+int factr(int n) {  
+  assert(n>=0);	    
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}  						 
+int facti(int n) {
+  assert(n>=0);	  				 
+  int result = 1;    
+  for (int i = n; i>0; --i) result *= i;       	    
+  return result;	   
+}
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<9;++i)
+    if (factr(i)!=facti(i)) cout << "Mismatch on " << i << endl;
+  return 0;
+}
+% ./foo
+% 
+
+
+RECURSION VS ITERATION
+
+#include <assert.h>
+int factr(int n) {  
+  assert(n>=0);	    
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}  						 
+int facti(int n) {
+  assert(n>=0);	  				 
+  int result = 1;    
+  for (int i = n; i>0; --i) result *= i;       	    
+  return result;	   
+}
+#include <iostream.h>
+int main() {   	       	       	       	  
+  for (int i = 0;i<10000000; ++i) factr(12);
+  return 0;  				    
+}	     
+
+
+
+
+
+RECURSION VS ITERATION
+
+#include <assert.h>
+int factr(int n) {  
+  assert(n>=0);	    
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}  						 
+int facti(int n) {
+  assert(n>=0);	  				 
+  int result = 1;    
+  for (int i = n; i>0; --i) result *= i;       	    
+  return result;	   
+}
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<10000000; ++i) factr(12);
+  return 0;  				    
+}	     				    
+% time ./foor				    
+8.07user 0.03system 0:08.35elapsed 96%CPU (0avgtext+0avgdata 0...
+% 
+
+
+RECURSION VS ITERATION
+
+#include <assert.h>
+int factr(int n) {  
+  assert(n>=0);	    
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}  						 
+int facti(int n) {
+  assert(n>=0);	  				 
+  int result = 1;    
+  for (int i = n; i>0; --i) result *= i;       	    
+  return result;	   
+}
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<10000000; ++i) factr(12); //facti(12) for fooi
+  return 0;  
+}	     
+% time ./foor
+8.07user 0.03system 0:08.35elapsed 96%CPU (0avgtext+0avgdata 0...
+% 
+
+
+RECURSION VS ITERATION
+
+#include <assert.h>
+int factr(int n) {  
+  assert(n>=0);	    
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}  						 
+int facti(int n) {
+  assert(n>=0);	  				 
+  int result = 1;    
+  for (int i = n; i>0; --i) result *= i;       	    
+  return result;	   
+}
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<10000000; ++i) factr(12); //facti(12) for fooi
+  return 0;  
+}	     
+% time ./foor
+8.07user 0.03system 0:08.35elapsed 96%CPU (0avgtext+0avgdata 0...
+% time ./fooi
+5.52user 0.00system 0:05.69elapsed 96%CPU (0avgtext+0avgdata 0...
+% 
+RECURSION VS ITERATION
+ 		      
+ - Every recursive function can be turned into an
+   iterative function (perhaps with the addition of
+   an explicit stack).
+		      
+ - Recursive definitions are often more natural than the
+   corresponding iterative definitions (after your head	
+   stops exploding)   
+		      
+ - Recursive definitions are sometimes slower to execute
+   than the corresponding iterative definitions		
+		      
+ - The potential for fewer bugs because of increased
+   clarity of recursive definitions sometimes argues in
+   their favor even if they're a little slower.
+		      
+ - Rule of thumb: If the iterative version would REQUIRE an 
+   explicit stack, favor recursive definition. 	       	
+		      
+		      
+		      
+		      
+		      
+RECURSION AND DATA STRUCTURES
+..
+class List {
+public: int Length();
+..
+ private:	 
+  struct _Elt {	 
+    _Elt(char c,_Elt *n) { ch = c; next = n; }
+    char ch;	 
+    _Elt * next;
+    int Length();
+  };		 
+  _Elt * _head;	 
+};		 
+		 
+
+
+
+
+
+
+
+
+
+RECURSION AND DATA STRUCTURES
+..
+class List {
+public: int Length();
+..
+ private:	 
+  struct _Elt {	 
+    _Elt(char c,_Elt *n) { ch = c; next = n; }
+    char ch;	 
+    _Elt * next;
+    int Length();
+  };		 
+  _Elt * _head;	 
+};		 
+		 
+int List::Length() {
+  if (_head) return _head->Length();  // NOT a recursive call :)
+  return 0;			    
+}
+
+
+
+
+
+RECURSION AND DATA STRUCTURES
+..
+class List {
+public: int Length();
+..
+ private:	 
+  struct _Elt {	 
+    _Elt(char c,_Elt *n) { ch = c; next = n; }
+    char ch;	 
+    _Elt * next;
+    int Length();
+  };		 
+  _Elt * _head;	 
+};		 
+		 
+int List::Length() {
+  if (_head) return _head->Length();
+  return 0;			    
+}
+int List::_Elt::Length() {
+  if (!next) return 1;            // Base case
+  return next->Length()+1;	  // Recursion
+}			  
+
+RECURSION AND DATA STRUCTURES
+..
+class List {
+public: int Length();
+..
+ private:	 
+  struct _Elt {	 
+    _Elt(char c,_Elt *n) { ch = c; next = n; }
+    char ch;	 
+    _Elt * next;
+    int Length();
+  };		 
+  _Elt * _head;	 
+};		 
+		 
+int List::Length() {
+  if (_head) return _head->Length();
+  return 0;			    
+}
+int List::_Elt::Length() {
+  if (!next) return 1;            // Base case
+  return next->Length()+1;	  // Recursion
+}			  
+             ..Is this a good use of recursion?
+RECURSION AND DATA STRUCTURES
+..
+class List {
+public: int Length();
+..
+ private:	 
+  struct _Elt {	 
+    _Elt(char c,_Elt *n) { ch = c; next = n; }
+    char ch;	 
+    _Elt * next;
+    int Length();
+  };		 
+  _Elt * _head;	 
+};		 
+		 
+int List::Length() {
+  if (_head) return _head->Length();
+  return 0;			    
+}
+int List::_Elt::Length() {
+  if (!next) return 1;            // Base case
+  return next->Length()+1;	  // Recursion
+}			  
+             ..Is this a good use of recursion?  ..Not great..
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL; 
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);
+  cout << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL; 
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);
+  cout << endl;
+  return 0;    
+}	       
+% ./foo	       
++A+B
+% 
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL; 
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);
+  delete hd;
+  cout << endl;
+  return 0;    
+}	       
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL; 
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);
+  delete hd;
+  cout << endl;
+  return 0;    
+}	       
+% ./foo	       
++A+B-A-B      
+% 
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:		hd     
+  char _c;		+------+
+  Foo * _next;		|  NULL|
+};     	       	       	+------+     
+int main() {   	       	       	     
+>>Foo * hd = NULL;<<	   
+  hd = new Foo('A',hd);	   
+  hd = new Foo('B',hd);	   
+  delete hd;		   
+  cout << endl;		   
+  return 0;    		   	       	    	    
+}	       		   
+% ./foo	       		   
+			   
+			   
+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:		hd     
+  char _c;     	       	+------+
+  Foo * _next;		|      |
+};			+---|--+     
+int main() {   	       	    |  	     
+  Foo * hd = NULL; 	    \->+---------+
+>>hd = new Foo('A',hd);<<      | 'A'   	 |     	    
+  hd = new Foo('B',hd);	       |---------|	    
+  delete hd;		       |    NULL |	    
+  cout << endl;		       +---------+	    
+  return 0;    			       	    	    
+}	       			       
+% ./foo	       			       
++A
+
+				       
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:		hd     
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+     
+int main() {   	       	    |  	     
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |     	    
+>>hd = new Foo('B',hd);<<      |---------|	    
+  delete hd;		       |     	 |	    
+  cout << endl;		       +------|--+	    
+  return 0;    		 	      |	    	    
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:      		hd     				  
+  char _c;     	   	+------+       
+  Foo * _next;		|      |       
+};     	       	       	+---|--+       
+int main() {   	       	    |  	       
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |     	    
+  hd = new Foo('B',hd);        |---------|	    
+>>delete hd;<< 	       	       |       	 |	    
+  cout << endl;		       +------|--+	    
+  return 0;    		 	      |	    	    
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<  
+private:      		hd     				  
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	     	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |     	    
+  hd = new Foo('B',hd);        |---------|	    
+>>delete hd;<< 	       	       |       	 |	    
+  cout << endl;		       +------|--+	    
+  return 0;    		 	      |	    	    
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<  
+private:       ^^^^^ 	hd     	    			  
+  char _c;     	   	+------+    	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	     	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |     	    
+  hd = new Foo('B',hd);        |---------|	    
+>>delete hd;<< 	       	      >|       	 |<	    
+  cout << endl;		       +------|--+	    
+  return 0;    		       	^^^^^^|^^   	    
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next)>delete _next;<cout << "-" << _c; }<<  
+private:       ^^^^^ 	hd     	    			  
+  char _c;     	   	+------+    	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	     	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |     	    
+  hd = new Foo('B',hd);        |---------|	    
+>>delete hd;<< 	       	      >|       	 |<	    
+  cout << endl;		       +------|--+	    
+  return 0;    		       	^^^^^^|^^   	    
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<  
+private:             	hd     				  
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+	   ~Foo::this
+  hd = new Foo('A',hd);	       | 'B'   	 |     	   +------------+
+  hd = new Foo('B',hd);        |---------|	/----- 	       	|
+>>delete hd;<< 	       	       |       	 |	|  +------------+
+  cout << endl;		       +------|--+	|   
+  return 0;    		 	      |	    	V   
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<  
+private:       ^^^^^ 	hd     				  
+  char _c;     	    	+------+	       	  ~Foo::this
+  Foo * _next;	    	|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL;  	    \->+---------+	   ~Foo::this
+  hd = new Foo('A',hd);	       | 'B'   	 |     	   +------------+
+  hd = new Foo('B',hd);        |---------|	/----- 	       	|
+>>delete hd;<< 	       	       |       	 |	|  +------------+
+  cout << endl;	       	       +------|--+	|   
+  return 0;    		 	      |	    	V   
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					 >|    	NULL|<
+					  +---------+
+					   ^^^^^^^^^  
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next;>cout << "-" << _c;<}<<  
+private:             	hd     			       	  
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+	   ~Foo::this
+  hd = new Foo('A',hd);	       | 'B'   	 |     	   +------------+
+  hd = new Foo('B',hd);        |---------|	/----- 	       	|
+>>delete hd;<< 	       	       |       	 |	|  +------------+
+  cout << endl;		       +------|--+	|   
+  return 0;    		 	      |	    	V   
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B-A        				  |---------|
+% 					  |    	NULL|
+					  +---------+
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next;>cout << "-" << _c;<}<<  
+private:             	hd     		    	       	  
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+  
+  hd = new Foo('A',hd);	       | 'B'   	 |  
+  hd = new Foo('B',hd);        |---------|  
+>>delete hd;<< 	       	       |       	 |  
+  cout << endl;		       +------|--+  
+  return 0;    		 	      |	    
+}	       			      \-->+ - - - - +
+% ./foo	       				       	     
++A+B-A        				  |    ?    |
+% 					       	     
+					  + - - - - +
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next;>cout << "-" << _c;<}<<  
+private:             	hd     		    	       	  
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+  
+  hd = new Foo('A',hd);	       | 'B'   	 |  
+  hd = new Foo('B',hd);        |---------|  
+>>delete hd;<< 	       	       |       	 |  
+  cout << endl;		       +------|--+  
+  return 0;    		 	      |	    
+}	       			      \-->+ - - - - +
+% ./foo	       				       	     
++A+B-A-B      				  |    ?    |
+% 					       	     
+					  + - - - - +
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }    
+private:             	hd     	      	    	       	  
+  char _c;     	   	+------+      
+  Foo * _next;		|      |      
+};     	       	       	+---|--+      
+int main() {   	       	    |  	      
+  Foo * hd = NULL; 	    \->+ - - - - +  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);        |    ?    |  
+>>delete hd;<< 	       	                    
+  cout << endl;		       + - - - - +  
+  return 0;    		 	   
+}	       			   
+% ./foo	       			   	       	     
++A+B-A-B 
+	 
+	 
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd     	      	    	       	  
+  char _c;     	   	+------+      
+  Foo * _next;		|      |      
+};     	       	       	+---|--+      
+int main() {   	       	    |  	      
+  Foo * hd = NULL; 	    \->+ - - - - +  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);        |    ?    |  
+  delete hd;   	       	                    
+>>cout << endl;<<	       + - - - - +  
+>>return 0;<<  		 	   
+}<<	       			   
+% ./foo	       			   	       	     
++A+B-A-B 
+%  	 
+	 
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd     	      	    	       	  
+  char _c;     	   	+------+      
+  Foo * _next;		|      |      
+};     	       	       	+---|--+      
+int main() {   	       	    |  	      
+  Foo * hd = NULL; 	    \->+ - - - - +  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);        |    ?    |  
+  delete hd;   	       	                    
+>>cout << endl;<<	       + - - - - +  
+>>return 0;<<  		 	   
+}<<	       			   
+% ./foo	       In this case, calling	       	     
++A+B-A-B        'delete hd;' deletes the whole list, 
+%      	       	because Foo::~Foo calls ITSELF *RECURSIVELY*
+	       	as long as the '_next's are non-NULL!
+					       	      
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd     	      	    	       	  
+  char _c;     	   	+------+      
+  Foo * _next;		|      |      
+};     	       	       	+---|--+      
+int main() {   	       	    |  	      
+  Foo * hd = NULL; 	    \->+ - - - - +  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);        |    ?    |  
+  delete hd;   	       	                    
+>>cout << endl;<<	       + - - - - +  
+>>return 0;<<  		 	   
+}<<	       			   
+% ./foo	       In this case, calling	       	     
++A+B-A-B        'delete hd;' deletes the whole list, 
+%      	       	because Foo::~Foo calls ITSELF *RECURSIVELY*
+	       	as long as the '_next's are non-NULL!
+					       	      
+       	Is this a good use of recursion?
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd     	      	    	       	  
+  char _c;     	   	+------+      
+  Foo * _next;		|      |      
+};     	       	       	+---|--+      
+int main() {   	       	    |  	      
+  Foo * hd = NULL; 	    \->+ - - - - +  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);        |    ?    |  
+  delete hd;   	       	                    
+>>cout << endl;<<	       + - - - - +  
+>>return 0;<<  		 	   
+}<<	       			   
+% ./foo	       In this case, calling	       	     
++A+B-A-B        'delete hd;' deletes the whole list, 
+%      	       	because Foo::~Foo calls ITSELF *RECURSIVELY*
+	       	as long as the '_next's are non-NULL!
+					       	      
+       	Is this a good use of recursion?     Pretty nifty anyway..
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Forward() { cout << _c; if (_next) _next->Forward(); }
+  void Backward() { if (_next) _next->Backward(); cout << _c; }
+private:          
+  char _c;     	  
+  Foo * _next;	  
+};     	       	  
+int main() {   	       	  
+  Foo * hd = NULL; 	  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);
+  hd = new Foo('C',hd);
+  hd->Forward();   cout << endl;
+  hd->Backward();  cout << endl;     	       	
+  delete hd;   	       	                    
+  return 0;
+}
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Forward() { cout << _c; if (_next) _next->Forward(); }
+  void Backward() { if (_next) _next->Backward(); cout << _c; }
+private:          
+  char _c;     	  
+  Foo * _next;	  
+};     	       	  
+int main() {   	       	  
+  Foo * hd = NULL; 	  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);
+  hd = new Foo('C',hd);
+  hd->Forward();   cout << endl;
+  hd->Backward();  cout << endl;     	       	
+  delete hd;   	       	                    
+  return 0;
+}
+CBA
+ABC
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Backward(ostream & o) {
+    if (_next) _next->Backward(o); o << _c; 
+  }
+private:          
+  char _c;     	  
+  Foo * _next;	  
+};     	       	  
+int main() {   	       	  
+  Foo * hd = NULL; 	  
+  hd = new Foo('A',hd);hd = new Foo('B',hd);hd = new Foo('C',hd);
+  hd->Backward(cout); 
+  cout << endl;
+  delete hd;   	       	                    
+  return 0;
+}
+ABC
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Backward(ostream & o) {
+    if (_next) _next->Backward(o); o << _c;    }
+  friend ostream & operator<<(ostream&o,const Foo & f) {
+    f.Backward(o);   					
+    return o;   
+  }		     
+private:             
+  char _c;     	     
+  Foo * _next;	     
+};     	       	     
+int main() {   	       	  
+  Foo * hd = NULL;   	  
+  hd = new Foo('A',hd);hd = new Foo('B',hd);hd = new Foo('C',hd);
+  cout << *hd << endl
+  delete hd;   	       	                    
+  return 0;
+}
+ABC
+
+
+
+
+
+
+
+
+
+
+

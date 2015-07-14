@@ -1,0 +1,936 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia: The Undeclared, GOING...
+ - Administrivia: What&How to turn in for program 1
+ - Makefile troubles @ CIRT 
+ - Container classes and efficiency, arrays
+
+TODAY:
+ - Administrivia: The Undeclared, GOING..., GOING...
+ - Administrivia: Program 1, late days, etc
+ - Container classes and efficiency, arrays, stacks
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : UNDER 27 HOURS REMAIN!
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - THE UNDECLARED
+   No recorded student declarations from:
+
+Arzate,Tiffany C       	       	Macy,Robert John          
+Bach, Jonathan A		Peer,Jennifer Fraser      
+                    		Perez,Gregory A R         
+Benjamin, Matthew Jaco		Putze,Mark Jay            
+Chung, Doil    	    		Romero,Lawrence Aaron     
+Cordova, Patricia Ann		Self,Michael Hunter       
+                    		Smith,Cal                 
+               	    		Sweeney,Jenelle C         
+Espinoza, Everett A		Uncapher,Mark D           
+Fuller,Michael McNair  	       	                          
+                       	       	                          
+Long,Xiangcun             			      	
+     						      
+      -> Remaining on this list leaves you 	      
+      	 liable to be 'instructor-dropped'            
+       	 this week!                       	      
+      						      
+      -> Opening day handout (with declaration) available at:
+	     http://www.cs.unm.edu/~ackley/cs251      
+						      
+      -> Fair Warning!    Going....   Going....	      
+ADMINISTRIVIA - TURNING IN PROGRAMS LATE - MECHANICS
+
+ - Programs are due on or before the assigned date and time.
+				      
+ - There is a `last turn-in time' for each assignment, beyond
+   which no program will be accepted for credit.
+       			       	       	
+ - Programs turned in between the assigned due date and time and
+   the last turn-in time are penalized 15% per 24 hours beyond
+   the due date and time.
+   				       	  
+ - Each student has three `free late days' to use over the course
+   of the entire semester for extra time on programs if needed
+   due to unexpected events such as illness, etc.
+       			       	       	  
+ - Using a `free late day' has the effect of moving the due date
+   and time precisely 24 hours later for that student, EXCEPT the
+   LAST TURN-IN TIME DOES NOT CHANGE.		
+
+ - Free late days can be applied to a program up to two weeks
+   after the program was originally due.		     
+
+ - Having unused free late days remaining at the end of the
+   semester earns `goodwill' in final grading.
+ADMINISTRIVIA - TURNING IN PROGRAM 1 LATE
+
+PROGRAM 1 >>>ASSIGNED DUE TIME IS 5PM Thu 2/10/00<<<
+ 	  >>>LAST TURN-IN TIME IS 2PM Mon 2/14/00<<<  
+
+
+late        Time penalty if turned in on or before:
+days 5pmThu2/10 5pmFri2/11 5pmSat2/12 5pmSun2/13 2pmMon2/14  later
+used   	       	       	       	       	       	     
+ 0     0%          15%         30%       45%        60%      100%
+   				       	  
+ 1     0%           0%         15%       30%        45%      100%
+								 
+ 2     0%           0%          0%       15%        30%      100%
+
+ 3     0%           0%          0%        0%        15%      100%
+
+	  LAST DAY TO APPLY FREE LATE DAYS TO PROGRAM 1
+			 IS THU 2/24/00.
+
+ The specific mechanism to use late days is now under 
+ construction.  More info to follow on Friday.		      
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ - Different kinds of containers are good at different tasks
+   
+ - In general, all the objects that get put into one container
+   will have SOMETHING in common 
+     (CD rack, sock drawer, Pez dispenser, refrigerator...)
+
+ - In some sense, the Mother of All Containers is the array
+       (We'll meet the father later)
+   - We can build many other kinds of containers OUT OF arrays
+     ..but let's look at the array itself first.
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100: poof[0]._woof (1st byte)	   Given:  class Bletch {
+  101: poof[0]._woof (2nd byte)              public: void Run();
+  102: poof[0]._woof (3rd byte)              private: int _woof;
+  103: poof[0]._woof (4th byte) 		      int _gag; 
+  104: poof[0]._gag  (1st byte)            };                  
+  105: poof[0]._gag  (2nd byte)            Bletch poof[2];     
+  106: poof[0]._gag  (3rd byte)    Each Bletch has two ints in
+  107: poof[0]._gag  (4th byte)	   in it so it's 8 bytes long, 
+  108: poof[1]._woof (1st byte)    so poof is 16 bytes long.. 
+  109: poof[1]._woof (2nd byte)    suppose poof starts at    
+  110: poof[1]._woof (3rd byte)    address 100           
+  111: poof[1]._woof (4th byte)	 And the compiler finds the 
+  112: poof[1]._gag  (1st byte)	 address of poof[i] by computing
+  etc	   etc                 		100+ 8*i                
+OBJECTS & MEMORY - HOW BIG THINGS ARE - sizeof
+#include <iostream.h>
+int main() {
+  cout << "Size of a char is " << sizeof(char) << endl;
+  cout << "Size of a short is " << sizeof(short) << endl;
+  cout << "Size of an int is " << sizeof(int) << endl;
+  cout << "Size of a long is " << sizeof(long) << endl;
+  cout << "Size of a float is " << sizeof(float) << endl;
+  cout << "Size of a double is " << sizeof(double) << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+OBJECTS & MEMORY - HOW BIG THINGS ARE - sizeof
+#include <iostream.h>
+int main() {
+  cout << "Size of a char is " << sizeof(char) << endl;
+  cout << "Size of a short is " << sizeof(short) << endl;
+  cout << "Size of an int is " << sizeof(int) << endl;
+  cout << "Size of a long is " << sizeof(long) << endl;
+  cout << "Size of a float is " << sizeof(float) << endl;
+  cout << "Size of a double is " << sizeof(double) << endl;
+  return 0;
+}
+
+$ ./foo
+Size of a char is 1
+Size of a short is 2
+Size of an int is 4
+Size of a long is 4
+Size of a float is 4
+Size of a double is 8
+$ 
+
+
+
+
+OBJECTS & MEMORY - HOW BIG THINGS ARE - sizeof
+#include <iostream.h>
+int main() {
+  cout << "Size of a char is " << sizeof(char) << endl;
+  cout << "Size of a short is " << sizeof(short) << endl;
+  cout << "Size of an int is " << sizeof(int) << endl;
+  cout << "Size of a long is " << sizeof(long) << endl;
+  cout << "Size of a float is " << sizeof(float) << endl;
+  cout << "Size of a double is " << sizeof(double) << endl;
+  return 0;
+}
+
+$ ./foo
+Size of a char is 1
+Size of a short is 2
+Size of an int is 4
+Size of a long is 4
+Size of a float is 4
+Size of a double is 8
+$ 
+
+ `sizeof' looks like a function, but it's not, it's a C++ keyword
+ (If it was a function, a `function call' like sizeof(int) would
+  be a compilation error..)
+OBJECTS & MEMORY - HOW BIG THINGS ARE - sizeof
+#include <iostream.h>
+int main() {
+  cout << "Size of a char is " << sizeof(char) << endl;
+  cout << "Size of a short is " << sizeof(short) << endl;
+  cout << "Size of an int is " << sizeof(int) << endl;
+  cout << "Size of a long is " << sizeof(long) << endl;
+  cout << "Size of a float is " << sizeof(float) << endl;
+  cout << "Size of a double is " << sizeof(double) << endl;
+  return 0;
+}
+
+$ ./foo
+Size of a char is 1    	     	   Warning!  These numbers can
+Size of a short is 2   	    \  /-- be different on different  
+Size of an int is 4	    | /	   computer architectures!  
+Size of a long is 4	    |/	  
+Size of a float is 4	    | 	   Bogus!
+Size of a double is 8	    /
+$ 
+
+ `sizeof' looks like a function, but it's not, it's a C++ keyword
+ (If it was a function, a `function call' like sizeof(int) would
+  be a compilation error..)
+OBJECTS & MEMORY - HOW BIG THINGS ARE - sizeof
+#include <iostream.h>
+class Foo { public: Foo() {}; int bad[10]; } ; // evil public data
+int main() {
+  cout << "Size of a Foo is " << sizeof(Foo) << endl;
+
+  Foo f;
+  cout << "Size of \"f\" is " << sizeof(f) << endl;
+  cout << "Size of \"f.bad[2]\" is " << sizeof(f.bad[2]) << endl;
+
+  Foo g[4];
+  cout << "Size of \"g\" is " << sizeof(g) << endl;
+  cout << "Size of \"g[1]\" is " << sizeof(g[1]) << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+OBJECTS & MEMORY - HOW BIG THINGS ARE - sizeof
+#include <iostream.h>
+class Foo { public: Foo() {}; int bad[10]; } ; // evil public data
+int main() {
+  cout << "Size of a Foo is " << sizeof(Foo) << endl;
+
+  Foo f;
+  cout << "Size of \"f\" is " << sizeof(f) << endl;
+  cout << "Size of \"f.bad[2]\" is " << sizeof(f.bad[2]) << endl;
+
+  Foo g[4];
+  cout << "Size of \"g\" is " << sizeof(g) << endl;
+  cout << "Size of \"g[1]\" is " << sizeof(g[1]) << endl;
+  return 0;
+}
+
+Size of a Foo is 40
+Size of "f" is 40
+Size of "f.bad[2]" is 4
+Size of "g" is 160
+Size of "g[1]" is 40
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..     	       	       	       	  
+  Block _blks[_MAXBLOCKS];   
+
+};
+
+
+
+
+
+				  
+
+
+
+           
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..
+  Block _blks[_MAXBLOCKS]; 
+  
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.  
+				  
+
+
+
+           
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..
+  Block _blks[_MAXBLOCKS];
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+
+
+           
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..
+  Block _blks[_MAXBLOCKS];
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+
+           
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..     	       	       
+  Block _blks[_MAXBLOCKS];
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..
+  Block _blks[_MAXBLOCKS]; 
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+ ATTACK    
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..
+  Block _blks[_MAXBLOCKS]; 
+ 
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+ ATTACK    
+ - we have to know how big the array will ever need to be at
+   the time we make the array
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..     	       	       	  
+  Block _blks[_MAXBLOCKS];
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+ ATTACK    
+ - we have to know how big the array will ever need to be at
+   the time we make the array
+ - without doing some kind of additional arranging of the
+   objects, we have to search the whole array to find out if
+   a given object is stored in it or not		    
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+
+
+
+   						       
+
+				   
+
+   	    
+
+			      			    	  
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+
+   	    
+
+			      			    	  
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+ Technique: 
+   	    
+ - An array plus a count of objects currently on the stack
+			      			    	  
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+ Technique: 
+   	    
+ - An array plus a count of objects currently on the stack
+			      			    	  
+ E.g., stack of ints				    	  
+ int main() {       				    	  
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+ Technique: 
+   	    
+ - An array plus a count of objects currently on the stack
+			      			    	  
+ E.g., stack of ints				    	  
+ int main() {       				    	  
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+   stack[count] = 1; count++;   // 'push' a 1
+   stack[count] = 2; count++;   // 'push' a 2
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY	    
+					    
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+ Technique: 
+   	    
+ - An array plus a count of objects currently on the stack
+			      			    	  
+ E.g., stack of ints				    	  
+ int main() {       				    	  
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+   stack[count] = 1; count++;   // 'push' a 1
+   stack[count] = 2; count++;   // 'push' a 2
+   count--; cout << stack[count] << endl;  // 'pop' and print
+   count--; cout << stack[count] << endl;  // 'pop' and print
+   return 0;
+ }
+CONTAINER CLASSES AND EFFICIENCY	    
+					    
+ The STACK    (e.g., example in PC++P ch 13)
+
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+
+Want fast insert.  You got it:
+		    	      
+   stack[count] = foodata;  // Store in 'top of stack'(ToS)  
+   count++;                 // Move ToS up to empty spot
+			      	        		         
+Want fast remove-most-recently inserted.  You got it:            
+
+   count--;                 // Move ToS down to last-filled spot
+   cout << stack[count];    // Use (or return, etc) that element
+
+
+
+
+
+
+
+   	    
+CONTAINER CLASSES AND EFFICIENCY	    
+					    
+ The STACK    (e.g., example in PC++P ch 13)
+
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+
+Want fast insert.  You got it:
+		    	      
+   stack[count] = foodata;  // Store in 'top of stack'(ToS)  
+   count++;                 // Move ToS up to empty spot
+			      	        		         
+Want fast remove-most-recently inserted.  You got it:            
+
+   count--;                 // Move ToS down to last-filled spot
+   cout << stack[count];    // Use (or return, etc) that element
+
+Some issues:
+ - How fast is 'fast'?
+
+
+
+
+   	    
+CONTAINER CLASSES AND EFFICIENCY	    
+					    
+ The STACK    (e.g., example in PC++P ch 13)
+
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+
+Want fast insert.  You got it:
+		    	      
+   stack[count] = foodata;  // Store in 'top of stack'(ToS)  
+   count++;                 // Move ToS up to empty spot
+			      	        		         
+Want fast remove-most-recently inserted.  You got it:            
+
+   count--;                 // Move ToS down to last-filled spot
+   cout << stack[count];    // Use (or return, etc) that element
+
+Some issues:
+ - How fast is 'fast'?
+ - What about 'stack overflow'? 
+     (I.e., What if count reaches 50 and we try to insert again?)
+
+
+   	    
+CONTAINER CLASSES AND EFFICIENCY	    
+			 		    
+ The STACK    (e.g., example in PC++P ch 13)
+			 
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+			 
+Want fast insert.  You got it:
+		    	      
+   stack[count] = foodata;  // Store in 'top of stack'(ToS)  
+   count++;                 // Move ToS up to empty spot
+			      	        		         
+Want fast remove-most-recently inserted.  You got it:            
+
+   count--;                 // Move ToS down to last-filled spot
+   cout << stack[count];    // Use (or return, etc) that element
+
+Some issues:
+ - How fast is 'fast'?
+ - What about 'stack overflow'? 
+     (I.e., What if count reaches 50 and we try to insert again?)
+ - What about 'stack underflow'?   				 
+     (I.e., What if count is 0 and we try to remove again?)
+   	    
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:               	    
+  Stack();                                                   
+  ~Stack();		    
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:               	
+  Stack();			                             
+  ~Stack();		
+  void Insert(int);  	
+  int Remove();         
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:               	 
+  Stack();		                                     
+  ~Stack();		 
+  void Insert(int);  	 
+  int Remove();          
+ private:      		 
+  enum { _SIZE = 100 };   
+  int _stack[_SIZE];    			   
+  int _count;
+};  
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:               	       Stack::Stack() { _count = 0; }
+  Stack();			                             
+  ~Stack();	      
+  void Insert(int);   
+  int Remove();       
+ private:      	      
+  enum { _SIZE = 100 };
+  int _stack[_SIZE];    			   
+  int _count;
+};  
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:               	       Stack::Stack() { _count = 0; }
+  Stack();			                             
+  ~Stack();		       void Stack::Insert(int num) {
+  void Insert(int);               if (_count<_SIZE) {
+  int Remove();                     _stack[_count++] = num;
+ private:      		       	  } else { ....um.... }    
+  enum { _SIZE = 100 };	       }                       
+  int _stack[_SIZE];    			   
+  int _count;
+};  
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:              
+  Stack();	        	                             
+  ~Stack();	      
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints		     
+class Stack {             
+ public:            
+  Stack();	        	                             
+  ~Stack();	    
+  bool Insert(int);   // true if was room to insert
+  bool Remove(int&);  // true if stack wasn't empty
+ private:
+  enum { _SIZE = 100 };
+  int _stack[_SIZE];    			   
+  int _count;	    
+};  		    
+  		    
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints        bool Stack::Insert(int num) {       
+class Stack {                if (_count>=_SIZE) return false; 
+ public:            	     ...                              
+  Stack();	             return true;                     
+  ~Stack();	    	  } 
+  bool Insert(int);   // true if was room to insert
+  bool Remove(int&);  // true if stack wasn't empty
+ private:
+  enum { _SIZE = 100 };
+  int _stack[_SIZE];    			   
+  int _count;	    
+};  		    
+                       	       ..and off we go..

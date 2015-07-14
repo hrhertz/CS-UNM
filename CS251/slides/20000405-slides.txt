@@ -1,0 +1,648 @@
+QUESTIONS	 
+       	       	       	       	  "food"[3]
+LAST TIME:				   Bignum(1)-Bignum(2);
+ - Review
+
+TODAY:
+ - Review
+ - Pieces of Dave's Bignum  
+	     		    
+FRIDAY	     		    
+ - Second in-class quiz (cumulative)
+	     		    
+HOMEWORK: Review PC++P Ch 1,2,3,4,5,6,7,8,9,13,15,18,20 
+	     		    
+   Program 3 is done
+   Ackley office-hours end early 4:30 today 
+
+
+ DOGFOOD: Software code not fit for public consumption but good
+  enough for internal purposes, very unrefined and buggy (that
+	   is, full of bugs), but containing the basic
+   nutrients. Alternately, code you're developing and using in
+ daily functions simultaneously (a process known as "eating your
+			 own dogfood").
+ADMINISTRIVIA
+
+ 
+  No further turn ins for Program 3 accepted
+
+
+Free                 TIME PENALTIES FOR PROGRAM 3
+Late           	     Last turned in BEFORE 1PM on:
+DaysTHU3/30 FRI3/31 SAT4/1 SUN4/2  MON4/3 TUE4/4 WED4/5 LATER
++------------------------------------------------------------+
+| 0 | past | past  | past | past  | past | past | past |-100%|
++------------------------------------------------------------+
+| 1 | past | past  | past | past  | past | past | past |-100%|
++------------------------------------------------------------+
+| 2 | past | past  | past | past  | past | past | past |-100%|
++------------------------------------------------------------+
+| 3 | past | past  | past | past  | past | past | past |-100%|
++------------------------------------------------------------+
+
+
+
+
+
+
+POINTERS III: Dynamic objects: `Segfaults' and memory leaks
+  			     	pi     	 		 
+int main() {   	       	       +---------+
+  int * pi;		       |   ?	 |
+  *pi = 7;		       +---------+
+  cout << *pi << endl;
+  return 0;
+} 					   
+  					   
+(x) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+  	       					       
+
+int main() {
+  int * pi = new int;
+  *pi = 7;
+  cout << *pi << endl;
+  return 0;
+} 					   
+  					   
+( ) `Segfault'? (x) Memory leak?  ( ) Neither?  ( ) Both?
+
+
+
+
+POINTERS III: Dynamic objects: `Segfaults' and memory leaks
+
+int main() {   
+  int * pi = new int;
+  *pi = 7;     
+  delete pi;
+  cout << *pi << endl;
+  return 0;    
+}   	       				   
+  					   
+( ) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+  						       
+int main() {   	       	   pi  	       	pj     	       
+  int * pi, * pj;	  +-------+    +--------+      
+  pi = new int;	       	  |    	  |    |    	|      
+  pj = pi;     		  +---\---+    +--/-----+      
+  *pj = 9;     	       	       \	 /  	       
+  cout << *pi << endl;	       	v      	v   	       
+  delete pj;			+ - - - - -+	       
+  return 0;    	       	       	     ?      	       
+}      	       	       	       	+ - - - - -+	       
+ 
+( ) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+POINTERS III: Dynamic objects: `Segfaults' and memory leaks
+  			     				 
+int main() {
+  int * pi = new int;
+  *pi = 7;
+  cout << *pi << endl;
+  delete pi;
+  return 0;
+} 					   
+  					   
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+  						       
+
+int main() {					       
+  int * pi, * pj;				       
+  pi = new int;	 				       
+  *pj = 9;					       
+  cout << *pi << endl;				       
+  delete pj;					       
+  return 0;					       
+}						       
+
+(X) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+POINTERS III: Dynamic objects and ctors
+#include <iostream.h>
+class Foo {
+public:	   
+  Foo();
+  Foo(int);
+  ~Foo();
+};	 
+Foo::Foo() { cout << "default"; }
+Foo::Foo(int a) { cout << "int" << a; }
+Foo::~Foo() { cout << "die"; }
+	       		  
+int main() {   		  
+  cout << "hi";		  
+  Foo * pf = new Foo;	  
+  delete pf;   		  
+  pf = new Foo(72);	  
+  delete pf;   	   	  
+  return 0;    		  
+}	       		  
+
+hidefaultdieint72die
+
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+POINTERS III: Dynamic objects and ctors
+#include <iostream.h>
+class Foo {
+public:	   
+  Foo();
+  Foo(int);
+  ~Foo();
+};	 
+Foo::Foo() { cout << "default"; }
+Foo::Foo(int a) { cout << "int" << a; }
+Foo::~Foo() { cout << "die"; }
+	       		  
+int main() {   		  
+  cout << "hi";		  
+  Foo * pf = new Foo;	  
+  pf = new Foo(72);	  
+  delete pf;   	   	  
+  return 0;    		  
+}	       		  
+
+hidefaultint72die
+	 
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+GDB BASICS
+
+What could you type to:
+
+Run gdb on program foo 	       	       	    gdb foo
+					            
+Run the program (with no cmd line args)	    (gdb) r  	    
+					            
+Break at start of main()		    (gdb) b main    
+					            	
+Break in file Foo.C at line number 123	    (gdb) b Foo.C:123
+ 							     
+Print the stack              		    (gdb) bt   	     
+  						    
+Show the current value of variable 'bar'    (gdb) p bar
+    					               
+Continue from a breakpoint		    (gdb) c    	    
+    					            
+Single step (go into function calls)	    (gdb) s 	    
+    					            
+Finish the current function then stop	    (gdb) fin	    
+    					             
+Next statement (skip over function calls)   (gdb) n  	    
+    					            
+DAVE'S BIGNUM
+
+Design decisions:
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	       	      
+
+
+
+
+   
+DAVE'S BIGNUM
+
+Design decisions:
+   
+ - Private embedded class 'Dig' represents a decimal digit
+   with standard magic Dig(int,Dig*) ctor
+
+
+
+
+
+
+
+
+
+
+
+
+	       	      
+
+
+
+
+   
+DAVE'S BIGNUM
+
+Design decisions:
+   
+ - Private embedded class 'Dig' represents a decimal digit
+   with standard magic Dig(int,Dig*) ctor
+
+ - Data members:
+  = Head pointer of singly-linked list of digits
+      with LSD at head and MSD at tail
+  = Digit count
+  = Flag for negative, store absolute value in list
+
+
+
+
+
+
+	       	      
+
+
+
+
+   
+DAVE'S BIGNUM
+
+Design decisions:
+   
+ - Private embedded class 'Dig' represents a decimal digit
+   with standard magic Dig(int,Dig*) ctor
+
+ - Data members:
+  = Head pointer of singly-linked list of digits
+      with LSD at head and MSD at tail
+  = Digit count
+  = Flag for negative, store absolute value in list
+
+ - Main private member functions			  
+   = _Init : Initialize an (under construction) Bignum     O(1)
+   = _Flush : Empty out an existing Bignum	  	   O(n)
+   = _Trim : Drop any leading zeros (from end of list)     O(n)
+   = _UnsignedCompare : Return -1,0,1 for abs(*this-arg)   O(n)
+	       	      
+
+
+
+
+   
+DAVE'S BIGNUM
+
+Design decisions:
+   
+ - Private embedded class 'Dig' represents a decimal digit
+   with standard magic Dig(int,Dig*) ctor
+
+ - Data members:
+  = Head pointer of singly-linked list of digits
+      with LSD at head and MSD at tail
+  = Digit count
+  = Flag for negative, store absolute value in list
+
+ - Main private member functions			  
+   = _Init : Initialize an (under construction) Bignum     O(1)
+   = _Flush : Empty out an existing Bignum	  	   O(n)
+   = _Trim : Drop any leading zeros (from end of list)     O(n)
+   = _UnsignedCompare : Return -1,0,1 for abs(*this-arg)   O(n)
+	       	      
+ - Some other private member functions
+   = _Sane : Sanity check Bignum return true if OK (debug) O(n)
+   = _Times10 : Multiply a Bignum by 10                	   O(1)
+   = _MoveTo : Move contents of *this to Bignum arg        O(1)
+   
+DAVE'S Bignum.h
+
+#ifndef BIGNUM_H         /*  -*- C++ -*- */
+#define BIGNUM_H
+
+#include <stddef.h>	  /* for size_t */
+#include <iostream.h>
+
+class Bignum {
+ public:
+  Bignum()                  { _Init(); }
+  Bignum(const Bignum & i)  { _Init(); *this = i; }
+  Bignum(const int n)       { _Init(); *this = n; }
+  Bignum(const char * p)    { _Init(); *this = p; }
+
+  ~Bignum() { _Flush(); }
+
+
+
+
+
+
+
+
+DAVE'S Bignum.h
+
+#ifndef BIGNUM_H         /*  -*- C++ -*- */
+#define BIGNUM_H
+
+#include <stddef.h>	  /* for size_t */
+#include <iostream.h>
+
+class Bignum {
+ public:
+  Bignum()                  { _Init(); }
+  Bignum(const Bignum & i)  { _Init(); *this = i; }
+  Bignum(const int n)       { _Init(); *this = n; }
+  Bignum(const char * p)    { _Init(); *this = p; }
+
+  ~Bignum() { _Flush(); }
+..
+private: 
+  void _Init() { _num = NULL; _digs = 0; _neg = false; }
+..
+  void _Flush() { while (_num) _Remove(); _neg = false; }
+  int _Remove() ;
+..
+
+DAVE'S Bignum.h
+	       
+..	       
+  Bignum & operator+=(const Bignum &);
+  Bignum & operator-=(const Bignum &a) 
+
+    	       
+
+
+
+
+	       
+
+
+
+
+       	       	       	       	       	   		      	
+
+
+
+	       
+
+
+
+DAVE'S Bignum.h
+	       
+..	       
+  Bignum & operator+=(const Bignum &);
+  Bignum & operator-=(const Bignum &a) 
+    { return *this += -a; }    // OPTNEG version only..	       
+    	       
+  Bignum operator+(const Bignum &b) const
+    { Bignum a(*this); return a += b; }	   
+  Bignum operator-(const Bignum &b) const
+    { Bignum a(*this); return a -= b; }
+	       
+
+
+
+
+       	       	       	       	       	   		      	
+
+
+
+	       
+
+
+
+DAVE'S Bignum.h
+	       
+..	       
+  Bignum & operator+=(const Bignum &);
+  Bignum & operator-=(const Bignum &a) 
+    { return *this += -a; }    // OPTNEG version only..	       
+    	       
+  Bignum operator+(const Bignum &b) const
+    { Bignum a(*this); return a += b; }	   
+  Bignum operator-(const Bignum &b) const
+    { Bignum a(*this); return a -= b; }
+	       
+  Bignum operator*(const int b) const     
+    { Bignum a(*this); return a *= b; }	  
+  Bignum operator*(const Bignum &b) const 
+    { Bignum a(*this); return a *= b; }	  
+       	       	       	       	       	   		      	
+  // OPTMULT stuff..
+  Bignum & operator*=(const int);      // implement int mult so	
+  Bignum & operator*=(const Bignum &); //  Bignum mult can use it
+..	       
+	       
+
+
+DAVE'S Bignum.h
+	       
+ ..
+
+  bool operator==(const Bignum &b) const {return  _Equal(b); }
+  bool operator!=(const Bignum &b) const {return !_Equal(b); }
+
+
+
+
+
+   
+
+   
+
+
+   
+
+
+
+
+
+
+
+DAVE'S Bignum.h
+	       
+ ..
+
+  bool operator==(const Bignum &b) const {return  _Equal(b); }
+  bool operator!=(const Bignum &b) const {return !_Equal(b); }
+
+  bool operator<(const Bignum &b)  const {return _Compare(b)< 0; }
+  bool operator<=(const Bignum &b) const {return _Compare(b)<=0; }
+  bool operator>(const Bignum &b)  const {return _Compare(b)> 0; }
+  bool operator>=(const Bignum &b) const {return _Compare(b)>=0; }
+   
+
+   
+
+
+   
+
+
+
+
+
+
+
+DAVE'S Bignum.h
+	       
+ ..
+
+  bool operator==(const Bignum &b) const {return  _Equal(b); }
+  bool operator!=(const Bignum &b) const {return !_Equal(b); }
+
+  bool operator<(const Bignum &b)  const {return _Compare(b)< 0; }
+  bool operator<=(const Bignum &b) const {return _Compare(b)<=0; }
+  bool operator>(const Bignum &b)  const {return _Compare(b)> 0; }
+  bool operator>=(const Bignum &b) const {return _Compare(b)>=0; }
+   
+  Bignum Exp(const Bignum &b) ;   // (*this) to the b power..
+   
+  friend ostream & operator<<(ostream &,const Bignum &);
+  friend istream & operator>>(istream &, Bignum &);
+   
+ ..
+
+
+
+
+
+
+DAVE'S Bignum.h
+
+..
+ private:
+  struct _Dig {           // A single decimal digit 
+    _Dig(int d, _Dig * p) { digit = d; next = p; } // Only ctor
+    void _Put(ostream &); // Recursive output   
+    int Comp(_Dig *);     // Recursive comparison
+    int digit; 	       	  // The digit			    
+    _Dig * next;	  // Link pointer		    
+  };					 		    
+ 					 		    
+
+
+
+
+
+
+
+
+
+
+
+ 
+DAVE'S Bignum.h
+
+..
+ private:
+  struct _Dig {           // A single decimal digit 
+    _Dig(int d, _Dig * p) { digit = d; next = p; } // Only ctor
+    void _Put(ostream &); // Recursive output   
+    int Comp(_Dig *);     // Recursive comparison
+    int digit; 	       	  // The digit			    
+    _Dig * next;	  // Link pointer		    
+  };					 		    
+ 					 		    
+  int _Compare(const Bignum &) const ;  
+                          // Compare *this to arg
+                          // Return -1 if *this less than arg
+		       	  //         0 if *this same as arg
+			  //        +1 if *this greater than arg
+  int _UnsignedCompare(const Bignum &) const ;
+                          // Ditto for absolute values 
+  bool _Equal(const Bignum &) const ;  
+                          // True if *this==arg
+       	       	       	  // (Faster than _Compare(arg)==0..)
+..
+ 
+DAVE'S Bignum.h 
+.. 	       
+
+  void _Trim() ;             // Remove leading zeros if any
+  void _Times10() ;   	     // O(1) multiplication by 10  
+  bool _Sane() const ;	     // True if *this is consistent
+  void _MoveTo(Bignum &i) ;  // Move contents of *this to i
+    
+
+
+
+
+
+
+
+      
+
+
+
+
+
+
+
+
+DAVE'S Bignum.h 
+.. 	       
+
+  void _Trim() ;             // Remove leading zeros if any
+  void _Times10() ;   	     // O(1) multiplication by 10  
+  bool _Sane() const ;	     // True if *this is consistent
+  void _MoveTo(Bignum &i) ;  // Move contents of *this to i
+    
+  // Data members
+  _Dig * _num;               // Head pointer of the number
+  size_t _digs;	  	     // Number of digits in _num list
+  bool _neg;	       	     // True if number is negative   
+};
+
+#endif
+      
+
+
+
+
+
+
+
+
+DAVE'S BIGNUM
+
+#include "Bignum.h"
+#include <assert.h>		/* for assert */ 
+#include <ctype.h>		/* for isdigit */
+
+// Sanity check a Bignum, for debugging
+//  In a sane Bignum:
+//   - The _digs member correctly gives the list length
+//   - The most significant digit is non-zero
+bool Bignum::_Sane() const	       
+{				       
+  size_t digs = 0;
+  _Dig * ln = NULL;
+  for (_Dig * p = _num; p; p = p->next) {
+    ++digs;                           // Count digits 	       	  
+    if (p->digit != 0) ln = p;	      // Find last non-zero digit
+  }				      			    	  
+				      			    	  
+  if (digs != _digs) return false;    // Mismatch on count!	  
+  if (ln && ln->next) return false;   // Last non-zero not at end!
+  
+  return true;                        // Sane
+}
+DAVE'S BIGNUM
+	     
+int Bignum::_Remove()           // Pop one digit
+{				  		
+  assert(_num);                 // Must be digits left
+  int val = _num->digit;	// Remember value     
+  _Dig * temp = _num;		// Remember head dig
+  _num = _num->next;		// Link down   	    
+  delete temp;			// Flush old head   
+  --_digs;			// Update digit count
+  return val;			// Return value	     
+}
+
+
+
+
+
+
+
+
+
+
+
+

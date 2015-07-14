@@ -1,0 +1,1234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice/5.1 (Linux)">
+	<META NAME="AUTHOR" CONTENT=" ">
+	<META NAME="CREATED" CONTENT="20000126;1423400">
+	<META NAME="CHANGEDBY" CONTENT=" ">
+	<META NAME="CHANGED" CONTENT="20000126;1423400">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin-left: 1.25in; margin-right: 1.25in; margin-top: 1in; margin-bottom: 1in }
+		P { margin-bottom: 0.08in }
+		H1 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 16pt }
+		H2 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 14pt; font-style: italic }
+		H3 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif }
+		H4 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 11pt; font-style: italic }
+		TD P { margin-bottom: 0.08in }
+		TH P { margin-bottom: 0.08in; font-style: italic }
+	-->
+	</STYLE>
+</HEAD>
+<BODY>
+<H1>CS 251 Program 1  <I>Blocks</I>: The Block Engine</H1>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=128*>
+	<COL WIDTH=128*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P><FONT FACE="helvetica, sans-serif"><B>Due: Thu Feb 10, 2000
+				5PM</B></FONT></P>
+			</TD>
+			<TD WIDTH=50%>
+				<P ALIGN=RIGHT><FONT FACE="helvetica, sans-serif"><B>Spec
+				version: 0.8</B></FONT></P>
+			</TD>
+		</TR>
+	</THEAD>
+</TABLE>
+<H1>Introduction</H1>
+<P ALIGN=LEFT>The goals of the first project are to work with classes
+and objects and arrays, to get some experience designing and building
+multiple file programs, and to understand a bit about reading, 
+understanding, and implementing from specifications.  We will
+implement a program called `blocks' that simulates a simple kind of
+`physics' for blocks sliding around on a gridded board.</P>
+<P ALIGN=LEFT><SPAN STYLE="font-style: normal">Your job in this first
+program is to implement a blocks `engine' that operates according to
+a specific set of commands and responses.  An </SPAN><I>engine</I><SPAN STYLE="font-style: normal">,
+informally speaking, is a program or some code that is designed to
+work behind the scenes or under the hood, rather than interacting
+directly with a human user.  Instead, other programs or code will sit
+between the engine and the user, playing the role of the steering
+wheel and gas pedal and tachometer and so forth.</SPAN></P>
+<P ALIGN=LEFT><SPAN STYLE="font-style: normal">It is of critical
+importance, obviously, that the engine and the gas pedal agree on
+exactly what messages can be sent and what they will mean.  A
+<I>communications protocol </I>provides a set of rules, describing
+who can say what to whom when and in what way, that all mutually
+communicating parties must agree on.  Below, find the description of
+the <B><I>Blocks </I></B><SPAN STYLE="font-weight: medium">protocol
+that your program must implement.</SPAN></SPAN></P>
+<H2>The Blocks Protocol</H2>
+<H4>General protocol issues: 
+</H4>
+<UL>
+	<LI><P>Each protocol message in either direction are terminated with
+	a single newline (i.e., the thing that '<FONT FACE="courier, monospace">endl</FONT>'
+	generates in C++).  The protocol consists of a series of
+	<I>interactions</I>.  Each interaction with the engine begins with a
+	command to the engine followed by zero or more responses from the
+	engine.</P>
+	<LI><P>The <I>only</I><SPAN STYLE="font-style: normal"> thing the
+	engine outputs is protocol responses.  That implies, specifically:</SPAN></P>
+</UL>
+<OL>
+	<LI><P STYLE="font-style: normal">Your program must output <B><I>nothing</I></B><SPAN STYLE="font-weight: medium">
+	when it first starts up.</SPAN></P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Your program
+	must <B><I>not</I></B> output any `debugging info' while it runs. 
+	If you put in any `debugging print statements' during development,
+	you <B><I>must</I></B> be sure to remove them all before turning in
+	your program, or it will fail testing and be marked down.</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Your program
+	must <B><I>not</I></B> output any `prompts' such as `Enter command:'
+	or anything of the sort, or it will fail testing and be marked down.</P>
+</OL>
+<UL>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Your program
+	<I>may</I>, but is not required to, accept lower-case forms of the
+	commands described below.  Your program <I>must</I> generate all
+	responses in upper-case as described below.  There is no grading
+	penalty for failing to accept lower-case commands, and no grading
+	bonus for doing so.</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">All response
+	arguments are separated by single space characters.  There is no
+	leading or trailing spaces in responses.  There is a single newline
+	ending each response.</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">The engine
+	may deal with illegal commands and/or illegal command arguments in
+	any way that it wants to provided that the program is not at risk of
+	crashing.  In particular, the engine <I>may</I> simply exit if a
+	command or command error occurs, or <I>may</I> ignore the error and
+	attempt to continue functioning, or <I>may</I> give an error message
+	and attempt to continue functioning.  It <I>must not</I> continue
+	functioning if further execution would be unsafe.</P>
+</UL>
+<H3>Commands the engine reads from cin</H3>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=120*>
+	<COL WIDTH=136*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">A</FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P>engine must produce an <B>A</B>UTHOR response containing the
+			name of the author of the engine</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">D <I>milliseconds</I></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P>engine must produce a <B>D</B>ELAY <I>milliseconds</I><SPAN STYLE="font-style: normal">
+			(int &gt;=0)</SPAN><I> </I>response <SPAN STYLE="font-style: normal">(Note
+			the engine does <B><I>NOT</I></B> actually perform a delay or
+			waste time here! It just outputs the DELAY response!)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">I <I>width</I> <I>height</I>
+			<I>blockcount</I></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><SPAN STYLE="font-style: normal"><B>I</B>nitialize the board to
+			have<SPAN STYLE="font-weight: medium"> </SPAN></SPAN><SPAN STYLE="font-weight: medium"><I>width</I></SPAN>
+			(int 1:50)  and <I>height</I> (int 1:50), with <I>blockcount </I><SPAN STYLE="font-style: normal">(int
+			1:100) blocks</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">B <I>num x y movable</I></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P>set <B>B</B><SPAN STYLE="font-weight: medium">lock <I>num</I><SPAN STYLE="font-style: normal">
+			(int 0:blockcount-1) initial position to </SPAN><I>x</I><SPAN STYLE="font-style: normal">
+			(int 0:width-1), </SPAN><I>y</I><SPAN STYLE="font-style: normal">
+			(int 0:height-1), and specify whether it is </SPAN><I>movable</I><SPAN STYLE="font-style: normal">
+			(int 0:1).</SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">R</FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><B><SPAN STYLE="font-style: normal"><FONT FACE="times, serif">R</FONT></SPAN></B><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal"><FONT FACE="times, serif">eset
+			all blocks to their initial positions, generating first a RESET
+			response and then blockcount BLOCK responses</FONT></SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">P <I>num direction</I></FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P><B>P</B><SPAN STYLE="font-weight: medium">ush block <I>num</I><SPAN STYLE="font-style: normal">
+			(int 0:blockcount-1) in given direction (char 'N', 'S', 'E', 'W').
+			Engine  generates a possibly empty sequence of MOVE, PUSHED, and
+			HALT responses until all the effects of the Push have died out</SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=47%>
+			<P><FONT FACE="courier, monospace">Q</FONT></P>
+		</TD>
+		<TD WIDTH=53%>
+			<P>engine generates a QUIT response and then <B>Q</B>uits</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<H3>Responses the engine writes to cout</H3>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=108*>
+	<COL WIDTH=148*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace"><SPAN STYLE="font-style: normal">RESET</SPAN><I>
+			width height</I></FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P><SPAN STYLE="font-style: normal">Board set to size </SPAN><I>width</I><SPAN STYLE="font-style: normal">
+			(int 1:50) by </SPAN><I>height</I><SPAN STYLE="font-style: normal">
+			(int 1:50).</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace">AUTHOR &quot;<I>authorname</I>&quot;</FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P><SPAN STYLE="font-weight: medium">Author of the program is</SPAN><B>
+			</B> <I>authorname</I><SPAN STYLE="font-style: normal">. (The
+			</SPAN><I>authorname</I><SPAN STYLE="font-style: normal"> can
+			contain any characters except for newlines and double quotes, and
+			is surrounded by double quotes in the AUTHOR response.)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace">BLOCK <I>num x y movable</I></FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P><FONT FACE="times, serif"><SPAN STYLE="font-style: normal">Block
+			</SPAN><I>num </I><SPAN STYLE="font-style: normal">(int
+			0:blockcount-1) has been placed at <I>x</I> (int 0:width-1), y
+			(int 0:height-1) and can be moved if <I>movable</I> (int 0:1)</SPAN></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P STYLE="font-style: normal"><FONT FACE="courier, monospace">MOVE
+			<I>num x y</I></FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P><FONT FACE="times, serif"><SPAN STYLE="font-style: normal">Block
+			</SPAN><I>num</I><SPAN STYLE="font-style: normal"> (int
+			0:blockcount-1) has moved from its previous location to </SPAN><I>x</I><SPAN STYLE="font-style: normal">
+			(int 0:width-1), </SPAN><I>y </I><SPAN STYLE="font-style: normal">(int
+			0:height-1).</SPAN></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace">DELAY <I>milliseconds</I></FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P><SPAN STYLE="font-style: normal">A delay of </SPAN><I>milliseconds</I><SPAN STYLE="font-style: normal">
+			(int &gt;=0) milliseconds should occur here. (Note the engine does
+			<B><I>NOT</I></B> actually <I>do</I> any delaying itself!)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace">PUSHED <I>num</I></FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P>Block <I>num</I><SPAN STYLE="font-style: normal"> (int
+			0:blockcount-1) has been pushed</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace">HALT <I>num</I></FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P>Block <I>num</I><SPAN STYLE="font-style: normal"> (int
+			0:blockcount-1) has halted</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=42%>
+			<P><FONT FACE="courier, monospace">QUIT</FONT></P>
+		</TD>
+		<TD WIDTH=58%>
+			<P>Engine is about to quit.</P>
+		</TD>
+	</TR>
+</TABLE>
+<H3>Board semantics</H3>
+<P ALIGN=LEFT>The board has a current width and current height, each
+of which may be as small as 1 or as large as 50.  The current width
+and current height are established when a `I' command is processed,
+and may be changed within a single run of the engine if further `I'
+commands are entered.</P>
+<P ALIGN=LEFT>For purposes of illustration here, the coordinate
+system is this: increasing <I>x</I><SPAN STYLE="font-style: normal">
+moves left to right, and increasing </SPAN><I>y</I><SPAN STYLE="font-style: normal">
+moves top to bottom.  So a width=3, height=2 board would have these
+<I>(x,y)</I> coordinates:</SPAN></P>
+<TABLE WIDTH=119 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=31>
+	<COL WIDTH=32>
+	<COL WIDTH=31>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31>
+			<P ALIGN=CENTER>(0,0)</P>
+		</TD>
+		<TD WIDTH=32>
+			<P ALIGN=CENTER>(1,0)</P>
+		</TD>
+		<TD WIDTH=31>
+			<P ALIGN=CENTER>(2,0)</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=31>
+			<P ALIGN=CENTER>(0,1)</P>
+		</TD>
+		<TD WIDTH=32>
+			<P ALIGN=CENTER>(1,1)</P>
+		</TD>
+		<TD WIDTH=31>
+			<P ALIGN=CENTER>(2,1)</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><SPAN STYLE="font-style: normal">When the engine is first started,
+before any commands have been read, the system is in a state as if an
+`<FONT FACE="courier, monospace">I 1 1 1</FONT>' command had been
+executed.</SPAN></P>
+<H3>Block semantics</H3>
+<P>An `I' command also establishes (or changes, if it's not the first
+`I' command) the <I>blockcount</I><SPAN STYLE="font-style: normal">,
+which is</SPAN> number of blocks on the board.  The <I>blockcount</I>
+may be as small as 1 and as large as 100.  After an `I' command, the
+<I>blockcount</I><SPAN STYLE="font-style: normal"> blocks, which are
+numbered ranging from 0 up to <I>blockcount</I>-1, all have the
+following properties: They are located at coordinates (0,0) and they
+are movable, but are currently halted.</SPAN></P>
+<P>The heart of the blocks program is its response to a `P' command,
+in which a block is pushed in one of the four compass directions.  In
+response, that block may move zero, one, or many times, and may bump
+into other blocks, possibly causing them to move.</P>
+<P>Several examples here will help clarify how the engine operates. 
+After the examples are some more details about the `settling' process
+that occurs when a `P' command is processed.</P>
+<P>In these examples, note that each command is a <I>single line</I><SPAN STYLE="font-style: normal">
+of input, even if it appears on multiple lines due to document
+formatting.  Note that there may zero, one, or more than one
+responses to each command.  Note, likewise, that</SPAN> each response
+(of the possibly generated by a single command) is a <I>single line</I><SPAN STYLE="font-style: normal">
+even if it appears on multiple lines due to line breaking in this
+document.</SPAN></P>
+<H4>Example 0</H4>
+<P>In this first example, a 1x2 board is created containing two
+blocks, and then one block is pushed<SPAN STYLE="font-style: normal">.
+ No `B' commands are given so the blocks start in the default
+position as discussed above.</SPAN></P>
+<P>For reference, the starting configuration for this example is:</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=28 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=18>
+				<TR>
+					<TD WIDTH=18 HEIGHT=17 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>1</B></P>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=18 HEIGHT=17>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P ALIGN=LEFT>where in fact both block 0 and block 1 are in (0,0). 
+The ending configuration is</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=27 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=17>
+				<TR>
+					<TD WIDTH=17 HEIGHT=17 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=17 HEIGHT=17 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>1</B></P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P STYLE="margin-bottom: 0in"><I>In all these illustrations, note
+that x increases moving to the <B>right</B>, and y increases moving
+<B>down</B></I>!</P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=65*>
+	<COL WIDTH=88*>
+	<COL WIDTH=103*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=25%>
+				<P>Command to engine</P>
+			</TH>
+			<TH WIDTH=35%>
+				<P>Response(s) from engine</P>
+			</TH>
+			<TH WIDTH=40%>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">I 1 2 2</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>width 1, height 2, blockcount 2</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">R</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">RESET
+				1 2</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				0 0 0 1</FONT></P>
+				<P><FONT FACE="courier, monospace">BLOCK 1 0 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>When a reset command is received,
+				RESET and then BLOCK responses are generated</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 1 S</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				1 0 1</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 1</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 1 is pushed, moves south,
+				hits the wall, and halts</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">Q</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace">QUIT</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Then the engine exits..</I></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H4 STYLE="font-style: normal">Example 1</H4>
+<P>In this example, a 3x2 board is created containing one block, and
+then the block is pushed around twice.  This shows the basic
+mechanics of the engine, but not any of the interactions that can
+happen <I>between</I><SPAN STYLE="font-style: normal"> blocks.</SPAN></P>
+<P>For reference, the starting configuration for this example is:</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=75 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=16>
+				<COL WIDTH=17>
+				<COL WIDTH=16>
+				<TR>
+					<TD WIDTH=16 HEIGHT=17 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+					<TD WIDTH=17 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=16 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=16 HEIGHT=17>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=17 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=16 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P ALIGN=LEFT>and the ending configuration is</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=75 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=16>
+				<COL WIDTH=17>
+				<COL WIDTH=16>
+				<TR>
+					<TD WIDTH=16 HEIGHT=17>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=17 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=16 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=16 HEIGHT=17>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=17 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=16 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P STYLE="margin-bottom: 0in"><I>In all these illustrations, note
+that x increases moving to the <B>right</B>, and y increases moving
+<B>down</B></I>!</P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=65*>
+	<COL WIDTH=88*>
+	<COL WIDTH=103*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=25%>
+				<P>Command to engine</P>
+			</TH>
+			<TH WIDTH=35%>
+				<P>Response(s) from engine</P>
+			</TH>
+			<TH WIDTH=40%>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">I 3 2 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>width 3, height 2, blockcount 1</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 0 0 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 0 is at (0,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">R</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">RESET
+				3 2</FONT></P>
+				<P><FONT FACE="courier, monospace">BLOCK 0 0 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>When a reset command is received,
+				RESET and then BLOCK responses are generated</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 0 S</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				0 0 1</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 0</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 0 is pushed, moves south,
+				hits the wall, and halts</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 0 E</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				0 1 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				0 2 1</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 0</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 0 is pushed. moves east
+				twice, hits the wall, and halts</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">Q</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace">QUIT</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Then the engine exits..</I></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<H4><SPAN STYLE="font-style: normal">Example 2</SPAN></H4>
+<P>This example shows both fixed and movable blocks, and shows blocks
+banging into each other.</P>
+<P>For reference, the starting configuration for this example is:</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=165 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=18>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<TR>
+					<TD WIDTH=18>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=19 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>1</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>2</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P ALIGN=LEFT>and the ending configuration is</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=164 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=18>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=18>
+				<TR>
+					<TD WIDTH=18>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=19 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>1</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=18 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>2</B></P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P ALIGN=LEFT><BR><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=65*>
+	<COL WIDTH=88*>
+	<COL WIDTH=103*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=25%>
+				<P>Command to engine</P>
+			</TH>
+			<TH WIDTH=35%>
+				<P>Response(s) from engine</P>
+			</TH>
+			<TH WIDTH=40%>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">A</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace">AUTHOR &quot;Dave Ackley&quot;</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>your engine's response will be
+				different!</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">I 6 1 3</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>width 6, height 1, blockcount 3</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 2 4 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 2 is at (4,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 0 3 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 0 is at (3,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 1 1 0 0</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 1 is at (1,0) and is fixed</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">R</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">RESET
+				6 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				0 3 0 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				1 1 0 0</FONT></P>
+				<P><FONT FACE="courier, monospace">BLOCK 2 4 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>When a reset command is received,
+				RESET and then BLOCK responses are generated</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 1 S</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 1 is fixed, no response</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 0 N</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				0</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 0</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 0 is movable, but there's
+				no place to move north</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 0 W</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				0 2 0</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 0</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 0 is pushed west.  It moves
+				one square, runs into fixed block 1, and halts</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 0 E</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				0 3 0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				2</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">HALT
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				2 5 0</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 2</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 0 is pushed east. It moves
+				one square (back to where it started), then bumps into block 2
+				and halts.  Block 2 moves one square then hits the edge and
+				halts.</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">D 3000</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace">DELAY 3000</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>A three second delay is requested</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">Q</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace">QUIT</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H4><SPAN STYLE="font-style: normal">Example 3</SPAN></H4>
+<P>This final example shows how `pushing' can be transmitted through
+multiple blocks, and how multiple 'r' commands can be given.</P>
+<P>For reference, the starting configuration for this example is:</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=165 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=18>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<TR>
+					<TD WIDTH=18 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>3</B></P>
+					</TD>
+					<TD WIDTH=19 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>1</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>2</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<P ALIGN=LEFT>and the configuration just before the second 'R'
+command is</P>
+<DL>
+	<DL>
+		<DL>
+			<DD>
+			<TABLE WIDTH=164 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+				<COL WIDTH=18>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=19>
+				<COL WIDTH=18>
+				<TR>
+					<TD WIDTH=18 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>3</B></P>
+					</TD>
+					<TD WIDTH=19 BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>1</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>0</B></P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=19 VALIGN=TOP>
+						<P ALIGN=CENTER><BR>
+						</P>
+					</TD>
+					<TD WIDTH=18 VALIGN=TOP BGCOLOR="#00b8ff">
+						<P ALIGN=CENTER><B>2</B></P>
+					</TD>
+				</TR>
+			</TABLE>
+		</DL>
+	</DL>
+</DL>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=65*>
+	<COL WIDTH=88*>
+	<COL WIDTH=103*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=25%>
+				<P>Command to engine</P>
+			</TH>
+			<TH WIDTH=35%>
+				<P>Response(s) from engine</P>
+			</TH>
+			<TH WIDTH=40%>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">I 6 1 4</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>width 6, height 1, blockcount 4</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 3 0 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 3 is at (0,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 1 1 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 1 is at (1,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 0 2 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 0 is at (2,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">B 2 3 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>block 2 is at (3,0) and is
+				movable</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">R</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">RESET
+				6 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				0 2 0 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				1 1 0 0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				2 3 0 1</FONT></P>
+				<P><FONT FACE="courier, monospace">BLOCK 3 0 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>When a reset command is received,
+				RESET and then BLOCK responses are generated</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">P 3 E</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				3</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">HALT
+				3</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">HALT
+				1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">PUSHED
+				2</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">HALT
+				0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				2 4 0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">MOVE
+				2 5 0</FONT></P>
+				<P><FONT FACE="courier, monospace">HALT 2</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>Block 3 is pushed east.  It
+				pushes block 1 and then halts.  Block 1 pushes block 0 and then
+				halts.  Block 0 pushes block 2 and then halts.  Block 2 moves two
+				squares east then hits the wall and halts.</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">R</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">RESET
+				6 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				0 2 0 1</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				1 1 0 0</FONT></P>
+				<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">BLOCK
+				2 3 0 1</FONT></P>
+				<P><FONT FACE="courier, monospace">BLOCK 3 0 0 1</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><FONT FACE="times, serif"><I>When a reset command is received,
+				RESET and then BLOCK responses are generated. Not much point in
+				resetting just before quitting, but it's legal.</I></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=25%>
+				<P><FONT FACE="courier, monospace">Q</FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace">QUIT</FONT></P>
+			</TD>
+			<TD WIDTH=40%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H1>`Settling' the board</H1>
+<P ALIGN=LEFT>As the examples above show, a 'P' command can cause a
+long sequence of responses to be generated.  For your blocks program
+to be correct, it must generate the responses in a specific order. 
+In broad strokes, here is a scheme that generates responses in the
+correct order and with reasonable efficiency.</P>
+<UL>
+	<LI><P ALIGN=LEFT>Each block keeps track of its `state', so that it
+	can tell whether it is currently moving in some direction, or is
+	movable but currently halted, or is not movable.</P>
+	<LI><P ALIGN=LEFT>When a 'P' command occurs, the board tells the
+	relevant block it has been pushed in the given direction; if the
+	block is movable, it notes that it has been pushed and changes its
+	current direction.</P>
+	<LI><P ALIGN=LEFT>The board then goes through all the blocks in
+	increasing order, giving each one in turn the option to move.  Each
+	block reports back whether it moved or changed its state.  If <I>any</I><SPAN STYLE="font-style: normal">
+	block says it did move or change state, then after going through all
+	the blocks, the board repeats this whole step.</SPAN></P>
+	<LI><P ALIGN=LEFT STYLE="font-style: normal">Otherwise, if on a
+	complete pass through the blocks, they all reported that they didn't
+	move or change state, then the `settling' process is completed.</P>
+</UL>
+<P ALIGN=LEFT STYLE="font-style: normal">You'll need to fill in the
+details of this process, such as precisely where and when to generate
+which responses, as your design develops.</P>
+<H1>Engine limits</H1>
+<P>The following limits apply to the blocks engine:</P>
+<OL>
+	<LI><P>The maximum number of blocks in use is 100.</P>
+	<LI><P>The minimum number of blocks in use is 1.</P>
+	<LI><P>The maximum size of the board is 50x50.</P>
+	<LI><P>The minimum size of the board is 1x1.</P>
+	<LI><P>All commands except `P' must complete in no more than
+	O(blockcount) time.  'P' commands must complete in no more than
+	<I>k*</I><SPAN STYLE="font-style: normal">O(blockcount) time, where
+	</SPAN><I>k</I><SPAN STYLE="font-style: normal"> is the total number
+	of MOVE, HALT, and PUSHED responses generated before the system
+	settles.</SPAN></P>
+</OL>
+<H3>Revision History</H3>
+<UL>
+	<LI><P>Version 0.8, first released version,1/25/00.  All the major
+	pieces are in place anyway.</P>
+</UL>
+</BODY>
+</HTML>

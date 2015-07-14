@@ -1,0 +1,235 @@
+#!/usr/bin/wish
+# NOTE: '/usr/local/bin/wish' is where 'wish' lives on the CIRT AIX systems.
+# If you are trying to use this script elsewhere, you will probably at least
+# need to change the first line to reflect where your 'wish' is located.
+
+#   (C) 2000 David H. Ackley
+#   This code may be used without fee by students registered in the
+#   Spring 2000 version of CS251 at the University of New Mexico, while
+#   they are so registered, provided that (1) This notice is included
+#   in its entirety, and (2) If the contents of this file is modified
+#   in any way, a comment will be added directly below this notice
+#   stating that this is a modified copy and providing the name(s) of
+#   those who performed the modifications.  Any other use requires
+#   written permission by the copyright holder.
+
+# showblock
+# Ackley for CS251
+#  A tiny display driver to make it easier to
+#  see what blocks programs are doing (and by
+#  the way try to enforce the protocol syntax.)
+#
+# Sun Jan 23 12:14:03 2000 Started
+# Wed Jan 26 02:04:56 2000 0.3 First released version
+
+set D(version) 0.3
+
+# Parameters
+set D(w) .block
+set D(author) ""
+
+set D(xoffset) 0
+set D(xside) 20
+set D(yoffset) 18
+set D(yside) 20
+
+set D(slidesteps) 8
+set D(slidedelay) 8
+
+set D(blockcolor) RoyalBlue
+set D(flashes) 2
+set D(flashdelay) 50
+set D(haltcolor) red
+set D(pushedcolor) green
+
+proc Main {} {
+    Init
+    while {[set input [gets stdin]]!=""} {
+	Parse $input
+	update idletasks
+    }
+}
+
+proc Init {} {
+    global D
+    catch { destroy $D(w) }
+    canvas $D(w)
+    pack $D(w)
+    update
+}
+
+proc Fail {msg} {
+    puts "showblock input error detected: $msg"
+    puts "showblock shutting down"
+    exit 1
+}
+
+proc Parse {input} {
+    if {[regexp {^AUTHOR \"([^\"]+)\"$} \
+	    $input all name]} {
+	Author $name
+	return
+    }
+    if {[regexp {^RESET ([0-9]+) ([0-9]+)$} \
+	    $input all w h]} {
+	Reset $w $h
+	return
+    }
+    if {[regexp {^BLOCK ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)$} \
+	    $input all n x y movable]} {
+	Block $n $x $y $movable 
+	return
+    }
+    if {[regexp {^MOVE ([0-9]+) ([0-9]+) ([0-9]+)$} \
+	    $input all n x y]} {
+	Move $n $x $y
+	return
+    }
+    if {[regexp {^HALT ([0-9]+)$} \
+	    $input all n]} {
+	Halt $n
+	return
+    }
+    if {[regexp {^PUSHED ([0-9]+)$} \
+	    $input all n y]} {
+	Pushed $n
+	return
+    }
+    if {[regexp {^DELAY ([0-9]+)$} \
+	    $input all ms]} {
+	Delay $ms
+	return
+    }
+    if {[regexp {^QUIT$} \
+	    $input all n y]} {
+	exit
+    }
+    Fail "Unrecognized command or bad argument format: <$input>"
+}
+
+proc Xs {x} {
+    global D
+    return [expr $x*$D(xside)+$D(xoffset)]
+}    
+
+proc Ys {y} {
+    global D
+    return [expr $y*$D(yside)+$D(yoffset)]
+}
+
+proc Xc {x} {
+    global D
+    return [expr [Xs $x]+$D(xside)/2.0]
+}
+
+proc Yc {x} {
+    global D
+    return [expr [Ys $x]+$D(yside)/2.0]
+}
+
+proc Author {name} {
+    global D
+    set D(author) $name
+}
+
+proc Reset {w h} {
+    global D
+    if {$w<=0||$w>1023} { Fail "Illegal width: $w" }
+    if {$h<=0||$h>1023} { Fail "Illegal height: $w" }
+    $D(w) configure \
+	    -width [Xs $w] \
+	    -height [Ys $h]
+    $D(w) delete all
+    $D(w) create text 0 0 \
+	    -text $D(author) \
+	    -anchor nw
+    # Update and kill time here, attempting 
+    # to trigger the window reconfig before redraw
+    update
+    after 1000
+}
+
+proc NeedBlock {num} {
+    global D
+    if {![info exists D(block,$num)]} { Fail "No such block `$num'" }
+}
+
+proc Block {num x y movable} {
+    global D
+    $D(w) delete "Block$num"
+    set D(block,$num) [$D(w) create rectangle \
+	    [Xs $x] [Ys $y] \
+	    [Xs [expr $x+1]] [Ys [expr $y+1]] \
+	    -tags "Block Block$num" \
+	    -fill $D(blockcolor) \
+	    ]
+    if {$movable==1} {
+	$D(w) create text \
+		[Xc $x] [Yc $y] \
+		-text "$num" \
+		-tags "Block Block$num"
+    } else {
+	if {$movable!=0} {
+	    Fail "Illegal movable $movable"
+	}
+    }
+}
+
+proc Move {num nx ny} {
+    global D
+    NeedBlock $num
+    set xs [Xs $nx]
+    set ys [Ys $ny]
+    set coords [$D(w) bbox Block$num]
+    if {[llength $coords]!=4} {
+	Fail "unknown block `$num'"
+    }
+    set xd [expr ($xs-[lindex $coords 0])/$D(slidesteps)]
+    set yd [expr ($ys-[lindex $coords 1])/$D(slidesteps)]
+
+    for {set i 0} {$i<$D(slidesteps)} {incr i} {
+	$D(w) move Block$num $xd $yd
+	update
+	after $D(slidedelay)
+    }
+    # Final backstop to make sure we arrived where expected..
+    set coords [$D(w) bbox Block$num]
+    $D(w) move Block$num \
+	    [expr $xs-[lindex $coords 0]] \
+	    [expr $ys-[lindex $coords 1]]
+}
+
+proc Delay {num} {
+    if {$num<0} { Fail "Illegal time to Delay: $num" }
+    if {$num>0} { after $num }
+}
+
+proc Halt {num} {
+    global D
+    NeedBlock $num
+    Flash $num $D(haltcolor)
+}
+
+proc Pushed {num} {
+    global D
+    NeedBlock $num
+    Flash $num $D(pushedcolor)
+}
+
+proc Flash {num color} {
+    global D
+    NeedBlock $num
+    for {set i 0} {$i<$D(flashes)} {incr i} {
+	$D(w) itemconfigure $D(block,$num) \
+		-fill $color
+	update
+	after $D(flashdelay)
+	$D(w) itemconfigure $D(block,$num) \
+		-fill $D(blockcolor)
+	update
+	after $D(flashdelay)
+    }
+}
+
+Main
+

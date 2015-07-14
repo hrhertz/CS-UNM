@@ -1,0 +1,1944 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia: The Undeclared, GOING..., GOING..., GOING...
+ - How fast is fast?  Big-O
+
+TODAY:
+ - Administrivia
+ - Efficiency and class design: Stack	   
+ - Dave's blocks
+
+HOMEWORK: PC++P Ch 13
+          PROGRAM 1: NO FURTHER TURN-INS AS OF NOW!
+
+
+  LANGUAGE LAWYER n. A person, usually an experienced or senior
+software engineer, who is intimately familiar with many or most of
+the numerous restrictions and features (both useful and esoteric)
+   applicable to one or more computer programming languages. A
+ language lawyer is distinguished by the ability to show you the
+   five sentences scattered through a 200-plus-page manual that
+   together imply the answer to your question "if only you had
+     thought to look there". Compare wizard, legal, legalese.
+
+ADMINISTRIVIA
+
+ - Undeclared: Going.. going.. going.. gone
+	     
+ - Scheduling:
+
+    o Program 2 (Stacks & Queues): Out this week
+     					
+    o FIRST IN-CLASS QUIZ NEXT WEDNESDAY, FEB 23
+			 
+ - Will have a `request to use free late days' page up on the
+   registered site today or tomorrow
+
+
+
+
+  	       	                	 
+  	       	                          
+                       	       	                          
+             			      	
+     						      
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..     	       	       	  
+  Block _blks[_MAXBLOCKS];
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+ ATTACK    
+ - we have to know how big the array will ever need to be at
+   the time we make the array
+ - without doing some kind of additional arranging of the
+   objects, we have to search the whole array to find out if
+   a given object is stored in it or not		    
+
+CONTAINER CLASSES AND EFFICIENCY	    
+					    
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+ Technique: 
+   	    
+ - An array plus a count of objects currently on the stack
+			      			    	  
+ E.g., stack of ints				    	  
+ int main() {       				    	  
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+   stack[count] = 1; count++;   // 'push' a 1
+   stack[count] = 2; count++;   // 'push' a 2
+   count--; cout << stack[count] << endl;  // 'pop' and print
+   count--; cout << stack[count] << endl;  // 'pop' and print
+   return 0;
+ }
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+						 
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+       	     			   	
+			      	        		         
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+				        		
+       	 			        		
+O(1) /   for (int i = 0;i<100000;++i)  /for (int i = 0;i<n;++i)
+     \      woof += bletch[i-1];      /\  woof += bletch[i-1]; 
+				   O(n)	
+         			       
+     /   for (int i = 0;i<n;++i)    2  /for (int i = 0;i<n;++i)
+O(n) \      cout << i;		 O(n ) |  for (int j = 0;j<n;++j)
+				       \     cout << i;          
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+
+  cout << "Hi";        	       	       	\___+------------------+
+  for (int i = 0;i<n;++i) cout << "!";  /   |O(1) + O(n) = O(n)|
+					    +------------------+
+					 		     
+for (int i = 0; i<n; ++i)  for (int j = 0; j<n; ++j)
+  cout << "(";		     cout << ")";      	    
+     O(n)                       O(n)	 
+					 
+for (int i = 0; i<n; ++i) cout << "(";\__+------------------+
+for (int j = 0; j<n; ++j) cout << ")";/  |O(n) + O(n) = O(n)|
+    				      	 +------------------+
+       	       	       	       	      
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)     
+				      
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+\------------------------/     	  \-------------------/	\-------/
+	O(1)   	       	  	      	 O(n)  	       	   O(1)	 
+				  \-----------------------------/
+ 				     O(n) * O(1) = O(n)	       	 
+       	       	       	    	      
+for (int i=0;i<10000; ++i)     	  \___+------------------+
+  for (int j=0;j<n;++j) cout<<".";/   |O(1) * O(n) = O(n)|
+				      +------------------+
+       	       	       	       	    
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+				    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    // O(1) 
+   int num;  			 // O(1)
+   while (s.Remove(num))         // n*(Remove (which costs O(1))+
+     tmp.Insert(num);    	 //    Insert (also O(1))) = O(n)
+   tmp.Remove(num);		 // O(1)			 
+   while (tmp.Remove(num))	 // (n-1)*(O(1) + O(1)) =      	 
+     s.Insert(num);            	 //   O(n)*O(1) = O(n)
+   // s has lost its oldest element but is otherwise unchanged
+
+DESIGNING A STACK
+	     
+ - What operations should a stack provide?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+	     
+ - What interface should a stack provide?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+
+
+
+
+	       
+
+
+
+	  
+
+
+    
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+
+
+
+	  
+
+
+    
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+class Stack { ...
+  int _data[8];  
+  int _count;  	 
+... };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  		       	       
+      	     		       	       
+   s._data  s._count                   	       	       
+   -------  -------		       
+[0]|  ?  |  |  ?  |
+   |-----|  -------
+[1]|  ?	 | 
+   |-----| 
+[2]|  ?	 | 
+   |-----| 
+[3]|  ?	 | 
+   |-----| 
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  		       s.init();	       
+       	       	       	       		
+   s._data  s._count                   	       	       
+   -------  -------    	       	       	
+[0]|  ?  |  |  0  |
+   |-----|  -------
+[1]|  ?	 | 
+   |-----| 
+[2]|  ?	 | 
+   |-----| 
+[3]|  ?	 | 
+   |-----| 
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count                   	       	       
+   -------  -------		       
+[0]|  3  |  |  1  |
+   |-----|  -------
+[1]|  ?	 | 
+   |-----| 
+[2]|  ?	 | 
+   |-----| 
+[3]|  ?	 | 
+   |-----| 
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       
+[0]|  3  |  |  2  |
+   |-----|  -------
+[1]| 89	 | 
+   |-----| 
+[2]|  ?	 | 
+   |-----| 
+[3]|  ?	 | 
+   |-----| 
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       s.push(-6);
+[0]|  3  |  |  3  |			  
+   |-----|  -------			  
+[1]| 89	 |     				  
+   |-----| 				  
+[2]| -6	 | 				  
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       s.push(-6);
+[0]|  3  |  |  2  |    	       cout << s.pop();   // prints -6
+   |-----|  -------			  
+[1]| 89	 |     				  
+   |-----| 				  
+[2]| -6	 | 				  
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       s.push(-6);
+[0]|  3  |  |  1  |    	       cout << s.pop();   // prints -6
+   |-----|  -------	       cout << s.pop();   // prints 89
+[1]| 89	 |     	       	     		  
+   |-----| 				  
+[2]| -6	 | 				  
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       s.push(-6);
+[0]|  3  |  |  2  |    	       cout << s.pop();   // prints -6
+   |-----|  -------	       cout << s.pop();   // prints 89
+[1]|  7	 |     	       	       s.push(7); 
+   |-----|   
+[2]| -6	 | 				  
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       s.push(-6);
+[0]|  3  |  |  1  |    	       cout << s.pop();   // prints -6
+   |-----|  -------	       cout << s.pop();   // prints 89
+[1]|  7	 |     	       	       s.push(7); 
+   |-----|     	       	       cout << s.pop();   // prints 7
+[2]| -6	 | 				  
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+      	     		       s.push(3);
+   s._data  s._count           s.push(89);     	       
+   -------  -------    	       s.push(-6);
+[0]|  3  |  |  0  |    	       cout << s.pop();   // prints -6
+   |-----|  -------	       cout << s.pop();   // prints 89
+[1]|  7	 |     	       	       s.push(7); 
+   |-----|     	       	       cout << s.pop();   // prints 7
+[2]| -6	 |     	       	       cout << s.pop();   // prints 3
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+
+  int _data[8]; 	       Stack s;
+  int _count;  	       	       s.init();
+   -------   		       s.push(3);
+[-1]?????|  s._count           s.push(89);     	       
+   |-----|  -------    	       s.push(-6);
+[0]|  3  |  | -1  |    	       cout << s.pop();   // prints -6
+   |-----|  -------	       cout << s.pop();   // prints 89
+[1]|  7	 |     	       	       s.push(7); 
+   |-----|     	       	       cout << s.pop();   // prints 7
+[2]| -6	 |     	       	       cout << s.pop();   // prints 3
+   |-----|     	       	       cout << s.pop();   // prints ??
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+
+
+
+	  
+
+
+    
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+
+
+	  
+
+
+    
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  
+
+
+    
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+   - No overflow/underflow handling
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  			     
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+   - No overflow/underflow handling  
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+
+
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  			     
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+   - No overflow/underflow handling  
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+
+
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  			     
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+   - No overflow/underflow handling  
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+
+
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  			     
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+   - No overflow/underflow handling  
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+       	       	       	       	     
+ATTACK				       	     
+ - It's unnecessary.  The class user  
+   can get the effect without it, just
+   using the other public methods.    
+
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+ATTACK				       	     
+ - It's unnecessary.  The class user      / (s is a Stack..)      
+   can get the effect without it, just ---| int i;                
+   using the other public methods.    	  \ while (s.Remove(i)) ;
+
+
+
+
+
+
+
+
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+ATTACK				       	     
+ - It's unnecessary.  The class user      / (s is a Stack..)      
+   can get the effect without it, just ---| int i;                
+   using the other public methods.    	  \ while (s.Remove(i)) ;
+ - Given that it's unnecessary, the    	
+   general principle of keeping our	
+   interfaces small says get rid of it.	
+
+
+
+
+
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+ATTACK 	       	       	       	       	     
+ - It's unnecessary.  The class user      / (s is a Stack..)      
+   can get the effect without it, just ---| int i;                
+   using the other public methods.     	  \ while (s.Remove(i)) ;
+ - Given that it's unnecessary, the  
+   general principle of keeping our    	
+   interfaces small says get rid of it.	
+DEFEND 	       	       	       	      
+ + The class user cannot implement it 
+   as EFFICIENTLY as we can.   	      
+
+
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+ATTACK				       	     
+ - It's unnecessary.  The class user      / (s is a Stack..)      
+   can get the effect without it, just ---| int i;                
+   using the other public methods.    	  \ while (s.Remove(i)) ;
+ - Given that it's unnecessary, the    	    \-------------------/
+   general principle of keeping our   	   	  |	       
+   interfaces small says get rid of it.	  	  |	       
+DEFEND 	       	       	       	      Using public methods is O(n)
+ + The class user cannot implement it 
+   as EFFICIENTLY as we can.   	      
+
+
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+ATTACK				       	     
+ - It's unnecessary.  The class user      / (s is a Stack..)      
+   can get the effect without it, just ---| int i;                
+   using the other public methods.    	  \ while (s.Remove(i)) ;
+ - Given that it's unnecessary, the    	    \-------------------/
+   general principle of keeping our	   	  |	       
+   interfaces small says get rid of it.	  	  |	       
+DEFEND 	       	       	       	      Using public methods is O(n)
+ + The class user cannot implement it 	but we can do it privately
+   as EFFICIENTLY as we can.   	       	in O(1) 
+       	       	       	       	       	    |
+			       /---------------------------------\
+	       		       void Stack::Empty() { _count = 0; }
+CLASS DESIGN: UPSHOTS
+    	    
+ - Only the paranoid survive: Always need to worry about insane
+   class users (vs `nobody would pop more than they pushed'...)
+    	    	 
+ - Small class interfaces are safer and more maintainable than
+   large ones.		 
+	      		 
+ - (But) It's also desirable to provide a `natural' interface,
+   even if not strictly minimal.
+			 
+ - Design is about tradeoffs.  
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+
+      
+
+
+
+
+      							     
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+
+
+
+
+      							     
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array
+
+
+
+      							     
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+
+
+      							     
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+      Reading on..
+       "where in fact both block 0 and block 1 are in (0,0)" 
+      							     
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+      Reading on..
+       "where in fact both block 0 and block 1 are in (0,0)" 
+      							     
+       o  Multiple blocks can be in one position!  Gag!
+ 	  -> So what happens if you bump into a pile of blocks?
+       	     --> The lowest numbered one gets pushed..
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+      Reading on..
+       "where in fact both block 0 and block 1 are in (0,0)" 
+      							     
+       o  Multiple blocks can be in one position!  Gag!
+ 	  -> So what happens if you bump into a pile of blocks?
+       	     --> The lowest numbered one gets pushed..
+
+       o  So, *could* use 2D array of int holding lowest block
+       	  number..  maybe..  but then would have to maintain
+       	  that array..  what happens when the lowest block# gets
+       	  knocked away?  would have to search for the *next*
+       	  lowest block# in that same (x,y) position..  
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+      Reading on..
+       "where in fact both block 0 and block 1 are in (0,0)" 
+      							     
+       o  Multiple blocks can be in one position!  Gag!
+ 	  -> So what happens if you bump into a pile of blocks?
+       	     --> The lowest numbered one gets pushed..
+
+       o  So, *could* use 2D array of int holding lowest block
+       	  number..  maybe..  but then would have to maintain
+       	  that array..  what happens when the lowest block# gets
+       	  knocked away?  would have to search for the *next*	
+       	  lowest block# in that same (x,y) position..  ugh. 	
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+      Reading on..
+       "where in fact both block 0 and block 1 are in (0,0)" 
+      							     
+       o  Multiple blocks can be in one position!  Gag!
+ 	  -> So what happens if you bump into a pile of blocks?
+       	     --> The lowest numbered one gets pushed..
+
+       o  So, *could* use 2D array of int holding lowest block
+       	  number..  maybe..  but then would have to maintain
+       	  that array..  what happens when the lowest block# gets
+       	  knocked away?  would have to search for the *next*
+       	  lowest block# in that same (x,y) position..  ugh. 
+
+       o  Hey..  If we('d have to) search through the blocks to
+       	  find who's in some position (anyway), then we don't
+       	  need a 2d array for the board at all!		     
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+
+
+
+
+
+
+
+      							     
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+
+      							     
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+ ..plausible..  ..at least at this point..  ..push on..
+      							     
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+ ..plausible..  ..at least at this point..  ..push on..
+      							     
+ - A Block needs: An (x,y) position.. 
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+ ..plausible..  ..at least at this point..  ..push on..
+      							     
+ - A Block needs: An (x,y) position..  A 'movable' bool..  
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+ ..plausible..  ..at least at this point..  ..push on..
+      							     
+ - A Block needs: An (x,y) position..  A 'movable' bool..  
+     A 'direction'?  Maybe..  
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+ ..plausible..  ..at least at this point..  ..push on..
+      							     
+ - A Block needs: An (x,y) position..  A 'movable' bool..  
+     A 'direction'?  Maybe..  Hey!
+   o Example 3 has two 'R' commands!  The second one moves
+      blocks back to their 'B' locations, not to (0,0)!	  Ono!
+
+
+
+
+DAVE'S BLOCKS
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (block i is located at (x,y)) return i;  // found block i
+   return -1;  					 // no block there
+ }
+
+ int Board::Find(int x,int y) {
+   for (int i = 0; i < _blockcount; ++i)
+     if (_blocks[i].At(x,y)) return i;  
+   return -1;  				
+ }
+
+ ..plausible..  ..at least at this point..  ..push on..
+      							     
+ - A Block needs: An (x,y) position..  A 'movable' bool..  
+     A 'direction'?  Maybe..  Hey!  
+   o Example 3 has two 'R' commands!  The second one moves
+      blocks back to their 'B' locations, not to (0,0)!	  Ono!
+   o So need (initx,inity) in ADDITION to (x,y)..  OK...
+
+..and so on..
+ 
+DAVE'S BLOCKS - DESIGN DECISIONS
+				
+ - Follow the Booth/Voter scheme where possible
+
+
+
+
+   		       			 
+
+
+
+
+
+
+
+
+
+
+
+      				      			     
+
+
+
+
+DAVE'S BLOCKS - DESIGN DECISIONS
+				
+ - Follow the Booth/Voter scheme where possible
+
+ - Use an array of Block as a data member of Board, search it as
+   needed to check occupancy at (x,y) (so no 2D array needed to
+   represent the board)			    
+   		       			 
+
+
+
+
+
+
+
+
+
+
+
+      				      			     
+
+
+
+
+DAVE'S BLOCKS - DESIGN DECISIONS
+				
+ - Follow the Booth/Voter scheme where possible
+
+ - Use an array of Block as a data member of Board, search it as
+   needed to check occupancy at (x,y) (so no 2D array needed to
+   represent the board)			    
+   		       			 
+ - Each Block remembers (x,y), (initx,inity), its 'state' and
+   its 'initial state'. 
+
+ - Block state is a char, 'N','S','E','W' if moving, or 'H' if
+   "halted but movable", or 'F' if "fixed and immovable".  
+
+ - Block will also store its own 'block number'
+
+
+
+
+      				      			     
+
+
+
+
+DAVE'S BLOCKS - DESIGN DECISIONS
+				
+ - Follow the Booth/Voter scheme where possible
+
+ - Use an array of Block as a data member of Board, search it as
+   needed to check occupancy at (x,y) (so no 2D array needed to
+   represent the board)			    
+   		       			 
+ - Each Block remembers (x,y), (initx,inity), its 'state' and
+   its 'initial state'. 
+
+ - Block state is a char, 'N','S','E','W' if moving, or 'H' if
+   "halted but movable", or 'F' if "fixed and immovable".  
+
+ - Block will also store its own 'block number'
+
+ - Board will handle command reading and sanity checking.
+
+ - A Block will handle moving itself  
+      				      			     
+
+
+
+
+DAVE'S BLOCKS - DESIGN DECISIONS
+				
+ - Follow the Booth/Voter scheme where possible
+
+ - Use an array of Block as a data member of Board, search it as
+   needed to check occupancy at (x,y) (so no 2D array needed to
+   represent the board)			    
+   		       			 
+ - Each Block remembers (x,y), (initx,inity), its 'state' and
+   its 'initial state'. 
+
+ - Block state is a char, 'N','S','E','W' if moving, or 'H' if
+   "halted but movable", or 'F' if "fixed and immovable".  
+
+ - Block will also store its own 'block number'
+
+ - Board will handle command reading and sanity checking.
+
+ - A Block will handle moving itself  
+      				      			     
+ - The Board will know who's moving, and handle change-of-mover
+   when there's a bump
+
+
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+
+
+
+
+
+
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+  void SetIndex(int idx);     // Tell a block its index
+
+
+
+
+
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+  int _index;                 // Block number
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+  void SetIndex(int idx);     // Tell a block its index
+
+
+
+  void Init(int x, int y,bool movable); // Sets block parameters
+  void Reset();               // Resets block to init parameters 
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+  int _index;                 // Block number
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+  void SetIndex(int idx);     // Tell a block its index
+  bool At(int x,int y);       // True if block is at (x,y)
+
+
+  void Init(int x, int y,bool movable); // Sets block parameters
+  void Reset();               // Resets block to init parameters 
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+  int _index;                 // Block number
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+  void SetIndex(int idx);     // Tell a block its index
+  bool At(int x,int y);       // True if block is at (x,y)
+
+  void Push(const char c);    // Changes block state if movable
+  void Init(int x, int y,bool movable); // Sets block parameters
+  void Reset();               // Resets block to init parameters 
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+  int _index;                 // Block number
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+  void SetIndex(int idx);     // Tell a block its index
+  bool At(int x,int y);       // True if block is at (x,y)
+  bool Move(class Board &);   // True if block wanted to move
+  void Push(const char c);    // Changes block state if movable
+  void Init(int x, int y,bool movable); // Sets block parameters
+  void Reset();               // Resets block to init parameters 
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+  int _index;                 // Block number
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Board.h
+
+
+
+
+
+
+
+
+
+
+
+			     				      
+
+
+			     
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+
+
+
+
+			     				      
+
+
+			     
+
+
+
+
+
+
+};
+#endif
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+
+private:  		     					  
+
+
+			     				      
+
+
+			     
+  enum {_MAXW=50, _MAXH=50, _MAXBLOCKS=100}; // Size limits
+  Block _blocks[_MAXBLOCKS]; // The blocks
+  int _blockcount;           // Number of blocks in use
+  int _boardw,_boardh;       // Current size of board
+
+
+};
+#endif
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+
+private:  		     					  
+  bool _Command();	     // Returns false on error or quit
+  bool _Error(const char * msg);  // Always returns false     
+			     				      
+
+
+			     
+  enum {_MAXW=50, _MAXH=50, _MAXBLOCKS=100}; // Size limits
+  Block _blocks[_MAXBLOCKS]; // The blocks
+  int _blockcount;           // Number of blocks in use
+  int _boardw,_boardh;       // Current size of board
+
+
+};
+#endif
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+
+private:  		     					  
+  bool _Command();	     // Returns false on error or quit
+  bool _Error(const char * msg);  // Always returns false     
+			     				      
+  bool _Author(); bool _Delay(); bool _Init();  // Command impl..
+  bool _Block(); bool _Push(); bool _Reset();   //  false on error
+			     
+  enum {_MAXW=50, _MAXH=50, _MAXBLOCKS=100}; // Size limits
+  Block _blocks[_MAXBLOCKS]; // The blocks
+  int _blockcount;           // Number of blocks in use
+  int _boardw,_boardh;       // Current size of board
+
+
+};
+#endif
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+
+private:  		     					  
+  bool _Command();	     // Returns false on error or quit
+  bool _Error(const char * msg);  // Always returns false     
+			     				      
+  bool _Author(); bool _Delay(); bool _Init();  // Command impl..
+  bool _Block(); bool _Push(); bool _Reset();   //  false on error
+			     
+  enum {_MAXW=50, _MAXH=50, _MAXBLOCKS=100}; // Size limits
+  Block _blocks[_MAXBLOCKS]; // The blocks
+  int _blockcount;           // Number of blocks in use
+  int _boardw,_boardh;       // Current size of board
+  int _mover;                // Moving block or -1 if none
+  bool _reset;               // True if we've 'R'd since last 'I'
+};
+#endif
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+  bool Bumped(int x, int y, const char c);  // True if (x,y) hit..
+private:  		     					  
+  bool _Command();	     // Returns false on error or quit
+  bool _Error(const char * msg);  // Always returns false     
+			     				      
+  bool _Author(); bool _Delay(); bool _Init();  // Command impl..
+  bool _Block(); bool _Push(); bool _Reset();   //  false on error
+			     
+  enum {_MAXW=50, _MAXH=50, _MAXBLOCKS=100}; // Size limits
+  Block _blocks[_MAXBLOCKS]; // The blocks
+  int _blockcount;           // Number of blocks in use
+  int _boardw,_boardh;       // Current size of board
+  int _mover;                // Moving block or -1 if none
+  bool _reset;               // True if we've 'R'd since last 'I'
+};
+#endif
+DAVE'S BLOCKS - Block.C
+
+//Block.C
+#include "Block.h"
+#include "Board.h"
+	 
+Block::Block()
+{	 
+  _x = _y = 0; _index = -1;  _state = 'H';   
+  Init(0,0,1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Block.C
+
+//Block.C
+#include "Block.h"
+#include "Board.h"
+	 
+Block::Block()
+{	 
+  _x = _y = 0; _index = -1;  _state = 'H';   
+  Init(0,0,1);
+}
+
+
+
+
+
+void Block::Init(int x, int y,bool movable)
+{
+  _initx = x;
+  _inity = y;
+  if (movable) _initstate = 'H';      // 'H'alted (but movable)
+  else _initstate = 'F';	      // 'F'ixed (and immovable)
+}	
+
+DAVE'S BLOCKS - Block.C
+
+//Block.C
+#include "Block.h"
+#include "Board.h"
+	 
+Block::Block()
+{	 
+  _x = _y = 0; _index = -1;  _state = 'H';   
+  Init(0,0,1);
+}
+
+void Block::SetIndex(int idx) {  _index = idx;  }
+
+bool Block::At(int x,int y) {  return (x==_x)&&(y==_y);  }
+
+void Block::Init(int x, int y,bool movable)
+{
+  _initx = x;
+  _inity = y;
+  if (movable) _initstate = 'H';      // 'H'alted (but movable)
+  else _initstate = 'F';	      // 'F'ixed (and immovable)
+}	
+
+DAVE'S BLOCKS - Block.C
+		     
+void Block::Reset()  
+{		     
+  _x = _initx;	     
+  _y = _inity;	     
+  _state = _initstate;
+  cout << "BLOCK " << _index << ' '    // Announce our position
+       << _x << ' ' << _y << ' '
+       << (_state!='F') 
+       << endl;	     
+}		     
+		     
+
+
+
+
+
+
+
+
+
+
+

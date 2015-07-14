@@ -1,0 +1,2040 @@
+QUESTIONS
+LAST TIME:
+ - TPL Questions
+ - Parsing and parse trees		   
+TODAY:
+ - Parsing, parse trees, interpreters	   
+
+HOMEWORK:  PC++P Ch 20		   
+   Program 4 NOW AT -75%		   
+   Program 5 DUE Monday 5/08 5PM: 10DAYS, 3HOURS 
+
+Program 5 spec 1.0 known bugs:
+		    			  
+ (s7.5.3.1) should read ..."and 'd' nodes (s7.5.2.6) in"...
+ (s7.3.1.1) has a misspelling of 'represents'.
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - HERE ON OUT
+
+  WHEN 	       	       	  DISTANCE     WHAT
+MON   4/30 5PM              3d3h      Program 3 late days close
+WED   5/03 2PM               ?        ICES CLASS EVALUATION
+FRI   5/05 2PM              7d 	      Last day of class
+MON   5/08 5PM             10d3h      Program 5 in
+THU   5/11 5PM             13d3h      Program 5 latest turnin
+FRI   5/12 12:30PM-2:30PM  13d22.5h   Final exam
+
+ IF YOU WANT TO APPLY FREE LATE DAYS TO PROGRAM 3 GET THE
+ REQUEST INTO THE STUDENT RESOURCES WEB SITE BEFORE MONDAY!!
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {  
+  	      op<<
+  	     / 	 \
+     	/---- 	  ----------\
+      op<<		    |
+     / 	  \--\		    |
+     | 	      op+   	    |
+     | 	     / 	 \ 	    |
+     | 	    / 	  \	    |
+     | 	   | 	   op/	    |
+     | 	   |   	  / \  	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     |	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+- Grammar rules consist of TERMINAL symbols (like "hello" and
+  "gabbo") and NON-TERMINAL symbols (like FOO and BAR)
+						      
+- Terminal symbols appear only as leaves in parse trees; 
+  non-terminal symbols only as interior nodes in parse trees
+
+- Grammar rules can use '|' to express 'either or'.
+
+- Grammar rules can use '+' to represent 'and then'.
+
+- Grammar rules can be recursive		      
+  						      
+
+       	       	      	      	    		       
+
+
+
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+ FOO <- "h" | "g" + FOO
+ Start symbol == FOO
+
+#include <iostream.h>
+bool Parse(istream&in) {
+  if (in.peek()=='h') { in.get(); return true; } // FOO <- "h"
+  if (in.peek()=='g') {		// then must be FOO <- "g" + FOO 
+    in.get(); return Parse(in);
+  }  	    
+  return false;			// else it's not a FOO
+}	    
+#include <strstream.h>
+int main() {
+  istrstream s("hgggggghi");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}      	       	This kind of code is called a `recognizer'. 
+110    	       	It checks the syntax but doesn't do anything else.
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+	   /+\	      three kinds of nodes in these parse trees
+	NUM3  E	        (1) NUM nodes -- no children	       
+       	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      	 	   
+struct Node {	   (E+)	  	   
+..	     	  +----+    (NUM)    			  
+  int value;   	  |  ? |   +----+  (E<-NUM)    	     (NUM)
+  Node * left; 	  |----|   |  3 |  >+----+	/-->+----+
+  Node * right;	  |   ---->|----| / | ?  |     /    | 6  |
+};		  |----|   |NULL| | |----|    /	    |----|
+		  |   --\  |----| | |   -----/	    |NULL|
+       	       	  +----+ | |NULL| | |----|	    |----|
+		      	 | +----+ | |NULL|	    |NULL|
+			 \     	  / +----+	    +----+
+			  \------/     	 
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+  Node(int what,Node * l, Node * r) {
+    value = what; left = l; right = r;
+  } ...more stuff...					
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+6");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;		       	    E
+  return 0;		   	   / \
+}                              	 NUM  E
+ E(1)			    	  |   |
+  NUM=6			   	  3  NUM
+E+			   	      |	
+ NUM=3			     	      6
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+  Node(int what,Node * l, Node * r) ...
+
+
+
+
+
+
+
+
+
+
+
+
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+  Node(int what,Node * l, Node * r) ...
+
+
+
+
+
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+
+
+
+
+
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+  Node(int what,Node * l, Node * r) ...
+
+  static Node * ParseNUM(istream & in) {
+
+
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+
+
+
+  } ..
+
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+  Node(int what,Node * l, Node * r) ...
+    
+  static Node * ParseNUM(istream & in) {
+    assert(isdigit(in.peek()));
+    return new Node(in.get()-'0',NULL,NULL);
+  } 
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (in.peek()!='+') return new Node(0,l,NULL);
+    assert(in.get()=='+');
+    Node * r = ParseE(in);
+    return new Node(0,l,r);
+  }			   
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <iomanip.h>      /* for setw() */
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+..void Print(ostream & o,int depth) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+..};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <iomanip.h>      /* for setw() */
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+..void Print(ostream & o,int depth) {
+    if (!left && !right) {   // No kids, must be NUM rule
+      o << setw(depth) << "" << "NUM=" << value << endl;
+      return;
+    }
+
+
+
+
+
+
+
+
+
+  }
+..};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <iomanip.h>      /* for setw() */
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+..void Print(ostream & o,int depth) {
+    if (!left && !right) {   // No kids, must be NUM rule
+      o << setw(depth) << "" << "NUM=" << value << endl;
+      return;
+    }
+    if (left && !right) {   // Just left kid, must be E->NUM rule
+      o << setw(depth) << "" << "E(1)" << endl;
+      left->Print(o,depth+1); // so eval left kid & return result
+      return;
+    }
+
+
+
+
+  }
+..};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <iomanip.h>      /* for setw() */
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+..void Print(ostream & o,int depth) {
+    if (!left && !right) {   // No kids, must be NUM rule
+      o << setw(depth) << "" << "NUM=" << value << endl;
+      return;
+    }
+    if (left && !right) {   // Just left kid, must be E->NUM rule
+      o << setw(depth) << "" << "E(1)" << endl;
+      left->Print(o,depth+1); // so eval left kid & return result
+      return;
+    }
+    assert(left&&right);   // Else need two kids 
+    right->Print(o,depth+1);   // Use 'reverse inorder' traversal
+    o << setw(depth) << "" << "E+" << endl;
+    left->Print(o,depth+1);
+  }
+..};
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <iomanip.h>      /* for setw() */
+#include <assert.h>	  /* for assert() */ 
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+..void Print(ostream & o,int depth) {
+    if (!left && !right) {   // No kids, must be NUM rule
+      o << setw(depth) << "" << "NUM=" << value << endl;
+      return;
+    }
+    if (left && !right) {   // Just left kid, must be E->NUM rule
+      o << setw(depth) << "" << "E(1)" << endl;
+      left->Print(o,depth+1); // so eval left kid & return result
+      return;
+    }
+    assert(left&&right);   // Else need two kids 
+    right->Print(o,depth+1);   // Use 'reverse inorder' traversal
+    o << setw(depth) << "" << "E+" << endl;
+    left->Print(o,depth+1);
+  }    	..Really wouldn't mind a BETTER way to tell what kind of
+..};   	  Node we're dealing with other than checking kid ptrs.. 
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+
+
+			     			  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+
+
+			     			  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+ - Each method can peek ahead into the istream to decide what to
+   do.  It might read terminal symbols itself and/or call other
+   rules to read non-terminal symbols and/or die on an error.  
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+ - Each method can peek ahead into the istream to decide what to
+   do.  It might read terminal symbols itself and/or call other
+   rules to read non-terminal symbols and/or die on an error.  
+
+ - If it succeeds it builds a parse tree node (perhaps containing
+   other parse trees obtained by reading other non-terminals)	 
+   and returns it.					     
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+ - Each method can peek ahead into the istream to decide what to
+   do.  It might read terminal symbols itself and/or call other
+   rules to read non-terminal symbols and/or die on an error.  
+
+ - If it succeeds it builds a parse tree node (perhaps containing
+   other parse trees obtained by reading other non-terminals)	 
+   and returns it.					     
+
+ - Can we use top-down parsing for all possible grammars?
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO   
+       |    
+       n    
+      	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO    
+       |     
+       n     
+      	     
+      yes    
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    
+       | 	/|\    
+       n       n a n   
+      		       
+      yes      
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO  
+       | 	/|\  
+       n       n a n 
+      		     
+      yes       no   
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    	  FOO
+       | 	/|\   	  /|\
+       n       n a n   	 n a FOO
+      			       	\
+      yes       no           	 n
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    	  FOO
+       | 	/|\   	  /|\
+       n       n a n   	 n a FOO
+      			       	\
+      yes       no        yes	 n
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    	  FOO
+       | 	/|\   	  /|\
+       n       n a n   	 n a FOO
+      			       	\
+      yes       no        yes	 n
+
+bool Parse(istream&in) {
+  if (in.peek()!='n') return false;
+  in.get();  	       	     
+  if (in.peek()=='a') { in.get(); return Parse(in); }
+  return true;
+}		   
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    	  FOO
+       | 	/|\   	  /|\
+       n       n a n   	 n a FOO
+      			       	\
+      yes       no        yes	 n
+#include <strstream.h>		  
+bool Parse(istream&in) {
+  if (in.peek()!='n') return false;
+  in.get();  	       	     
+  if (in.peek()=='a') { in.get(); return Parse(in); }
+  return true;	   
+}		   
+int main() {	   
+  istrstream s("nnna");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    	  FOO
+       | 	/|\   	  /|\
+       n       n a n   	 n a FOO
+      			       	\
+      yes       no        yes	 n
+#include <strstream.h>		  
+bool Parse(istream&in) { 
+  if (in.peek()!='n') return false;
+  in.get();  	       	     
+  if (in.peek()=='a') { in.get(); return Parse(in); }
+  return true;	   
+}		   
+int main() {	   
+  istrstream s("nnna");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}
+110
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "n" | "n" + "a" + FOO
+ Start symbol == FOO  
+      FOO      	FOO    	  FOO
+       | 	/|\   	  /|\
+       n       n a n   	 n a FOO
+      			       	\
+      yes       no        yes	 n
+#include <strstream.h>		  
+bool Parse(istream&in) { 
+  if (in.peek()!='n') return false;
+  in.get();  	       	     
+  if (in.peek()=='a') { in.get(); return Parse(in); }
+  return true;	   
+}		   
+int main() {	   
+  istrstream s("nnna");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}
+110       <-- Hey!  Shouldn't that be 111 with 'a' left to read??
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+
+
+
+
+
+
+
+
+         
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+
+ FOO <- "a" | FOO + "z"
+ Start symbol == FOO   
+
+
+
+
+
+
+         
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+       	      			 
+ FOO <- "a" | FOO + "z"		 
+ Start symbol == FOO   		 
+       	       	       	       	 
+      FOO     FOO      FOO     	 
+       |      / \     /	  \    	 
+       a     a   z  FOO    z	 
+       	       	     | 		 
+                     a 	         
+         
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+			       
+ FOO <- "a" | FOO + "z"	       
+ Start symbol == FOO   	       
+	  	       	       
+      FOO     FOO      FOO     
+       |      / \     /	  \    
+       a     a   z  FOO    z   
+       	       	     | 	       
+     yes       no    a 	 yes   
+         		       
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+				       FOO
+ FOO <- "a" | FOO + "z"		       / \
+ Start symbol == FOO   		     FOO  z
+	  	       		     / \  
+      FOO     FOO      FOO     	   FOO 	z 
+       |      / \     /	  \    	   / \ 	  
+       a     a   z  FOO    z	 FOO  z	  
+       	       	     | 		  |  	  
+     yes       no    a 	 yes   	  a    	 yes
+         
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+				       FOO
+ FOO <- "a" | FOO + "z"		       / \
+ Start symbol == FOO   		     FOO  z
+	  	       		     / \  
+      FOO     FOO      FOO     	   FOO 	z 
+       |      / \     /	  \    	   / \ 	  
+       a     a   z  FOO    z	 FOO  z	  
+       	       	     | 		  |  	  
+     yes       no    a 	 yes   	  a    	 yes
+         
+bool Parse(istream&in) { 
+  if (in.peek()=='a') { in.get(); return true; }
+  if (!Parse(in)) return false;
+  if (in.peek()!='z') return false;
+  in.get();
+  return true;
+}		   
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+				       FOO
+ FOO <- "a" | FOO + "z"		       / \
+ Start symbol == FOO   		     FOO  z
+	  	       		     / \  
+      FOO     FOO      FOO     	   FOO 	z 
+       |      / \     /	  \    	   / \ 	  
+       a     a   z  FOO    z	 FOO  z	  
+       	       	     | 		  |  	  
+     yes       no    a 	 yes   	  a    	 yes
+         
+bool Parse(istream&in) { 
+  if (in.peek()=='a') { in.get(); return true; }
+  if (!Parse(in)) return false;
+  if (in.peek()!='z') return false;
+  in.get();
+  return true;
+}		   
+
+% ./foo
+Segmentation fault (core dumped)
+% 
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+				       FOO  
+ FOO <- "a" | FOO + "z"		       / \ 
+ Start symbol == FOO   		     FOO  z
+	  	       		     / \   
+      FOO     FOO      FOO     	   FOO 	z  
+       |      / \     /	  \    	   / \ 	   
+       a     a   z  FOO    z   	 FOO  z	   
+       	       	     | 	       	  |  	   
+     yes       no    a 	 yes   	  a    	 yes
+         		       	
+bool Parse(istream&in) { 
+  if (in.peek()=='a') { in.get(); return true; }
+  if (!Parse(in)) return false;    //<<<'Infinite' recursion...
+  if (in.peek()!='z') return false;
+  in.get();
+  return true;
+}		   
+
+% ./foo
+Segmentation fault (core dumped)
+% 
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+
+
+
+
+				       
+
+
+
+
+				       
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+
+
+				       
+
+
+
+
+				       
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+   - Grammars containing 'left recursion' are a problem	   	  
+     e.g,   FOO <- "a" | FOO + "z"     			   	  
+				       
+
+
+
+
+				       
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+   - Grammars containing 'left recursion' are a problem	   	  
+     e.g,   FOO <- "a" | FOO + "z"     			   	  
+				       
+ - Sometimes there are tricks you can do to REWRITE grammar	  
+   rules so that they describe the same legal inputs but are	  
+   easier to parse.  You end up with DIFFERENT parse trees, but	  
+   sometimes you don't care.	       				  
+				       
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+   - Grammars containing 'left recursion' are a problem	   	  
+     e.g,   FOO <- "a" | FOO + "z"     			   	  
+				       
+ - Sometimes there are tricks you can do to REWRITE grammar	  
+   rules so that they describe the same legal inputs but are	  
+   easier to parse.  You end up with DIFFERENT parse trees, but	  
+   sometimes you don't care.	       				  
+       	       	       		       
+                   FOO <- "a" | FOO + "z"     	                 
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+   - Grammars containing 'left recursion' are a problem	   	  
+     e.g,   FOO <- "a" | FOO + "z"     			   	  
+				       
+ - Sometimes there are tricks you can do to REWRITE grammar	  
+   rules so that they describe the SAME LEGAL INPUTS but are	  
+   easier to parse.  You end up with DIFFERENT PARSE TREES, but	  
+   sometimes you don't care.	       				  
+       	       	       	   	       
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as			    
+    FOO <- "a" | "a" + ZEES 
+    ZEES <- "z" | "z" + ZEES
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+   - Grammars containing 'left recursion' are a problem	   	  
+     e.g,   FOO <- "a" | FOO + "z"     			   	  
+				       
+ - Sometimes there are tricks you can do to REWRITE grammar	  
+   rules so that they describe the same legal inputs but are	  
+   easier to parse.  You end up with DIFFERENT parse trees, but	  
+   sometimes you don't care.	       				  
+       	       	       		       
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as			       	    
+    FOO <- "a" | "a" + ZEES 	    
+    ZEES <- "z" | "z" + ZEES	    
+    	   			    
+   FOO     FOO      FOO      FOO    
+    |      / \     /   \    /   \   
+    a     a   z  FOO    z  a   	ZEES
+                  |         	 |  
+  yes       no    a    no      	 z  
+               	   (was yes)    yes
+TOP-DOWN PARSING	  
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy	       
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO			  
+   - Grammars containing 'left recursion' are a problem	   	  
+     e.g,   FOO <- "a" | FOO + "z"     			   	  
+				       
+ - Sometimes there are tricks you can do to REWRITE grammar	  
+   rules so that they describe the same legal inputs but are	  
+   easier to parse.  You end up with DIFFERENT parse trees, but	  
+   sometimes you don't care.	       				  
+       	       	       		       
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as			       	          FOO                FOO 
+    FOO <- "a" | "a" + ZEES 	         /   \               / \ 
+    ZEES <- "z" | "z" + ZEES	        a    ZEES          FOO  z
+    	   			             /  \          / \   
+   FOO     FOO      FOO      FOO            z   ZEES     FOO  z  
+    |      / \     /   \    /   \               / \      / \     
+    a     a   z  FOO    z  a   	ZEES           z  ZEES FOO  z    
+    	       	  |    	    	 |                 |    |        
+  yes       no    a   	       	 z                 z    a      no
+		       no       yes        yes                   
+TOP-DOWN PARSING	  
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as  FOO <- "a" | "a" + ZEES    			       
+     ZEES <- "z" | "z" + ZEES     				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as  FOO <- "a" | "a" + ZEES    			       
+     ZEES <- "z" | "z" + ZEES     				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int main() {	   
+  istrstream s("azzazan");
+  cout << ParseFOO(s); cout << ParseFOO(s); cout << ParseFOO(s);
+  return 0;
+}
+
+TOP-DOWN PARSING	  
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as  FOO <- "a" | "a" + ZEES    			       
+     ZEES <- "z" | "z" + ZEES     				
+
+
+
+
+
+
+
+
+bool ParseFOO(istream&in) { 
+  if (in.peek()!='a') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}		   
+int main() {	   
+  istrstream s("azzazan");
+  cout << ParseFOO(s); cout << ParseFOO(s); cout << ParseFOO(s);
+  return 0;
+}
+
+TOP-DOWN PARSING	  
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as  FOO <- "a" | "a" + ZEES    			       
+     ZEES <- "z" | "z" + ZEES     				
+
+
+bool ParseZEES(istream&in) {
+  if (in.peek()!='z') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}
+bool ParseFOO(istream&in) { 
+  if (in.peek()!='a') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}		   
+int main() {	   
+  istrstream s("azzazan");
+  cout << ParseFOO(s); cout << ParseFOO(s); cout << ParseFOO(s);
+  return 0;
+}
+
+TOP-DOWN PARSING	  
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as  FOO <- "a" | "a" + ZEES    			       
+     ZEES <- "z" | "z" + ZEES     				
+
+#include <strstream.h>		  
+bool ParseZEES(istream&in) {
+  if (in.peek()!='z') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}
+bool ParseFOO(istream&in) { 
+  if (in.peek()!='a') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}		   
+int main() {	   
+  istrstream s("azzazan");
+  cout << ParseFOO(s); cout << ParseFOO(s); cout << ParseFOO(s);
+  return 0;
+}
+
+TOP-DOWN PARSING	  
+ We could rewrite  FOO <- "a" | FOO + "z"     	                 
+ as  FOO <- "a" | "a" + ZEES    			       
+     ZEES <- "z" | "z" + ZEES     				
+
+#include <strstream.h>		  
+bool ParseZEES(istream&in) {
+  if (in.peek()!='z') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}
+bool ParseFOO(istream&in) { 
+  if (in.peek()!='a') return false;
+  in.get();
+  if (in.peek()=='z') return ParseZEES(in);
+  return true;
+}		   
+int main() {	   
+  istrstream s("azzazan");
+  cout << ParseFOO(s); cout << ParseFOO(s); cout << ParseFOO(s);
+  return 0;
+}
+111
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+ - Each method can peek ahead into the istream to decide what to
+   do.  It might read terminal symbols itself and/or call other
+   rules to read non-terminal symbols and/or die on an error.  
+
+ - If it succeeds it builds a parse tree node (perhaps containing
+   other parse trees obtained by reading other non-terminals)	 
+   and returns it.					     
+
+ - Can we use top-down parsing for all possible grammars?
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+ - Each method can peek ahead into the istream to decide what to
+   do.  It might read terminal symbols itself and/or call other
+   rules to read non-terminal symbols and/or die on an error.  
+
+ - If it succeeds it builds a parse tree node (perhaps containing
+   other parse trees obtained by reading other non-terminals)	 
+   and returns it.					     
+
+ - Can we use top-down parsing for all possible grammars?
+   = No. Top-down parsing can't do grammars with left-recursion. 
+     Also, you might need to `look-ahead' far into the input to
+     decide what rule to apply.				       
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+ - If you just need to know if something's grammatical, or do
+   only do simple things, you can often just build a recognizer. 
+   If you need to DO something based on the input, you often 
+   want to build a parse tree.	    
+ 
+ - Can make a (static) method for each rule in the grammar, that
+   returns a pointer to (the root of) a parse tree
+			     			  
+ - Each method can peek ahead into the istream to decide what to
+   do.  It might read terminal symbols itself and/or call other
+   rules to read non-terminal symbols and/or die on an error.  
+
+ - If it succeeds it builds a parse tree node (perhaps containing
+   other parse trees obtained by reading other non-terminals)	 
+   and returns it.					     
+
+ - Can we use top-down parsing for all possible grammars?
+   = No. Top-down parsing can't do grammars with left-recursion. 
+     Also, you might need to `look-ahead' far into the input to
+     decide what rule to apply.				       
+   = Sometimes grammars can be rewritten for top-down parsing.
+   = Other parsing techniques are more complex and powerful.
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    			 		   		   
+
+   	       	       	 
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+.. 
+struct Node { ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+6");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+
+
+
+
+
+    			 		   		   
+
+   	       	       	 
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+.. 
+struct Node { ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+6");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+% ./foo
+ E(1)
+  NUM=6
+E+
+ NUM=3
+% 
+  
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+.. 
+struct Node { ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("+1");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+.. 
+struct Node { ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("+1");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+% ./foo
+foo: foo.C:9: static struct Node * Node::ParseNUM(class istream &\
+): Assertion `(__ctype_b[(int) ((in.peek()))] & (unsigned short i\
+nt) _ISdigit)' failed.
+% 
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {
+    assert(isdigit(in.peek())); ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("+1");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+% ./foo
+foo: foo.C:9: static struct Node * Node::ParseNUM(class istream &\
+): Assertion `(__ctype_b[(int) ((in.peek()))] & (unsigned short i\
+nt) _ISdigit)' failed.
+% 
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    assert(isdigit(in.peek())); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);	       
+  }						       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);	       
+  }						       
+  static Node * ParseE(istream & in) {		       
+    Node * l = ParseNUM(in);			       
+    if (in.peek()!='+') return new Node(0,l,NULL);
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);	       
+  }						       
+  static Node * ParseE(istream & in) {		       
+    Node * l = ParseNUM(in);			       
+    if (!l) return NULL;	 // If no NUM, then no E
+..} ..
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);	       
+  }						       
+  static Node * ParseE(istream & in) {		       
+    Node * l = ParseNUM(in);			       
+    if (!l) return NULL;	 // If no NUM, then no E
+..} ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+6");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+..static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);	       
+  }						       
+  static Node * ParseE(istream & in) {		       
+    Node * l = ParseNUM(in);			       
+    if (!l) return NULL;	 // If no NUM, then no E
+..} ..
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+67+8+9");
+  Node * t;	    	      
+  while ((t = Node::ParseE(s))) { // Quit loop on parse error
+    t->Print(cout,0);
+    delete t;	
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+int main() {    
+  istrstream s ("3+67+8+9");
+  Node * t;	    	      
+  while ((t = Node::ParseE(s))) { // Quit loop on parse error
+    t->Print(cout,0);
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+int main() {    
+  istrstream s ("3+67+8+9");
+  Node * t;	    	      
+  while ((t = Node::ParseE(s))) { // Quit loop on parse error
+    t->Print(cout,0);
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+ E(1)
+  NUM=6
+E+
+ NUM=3
+  E(1)
+   NUM=9
+ E+
+  NUM=8
+E+
+ NUM=7
+Parse error, exiting
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+int main() {    
+  istrstream s ("3+67+8+9");
+  Node * t;	    	      
+  while ((t = Node::ParseE(s))) { // Quit loop on parse error
+    t->Print(cout,0);
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;	       	       	       	 
+}	       E      
+ E(1)  	      /+\      	       	      
+  NUM=6	    NUM3 E     	       	      
+E+	         |  	       	E     
+ NUM=3	        NUM6	       /+\    
+  E(1)		    	    NUM7  E 
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+Parse error, exiting
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+                       	       	E     
+                     	       /+\    
+  E(1)		    	    NUM7  E
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+
+
+ - Once we have a parse tree, what can we do with it?
+   Besides print it..
+
+
+
+			 	     
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+                       	       	E     
+                     	       /+\    
+  E(1)		    	    NUM7  E
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+
+
+ - Once we have a parse tree, what can we do with it?
+   Besides print it..
+
+ - We could define a SEMANTICS for the nodes and then
+   EVALUATE or INTERPRET the parse tree..	     
+			 	     
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+                       	       	E     
+                     	       /+\    
+  E(1)		    	    NUM7  E
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+
+
+ - Once we have a parse tree, what can we do with it?
+   Besides print it..
+
+ - We could define a SEMANTICS for the nodes and then
+   EVALUATE or INTERPRET the parse tree..	     
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+                       	       	E     
+                     	       /+\    
+  E(1)		    	    NUM7  E
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+
+
+ - Once we have a parse tree, what can we do with it?
+   Besides print it..
+
+ - We could define a SEMANTICS for the nodes and then
+   EVALUATE or INTERPRET the parse tree..	     
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+   An E node with one child N     The evaluation of N
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+                       	       	E     
+                     	       /+\    
+  E(1)		    	    NUM7  E
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+
+
+ - Once we have a parse tree, what can we do with it?
+   Besides print it..
+
+ - We could define a SEMANTICS for the nodes and then
+   EVALUATE or INTERPRET the parse tree..	     
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R	  
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R	  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R	  
+..
+struct Node {
+..
+  int Eval() {
+    if (!left && !right)   // No kids, must be NUM rule
+      return value;        // so just return the value
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R	  
+..
+struct Node {
+..
+  int Eval() {
+    if (!left && !right)   // No kids, must be NUM rule
+      return value;        // so just return the value
+    if (left && !right)    // Just left kid, must be E->NUM rule
+      return left->Eval(); // so eval left kid & return result
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+			 	     
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X 
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R	  
+..
+struct Node {
+..
+  int Eval() {
+    if (!left && !right)   // No kids, must be NUM rule
+      return value;        // so just return the value
+    if (left && !right)    // Just left kid, must be E->NUM rule
+      return left->Eval(); // so eval left kid & return result
+    assert(left&&right);   // Else need two kids 
+    assert(value=='+');    // And we only do addition 
+    return left->Eval() + right->Eval();   // E->NUM+'+'+E rule
+  }
+..
+};
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+..
+int main() {    
+
+  istrstream s ("3+67+8+9");
+  Node * t;
+  while ((t = Node::ParseE(s))) {
+    cout << " = " << t->Eval() << endl;
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+
+% ./foo
+ = 9
+ = 24
+Parse error, exiting
+% 
+

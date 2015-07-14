@@ -1,0 +1,1344 @@
+QUESTIONS
+
+LAST TIME:
+ - Parsing, parse trees, interpreters
+ - The rest of C++
+
+TODAY:
+ - The rest of the rest of C++
+ - The big picture
+ - Class evaluations
+
+NEXT TIME:
+ - Review
+
+HOMEWORK:  Review for final exam
+   Program 5 DUE Monday 5/08 5PM: 5 DAYS LEFT!
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - HERE ON OUT
+
+  WHEN 	       	       	  DISTANCE     WHAT
+FRI   5/05 2PM              2d 	      Last day of class
+MON   5/08 5PM              5d3h      Program 5 in
+MON   5/08 5PM              5d3h      Program 4 late days close
+THU   5/11 5PM              8d3h      Program 5 latest turnin
+FRI   5/12 12:30PM-2:30PM   8d22.5h   Final exam
+FRI   5/12 5PM              9d3h      Program 5 late days close
+	     
+
+
+  FINAL EXAM `CHEAT SHEET' RULES:
+  
+  You may bring to the exam:
+			    
+    One sheet of paper no larger than legal size (8.5" x 14")
+    containing original notes handwritten by you only.
+	     					      
+    No photocopying or photoreduction.
+	     			     
+    No printed material; your own handwriting only.
+
+
+THE REST OF C++
+
+ - Inheritance
+
+ - Exceptions
+
+ - STL
+
+ - ( RTTI, etc etc etc )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXCEPTIONS
+
+Persistent design problem:
+  What should we do about errors??
+
+    nothing ?
+    return a flag ?
+    assert(..) ?
+    abort() ?
+    exit(1) ?
+
+Old days:
+  Non-interactive batch processing.
+  When something goes wrong, no real alternative except to die.
+
+New days:
+  Interactive online services.
+  No matter what, DON'T DIE!
+
+
+
+
+
+
+EXCEPTIONS
+
+- We want something IN BETWEEN a return flag kind of thing:
+
+     bool DoWork() { ... if (!canwork) return false; .. }
+			     	 
+which is very weak and easy to ignore, possibly with dangerous 
+consequences, and stuff like:	 			       
+	    		     	 			       
+     void DoWork() { ... if (!canwork) exit(1); .. }     or    
+     void DoWork() { ... assert(canwork); .. }  	       
+			    				       
+which kill the program, and are too strong and hard to avoid.
+
+ Enter the exception.
+
+ - When 'exit' is too much but 'return' is too little
+ - How: C++ keywords 'catch', 'throw', and 'try'
+
+       	    foo.DoWork();
+	    cout << "done" << endl;
+
+
+
+EXCEPTIONS
+#include <iostream.h>
+void func(int i) {
+  if (i<5) cout << i;
+  else throw "Bogus";     // `throw an exception'
+  cout << ", ";		       	       	       	       	       	  
+}			  			   		  
+			  			   		  
+int main() {		  			   		  
+  int i = 0;		  			   		  
+  try { 		  // `try a block of code'		  
+    while (1) {		  			    		  
+      func(++i);	  			    		  
+    }			  			    		  
+  }			       	       	       	    		  
+  catch (...) {		  // `catch exceptions from previous try'
+    cout << "can I have a little more?" << endl;
+  }
+}
+% ./foo
+1, 2, 3, 4, can I have a little more?
+% 
+
+
+STL
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+             ..after building it from scratch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+             ..after building it from scratch
+
+ C++ w/STL:  Riding in a limo  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+             ..after building it from scratch
+
+ C++ w/STL:  Riding in a limo  
+	     ..that you don't own
+
+
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+             ..after building it from scratch
+
+ C++ w/STL:  Riding in a limo  		     
+	     ..that you don't own..	     
+       	       ..with a `quirky' driver	     
+					     
+
+
+
+
+
+
+
+
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+             ..after building it from scratch
+
+ C++ w/STL:  Riding in a limo  		     
+	     ..that you don't own..	     
+       	       ..with a `quirky' driver	     
+					     
+#include <string>            /* no '.h'!? What's that about?! */
+#include <iostream>
+int main() {
+  string a("foo"),b("bar"),c;
+  c = a+b+"!";
+  cout << c << endl;
+  return 0;
+}
+
+
+
+STL
+   
+ == `Standard Template Library'
+
+ Trading control for convenience..
+
+ Bare C++:   Driving a Maserati
+             ..after building it from scratch
+
+ C++ w/STL:  Riding in a limo  		     
+	     ..that you don't own..	     
+       	       ..with a `quirky' driver	     
+					     
+#include <string>            /* no '.h'!? What's that about?! */
+#include <iostream>
+int main() {
+  string a("foo"),b("bar"),c;
+  c = a+b+"!";
+  cout << c << endl;
+  return 0;
+}
+% ./foo
+foobar!
+% 
+
+
+  And the rest..
+
+
+
+
+
+
+			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+       	   
+ 	   
+
+
+
+
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+       	   
+ 	   
+                     CS251                    
+
+
+
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+       	   
+ 	   
+    CS151            CS251            CS351 
+
+
+
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+       	       	   
+ 		   
+    CS151----------> CS251 ---------> CS351 - - >  
+
+
+
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+ 		    /-----\
+ 		    v	  /
+    CS151----------> CS251 ---------> CS351 - - >  
+
+
+
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+ 		    /-----\
+ 		    v	  /
+    CS151----------> CS251 ---------> CS351 - - >  
+                         \			   
+   		       	  \ 			   
+                       	   \---> j omega - - > 	 
+                       	       	 signals       	 	
+                            	  etc  	
+                               	     
+                            
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+ 		    /-----\
+ 		    v	  /
+    CS151----------> CS251 ---------> CS351 - - >  
+       	       	      |	 \			   
+   		      |	  \ 			   
+                      |	   \---> j omega - - > 	 
+	              |	       	 signals       	 	
+       	              v     	  etc  	
+       	       	    other      	     
+		     majors 
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+
+ 		    /-----\
+ 		    v	  /
+    CS151----------> CS251 ---------> CS351 - - >  
+  		    / |	 \			   
+   		   /  |	  \ 			   
+        beer  <---/   |	   \---> j omega - - > 	 
+	service	      |	       	 signals       	 	
+       	 industry     v     	  etc  	
+       	       	    other      	     
+		     majors
+			  
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+ 	  
+ 	  
+    CS151            CS251            CS351
+  				    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+ 	  
+ 	  
+    CS151            CS251            CS351
+  				    
+  statements   	   
+  functions    	   
+  if/while/for 	   
+  variables    	   
+  classes      	   
+  static arrays	   
+  tiny programs    
+                   
+	       	   
+	       	   
+	       	   
+		   
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+ 	  
+ 	  
+    CS151            CS251            CS351
+  				    
+  statements   	     objects	     
+  functions    	     ctors/dtor	     
+  if/while/for 	     stacks/queues   
+  variables    	     pointers	     
+  classes      	     linked lists    
+  static arrays	     dynamic arrays  
+  tiny programs      templates	     
+                     search trees    
+	       	     parse trees     
+	       	     debugging	     
+	       	     reading specs   
+		     small programs
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+ 	  
+ 	  
+    CS151            CS251            CS351
+  				    
+  statements   	     objects	      inheritance
+  functions    	     ctors/dtor	      exceptions 
+  if/while/for 	     stacks/queues    class design   
+  variables    	     pointers	      design patterns
+  classes      	     linked lists     hash tables
+  static arrays	     dynamic arrays   event-driven simulation
+  tiny programs      templates	      graphs
+                     search trees     debugging
+	       	     parse trees      reading specs
+	       	     debugging	      working in groups
+	       	     reading specs    less small programs
+		     small programs
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+
+
+
+
+
+ 	  
+ 	  
+               CS151 CS251 CS351
+    				    
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+
+
+
+					CS461
+       	       	       	      CS361	     	  
+ 	  			   	     	
+ 	  			   	     	
+               CS151 CS251 CS351                
+    				    	     	
+		       CS257	   CS451     	
+       	       	      		   	     	       	
+				   	    CS460
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	  
+
+
+			         
+			       	       	      
+       	       	       	     
+ 	  	      etc    
+       	    	     3/4/61  
+                 CS1/2/3/451 
+         	     460     
+		      etc    
+			     
+			     
+			     
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+       	       	       	         
+			       	       	      
+       	       	       	       
+ 	  	      etc      
+       	    	     3/4/61    
+   high  ------> CS1/2/3/451 -------> job     
+   school	     460       
+		      etc      
+			       
+			       
+			       
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+               	       	      	     (better)  	       
+   job -------->      etc    ------->(different)
+       	    	     3/4/61    	     (same)   
+   high  ------> CS1/2/3/451 -------> job     
+   school	     460      	  
+		      etc     	  
+				  
+				  
+				  
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	       	       	      	     (better)  	       
+   job -------->      etc    ------->(different)
+       	    	     3/4/61    	     (same)   
+   high  ------> CS1/2/3/451 -------> job     
+   school	     460      	       web/db 
+		      etc     	       industrial
+				       research	 
+				       startup 	 
+				       other
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+                   school
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+                   school->job
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+                   school->job->die
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+                   school->job
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+parents'->parents'>school->job -> kid's	 -> kid's -> grandkid's
+ school	    job               	  school    job	     school    
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+                   school->job
+		    learn->do
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+
+		    learn->do
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+       	       	 
+   history                     	     affect    	  results
+   culture ------>  learn->do  ----> change ----> impact - - - >
+       	       	    				  history
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+       	       	       	humans
+
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+    dinosaurs -------> 	humans  -------> ?
+				
+       	       	    		
+	   			
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+    dinosaurs -------> 	humans  -------> ?
+					 superhumans?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+    dinosaurs -------> 	humans  -------> ?
+					 superhumans?
+       	       	    			 machines?   
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+    dinosaurs -------> 	humans  -------> ?
+					 superhumans?
+       	       	    			 machines?   
+	   				 dinosaurs again?
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+ 	   
+       	       	       	 life
+
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+  	   
+       	 big bang -----> life -----> heat death  
+				     of universe?
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+			       	       	      
+       	   
+       	       	       	 the
+                       universe
+
+       	       	    
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+       	       	the physical          the conceptual
+       	   	e.g.,          	      e.g.,
+       	       	       	 the		   ideas,
+                       universe		   dreams, 
+					   plans,  
+       	       	    			   numbers    
+	   				   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+
+
+       	       	      
+       	       	          unifying 
+		    physical & conceptual
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+THE TOTAL PERSPECTIVE VORTEX
+       	       	       	       	 
+				 
+				 
+			         
+
+
+
+       	       	   
+       	       	         hacking
+       	       	       	  code
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	 
+
+				 
+			         
+
+
+
+       	       	   
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	 
+  CLASS EVALUATIONS		 
+				 
+			         
+
+
+
+       	       	   
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+

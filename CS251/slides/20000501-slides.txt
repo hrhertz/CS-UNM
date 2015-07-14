@@ -1,0 +1,2688 @@
+QUESTIONS
+
+LAST TIME:
+ - Parsing, parse trees, interpreters
+
+TODAY:
+ - Parsing, parse trees, interpreters
+ - The rest of C++
+
+HOMEWORK:  PC++P Ch 20
+   Program 5 DUE Monday 5/08 5PM: 1 WEEK LEFT!
+
+
+  HA HA ONLY SERIOUS A phrase that aptly captures the flavor of
+     much hacker discourse. Applied especially to parodies,
+    absurdities, and ironic jokes that are both intended and
+ perceived to contain a possibly disquieting amount of truth, or
+truths that are constructed on in-joke and self-parody... Indeed,
+      the entirety of hacker culture is often perceived as
+ ha-ha-only-serious by hackers themselves; to take it either too
+    lightly or too seriously marks a person as an outsider, a
+ wannabee, or in larval stage. For further enlightenment on this
+		subject, consult any Zen master.
+
+ADMINISTRIVIA - HERE ON OUT
+
+  WHEN 	       	       	  DISTANCE     WHAT
+MON   4/30 5PM              3h        Program 3 late days close
+WED   5/03 2PM              2d        ICES class evaluation
+FRI   5/05 2PM              4d 	      Last day of class
+MON   5/08 5PM              7d3h      Program 5 in
+MON   5/08 5PM              7d3h      Program 4 late days close
+THU   5/11 5PM             10d3h      Program 5 latest turnin
+FRI   5/12 12:30PM-2:30PM  10d22.5h   Final exam
+FRI   5/12 5PM             11d3h      Program 5 late days close
+
+	 IF YOU WANT TO APPLY FREE LATE DAYS TO PROGRAM 3 GET
+	   YOUR REQUEST INTO THE STUDENT RESOURCES WEB SITE
+			      >>BEFORE<<
+			   >>>>>>5PM<<<<<<
+		      >>>>>>>>>>TODAY<<<<<<<<<<
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+#include <assert.h>	  /* for assert() */
+#include <ctype.h>        /* for isdigit() */
+struct Node {
+  Node(int what,Node * l, Node * r) ...
+
+  static Node * ParseNUM(istream & in) {
+    assert(isdigit(in.peek()));
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (in.peek()!='+') return new Node(0,l,NULL);
+    assert(in.get()=='+');
+    Node * r = ParseE(in);
+    return new Node(0,l,r);
+  }
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+TOP-DOWN PARSING
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+				       FOO
+ FOO <- "a" | FOO + "z"		       / \
+ Start symbol == FOO   		     FOO  z
+	  	       		     / \
+      FOO     FOO      FOO     	   FOO 	z
+       |      / \     /	  \    	   / \
+       a     a   z  FOO    z   	 FOO  z
+       	       	     | 	       	  |
+     yes       no    a 	 yes   	  a    	 yes
+
+bool Parse(istream&in) {
+  if (in.peek()=='a') { in.get(); return true; }
+  if (!Parse(in)) return false;    //<<<'Infinite' recursion...
+  if (in.peek()!='z') return false;
+  in.get();
+  return true;
+}
+
+% ./foo
+Segmentation fault (core dumped)
+%
+TOP-DOWN PARSING
+ - Sometimes top-down parsing is easy to code
+ - Sometimes it's not so easy
+   - Grammars requiring a lot of 'lookahead' are a problem
+     e.g,   FOO <- "n" | "n" + "a" + FOO
+   - Grammars containing 'left recursion' are a problem
+     e.g,   FOO <- "a" | FOO + "z"
+
+ - Sometimes there are tricks you can do to REWRITE grammar
+   rules so that they describe the SAME legal inputs but are
+   easier to parse.  You end up with DIFFERENT parse trees, but
+   sometimes you don't care.
+
+ We could rewrite  FOO <- "a" | FOO + "z"
+ as			       	          FOO                FOO
+    FOO <- "a" | "a" + ZEES 	         /   \               / \
+    ZEES <- "z" | "z" + ZEES	        a    ZEES          FOO  z
+    	   			             /  \          / \
+   FOO     FOO      FOO      FOO            z   ZEES     FOO  z
+    |      / \     /   \    /   \               / \      / \
+    a     a   z  FOO    z  a   	ZEES           z  ZEES FOO  z
+    	       	  |    	    	 |                 |    |
+  yes       no    a   	       	 z                 z    a      no
+		       no       yes        yes
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E			 
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..					 
+  static Node * ParseNUM(istream & in) {	 
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);	 
+  }						 
+  static Node * ParseE(istream & in) {		 
+    Node * l = ParseNUM(in);			 
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'	 
+    return new Node('+',l,ParseE(in));		 
+  }						 
+..						 
+						 
+						 +1
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+>>static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..
+
+
+   1+X
+   ^
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>>  Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..
+
+
+   1+X
+   ^
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+> static Node * ParseNUM(istream & in) {
+>>  if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..
+
+
+   1+X
+   ^
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+> static Node * ParseNUM(istream & in) {
+>   if (!isdigit(in.peek())) return NULL;  // Not a NUM
+>>  return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..
+       	       	     +-----+
+		     |	1  |
+   1+X		     |-----|
+    ^ 		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>>  Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+
+	     +----+  |	1  |
+   1+X		     |-----|
+    ^ 		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>>  if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+
+	     +----+  |	1  |
+   1+X		     |-----|
+    ^ 		     |NULL |
+ 		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>>  if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+
+	     +----+  |	1  |
+   1+X		     |-----|
+    ^ 		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>>  in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+
+  	     +----+  |	1  |
+   1+X		     |-----|
+     ^		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>>tatic Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+
+  	     +----+  |	1  |
+   1+X		     |-----|
+     ^		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+> static Node * ParseNUM(istream & in) {
+>>  if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>static Node * ParseE(istream & in) {
+2>  Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+
+  	     +----+  |	1  |
+   1+X		     |-----|
+     ^		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>static Node * ParseE(istream & in) {
+2>> Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   return new Node('+',l,ParseE(in));
+  }
+..     	     +----+    	       	       +-----+
+       	    l| 	 --->+-----+	  l (2)| NULL|
+  	     +----+  |	1  |	       +-----+
+   1+X		     |-----|
+     ^		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>static Node * ParseE(istream & in) {
+2>  Node * l = ParseNUM(in);
+2>> if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   return new Node('+',l,ParseE(in));
+  }
+..     	     +----+    	       	       +-----+
+       	    l| 	 --->+-----+	  l (2)| NULL|
+  	     +----+  |	1  |	       +-----+
+   1+X		     |-----|
+     ^		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>>  return new Node('+',l,ParseE(in));
+  }    	       	       	  ^^^^^^^^^^==NULL
+..     	     +----+
+       	    l| 	 --->+-----+
+  	     +----+  |	1  |
+   1+X		     |-----|
+     ^		     |NULL |
+		     |-----|
+		     |NULL |
+		     +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>>  return new Node('+',l,ParseE(in));
+  }
+..     	     +----+
+       	    l| 	 --->+-----+<-\	    +----+
+  	     +----+  |	1  |   \    |'+' |
+   1+X	    	     |-----|   	\   |----|
+     ^	    	     |NULL |	 \-----	 |
+	    	     |-----|	    |----|
+	       	     |NULL |	    |NULL|
+		     +-----+	    +----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }    	       	       	 	       /----returned
+..     	               	       	       v
+       	             +-----+<-\	    +----+
+  	             |	1  |   \    |'+' |
+   1+X		     |-----|   	\   |----|
+     ^		     |NULL |	 \-----	 |
+		     |-----|	    |----|
+		     |NULL |	    |NULL|
+		     +-----+	    +----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+> }    	       	       	 	       /----returned
+..     	               	       	       v
+       	             +-----+<-\	    +----+    -	No error detected
+       	             | 	1  |   \    |'+' |    -	But '1+' is not
+   1+X		     |-----|   	\   |----|    	a legal input..
+     ^		     |NULL |	 \-----	 |
+		     |-----|	    |----|
+		     |NULL |	    |NULL|
+		     +-----+	    +----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    return new Node('+',l,ParseE(in));
+  }
+..
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    return new Node('+',l,r);
+  }
+..
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;
+    return new Node('+',l,r);
+  }
+..
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>>  if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;
+    return new Node('+',l,r);  	    +----+
+  }	      	       	       	   l|   --->+-----+
+..     	  	   		    +----+  |  1  |
+       1+X	   		            |-----|
+        ^      	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>>  in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;
+    return new Node('+',l,r);  	    +----+
+  }	      	       	       	   l|   --->+-----+
+..     	  	   		    +----+  |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+> static Node * ParseNUM(istream & in) {
+>>  if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>static Node * ParseE(istream & in) {
+2>  Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   Node * r = ParseE(in);
+    if (!r) return NULL;
+    return new Node('+',l,r);  	    +----+
+  }	      	       	       	   l|   --->+-----+
+..     	  	   		    +----+  |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>static Node * ParseE(istream & in) {
+2>> Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   Node * r = ParseE(in);			     l(2)+------+
+    if (!r) return NULL;       				 | NULL	|
+    return new Node('+',l,r);  	    +----+             	 +------+
+  }	      	       	       	   l|   --->+-----+
+..     	  	   		    +----+  |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+2>static Node * ParseE(istream & in) {
+2>  Node * l = ParseNUM(in);
+2>> if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   Node * r = ParseE(in);			     l(2)+------+
+    if (!r) return NULL;       				 | NULL	|
+    return new Node('+',l,r);  	    +----+             	 +------+
+  }	      	       	       	   l|   --->+-----+
+..     	  	   		    +----+  |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>>  Node * r = ParseE(in);
+    if (!r) return NULL;
+    return new Node('+',l,r);  	    +----+           	+-----+
+  }	      	       	       	   l|   --->+-----+    r| NULL|
+..     	  	   		    +----+  |  1  |	+-----+
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+> static Node * ParseE(istream & in) {
+>   Node * l = ParseNUM(in);
+>   if (!l) return NULL;	 // If no NUM, then no E
+>   if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+>   in.get();			 // eat the '+'
+>   Node * r = ParseE(in);
+>>  if (!r) return NULL;
+    return new Node('+',l,r);  	    +----+           	+-----+
+  }	      	       	       	   l|   --->+-----+    r| NULL|
+..     	  	   		    +----+  |  1  |	+-----+
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;       		       	    returned: NULL
+    return new Node('+',l,r);
+> }    	       	       	       	            +-----+
+..     	  	   		            |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;       		       	    returned: NULL
+    return new Node('+',l,r);  	                    -Error caught
+> }    	       	       	       	            +-----+
+..     	  	   		            |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;       		       	    returned: NULL
+    return new Node('+',l,r);  	                    -Error caught
+> }    	       	       	       	            +-----+<-Memory leaked
+..     	  	   		            |  1  |
+       1+X	   		            |-----|
+         ^     	   		            |NULL |
+				            |-----|
+				            |NULL |
+       	  			            +-----+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) return NULL;
+    return new Node('+',l,r);
+  }
+..
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - ERRORS
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;  // Not a NUM
+    return new Node(in.get()-'0',NULL,NULL);
+  }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;	 // If no NUM, then no E
+    if (in.peek()!='+') return new Node(0,l,NULL); // E<-NUM
+    in.get();			 // eat the '+'
+    Node * r = ParseE(in);
+    if (!r) { delete l; return NULL; } // flush half-built tree.
+    return new Node('+',l,r);
+  }
+..
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+                       	       	E
+                     	       /+\
+  E(1)		    	    NUM7  E
+   NUM=9	       	      	 /+\
+ E+			      NUM8  E
+  NUM=8				    |
+E+				   NUM9
+ NUM=7
+
+
+ - Once we have a parse tree, what can we do with it?
+   Besides print it..
+
+ - We could define a SEMANTICS for the nodes and then
+   EVALUATE or INTERPRET the parse tree..
+
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R
+..
+struct Node {
+..
+  int Eval() {
+    if (!left && !right)   // No kids, must be NUM rule
+      return value;        // so just return the value
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R
+..
+struct Node {
+..
+  int Eval() {
+    if (!left && !right)   // No kids, must be NUM rule
+      return value;        // so just return the value
+    if (left && !right)    // Just left kid, must be E->NUM rule
+      return left->Eval(); // so eval left kid & return result
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+E.g.   	 NODE TYPE                 EVALUATES TO
+   A NUM node with value X 	  The number X
+   An E node with one child N     The evaluation of N
+   An E node with two children    The evaluation of L plus
+     L and R			    the evaluation of R
+..
+struct Node {
+..
+  int Eval() {
+    if (!left && !right)   // No kids, must be NUM rule
+      return value;        // so just return the value
+    if (left && !right)    // Just left kid, must be E->NUM rule
+      return left->Eval(); // so eval left kid & return result
+    assert(left&&right);   // Else need two kids
+    assert(value=='+');    // And we only do addition
+    return left->Eval() + right->Eval();   // E->NUM+'+'+E rule
+  }
+..
+};
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+..
+int main() {
+
+  istrstream s ("3+67+8+9");
+  Node * t;
+  while ((t = Node::ParseE(s))) {
+    cout << " = " << t->Eval() << endl;
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+
+% ./foo
+ = 9
+ = 24
+Parse error, exiting
+%
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+..
+int main() {
+
+  istrstream s ("3+67+8+9");
+  Node * t;
+  while ((t = Node::ParseE(s))) {
+    cout << " = " << t->Eval() << endl;
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+
+% ./foo
+ = 9
+ = 24
+Parse error, exiting
+%    ..The semantics is up to us!  Just because '+' means addition
+       to somebody else doesn't mean we have to stick to that..
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+..
+int main() {
+
+  istrstream s ("3+67+8+9");
+  Node * t;
+  while ((t = Node::ParseE(s))) {
+    cout << " = " << t->Eval() << endl;
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+
+% ./foo2
+ = 63
+ = 987
+Parse error, exiting
+%
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+  int Eval() { ..
+    return left->Eval() + right->Eval()*10;   // E->NUM+'+'+E rule
+  }..
+int main() {
+
+  istrstream s ("3+67+8+9");
+  Node * t;
+  while ((t = Node::ParseE(s))) {
+    cout << " = " << t->Eval() << endl;
+    delete t;
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;
+}
+
+% ./foo2
+ = 63
+ = 987
+Parse error, exiting
+%
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE - EVALUATION
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+  int Eval() { ..
+    return left->Eval() + right->Eval()*10;   // E->NUM+'+'+E rule
+  }..
+int main() {
+
+  istrstream s ("3+67+8+9");   	       	       	      E+[63]
+  Node * t; 					     / \
+  while ((t = Node::ParseE(s))) {		[3]NUM3 E(1)[6]
+    cout << " = " << t->Eval() << endl;		    	 |
+    delete t;					      	NUM6[6]
+  }
+  cout << "Parse error, exiting" << endl;
+  return 0;				       	  E+[987]
+}					      	 / \
+					   [7]NUM7  E+[98]
+% ./foo2				       	   / \
+ = 63  					     [8]NUM8  E(1)[9]
+ = 987						       |
+Parse error, exiting				      NUM9[9]
+%
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4
+
+        E+
+       /  \
+    NUM3   E
+           |
+          NUM4
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4
+
+        E+
+       /  \
+ [3]NUM3   E
+           |
+          NUM4
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4
+
+        E+
+       /  \
+ [3]NUM3   E
+           |
+          NUM4[4]
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4
+
+        E+ [7]
+       /  \
+ [3]NUM3   E [4]
+           |
+          NUM4[4]
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5
+
+        E+ [7] 	          E*
+       /  \   	       	 /  \
+ [3]NUM3   E [4]      NUM4   E
+           |  	 	     |
+          NUM4[4]	    NUM5
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5
+
+        E+ [7] 	          E*[20]
+       /  \   	       	 /  \
+ [3]NUM3   E [4]   [4]NUM4   E [5]
+           |  	 	     |
+          NUM4[4]	    NUM5[5]
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5	       	5*6+7
+
+        E+ [7] 	          E*[20]
+       /  \   	       	 /  \
+ [3]NUM3   E [4]   [4]NUM4   E [5]
+           |  	 	     |
+          NUM4[4]	    NUM5[5]
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5	       	5*6+7
+
+        E+ [7] 	          E*[20]
+       /  \   	       	 /  \
+ [3]NUM3   E [4]   [4]NUM4   E [5]      NUM5
+           |  	 	     |
+          NUM4[4]	    NUM5[5]
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5	       	5*6+7
+
+        E+ [7] 	          E*[20]	   E*
+       /  \   	       	 /  \  	  	  /
+ [3]NUM3   E [4]   [4]NUM4   E [5]      NUM5
+           |  	 	     |
+          NUM4[4]	    NUM5[5]
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5	       	5*6+7
+
+        E+ [7] 	          E*[20]   	   E*
+       /  \   	       	 /  \  	   	  / \
+ [3]NUM3   E [4]   [4]NUM4   E [5]      NUM5 E+
+           |  	 	     |	   	    / \
+          NUM4[4]	    NUM5[5]      NUM6  E
+					       |
+					      NUM7
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5   	       	5*6+7
+
+        E+ [7] 	          E*[20]	   E*
+       /  \   	       	 /  \  	  	  / \
+ [3]NUM3   E [4]   [4]NUM4   E [5]   [5]NUM5 E+
+           |  	 	     |	   	    / \
+          NUM4[4]	    NUM5[5]      NUM6  E
+					       |
+					      NUM7
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5   	       	5*6+7
+
+        E+ [7] 	          E*[20]	   E*
+       /  \   	       	 /  \  	  	  / \
+ [3]NUM3   E [4]   [4]NUM4   E [5]   [5]NUM5 E+
+           |  	 	     |	   	    / \
+          NUM4[4]	    NUM5[5]   [6]NUM6  E[7]
+					       |
+					      NUM7[7]
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5   	       	5*6+7
+
+        E+ [7] 	          E*[20]	   E*
+       /  \   	       	 /  \  	  	  / \
+ [3]NUM3   E [4]   [4]NUM4   E [5]   [5]NUM5 E+[13]
+           |  	 	     |	   	    / \
+          NUM4[4]	    NUM5[5]   [6]NUM6  E[7]
+					       |
+					      NUM7[7]
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5   	       	5*6+7
+
+        E+ [7] 	          E*[20]	   E*[65]
+       /  \   	       	 /  \  	  	  / \
+ [3]NUM3   E [4]   [4]NUM4   E [5]   [5]NUM5 E+[13]
+           |  	 	     |	   	    / \
+          NUM4[4]	    NUM5[5]   [6]NUM6  E[7]
+					       |
+					      NUM7[7]
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+How about one of those cases where you've got addition
+AND multiplication, and you've got to make sure you do
+multiplications first?
+
+  E <- NUM | NUM + "+" + E | NUM + "*" + E
+
+       3+4     	         4*5   	       	5*6+7 == 65 ??
+
+        E+ [7] 	          E*[20]	   E*[65]
+       /  \   	       	 /  \  	  	  / \
+ [3]NUM3   E [4]   [4]NUM4   E [5]   [5]NUM5 E+[13]
+           |  	 	     |	   	    / \
+          NUM4[4]	    NUM5[5]   [6]NUM6  E[7]
+					       |
+					      NUM7[7]
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+What we need is to structure the grammar so that multiplication
+HAS to be dealt with LOWER in the tree.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+What we need is to structure the grammar so that multiplication
+HAS to be dealt with LOWER in the tree.
+
+
+  E <- TERM | TERM + "+" + E
+
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+is an easy grammar.
+
+What we need is to structure the grammar so that multiplication
+HAS to be dealt with LOWER in the tree.
+
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3
+
+  E
+  |
+ NUM3
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3
+
+  E
+  |
+ NUM3
+
+
+  no
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3
+
+  E
+  |
+ TERM
+  |
+ NUM3
+
+ yes
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3    	   2+1
+
+  E    	    E
+  |    	   /+\
+ TERM	 TERM E
+  |  	  |    \
+ NUM3	 NUM2  TERM
+    		 |
+ yes		NUM1
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3    	   2+1
+
+  E    	    E
+  |    	   /+\
+ TERM	 TERM E
+  |  	  |    \
+ NUM3	 NUM2  TERM
+   		 |
+ yes		NUM1
+   	   yes
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3    	   2+1	       	 4*5
+
+  E    	    E 	       	  E
+  |    	   /+\	       	 /*\
+ TERM	 TERM E	       TERM E
+  |  	  |    \       	|    \
+ NUM3	 NUM2  TERM    NUM4  TERM
+   		 |     	      |
+ yes   	   	NUM1   	     NUM5
+	   yes
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3    	   2+1	       	 4*5	   4*5
+
+  E    	    E 	       	  E    	     E
+  |    	   /+\	       	 /*\	     |
+ TERM	 TERM E	       TERM E	    TERM
+  |  	  |    \       	|    \	    /*\
+ NUM3	 NUM2  TERM    NUM4  TERM NUM4 TERM
+   		 |     	      |	        |
+ yes   	   	NUM1   	     NUM5      NUM5
+ 	   yes 	       	  no	   yes
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+  3    	   2+1	       	 4*5	   4*5         1+3*5
+
+  E    	    E 	       	  E    	     E         	 E
+  |    	   /+\	       	 /*\	     |         	/+\
+ TERM	 TERM E	       TERM E	    TERM      TERM E
+  |  	  |    \       	|    \	    /*\        |    \
+ NUM3	 NUM2  TERM    NUM4  TERM NUM4 TERM   NUM1  TERM
+   		 |     	      |	        |      	    /*\
+ yes   	       	NUM1   	     NUM5      NUM5    	 NUM3 TERM
+	   yes		  no   	   yes 		       |
+				       	       	      NUM5
+						yes
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;
+    return new Node(in.get()-'0',NULL,NULL); }
+
+
+
+
+
+
+
+  static Node * ParseE(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;
+..
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;
+    return new Node(in.get()-'0',NULL,NULL); }
+
+
+
+
+
+
+
+  static Node * ParseE(istream & in) {
+    Node * l = ParseTERM(in);
+    if (!l) return NULL;
+..
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;
+    return new Node(in.get()-'0',NULL,NULL); }
+  static Node * ParseTERM(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;
+
+
+
+
+  static Node * ParseE(istream & in) {
+    Node * l = ParseTERM(in);
+    if (!l) return NULL;
+..
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;
+    return new Node(in.get()-'0',NULL,NULL); }
+  static Node * ParseTERM(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;
+    if (in.peek()!='*') return new Node('T',l,NULL);
+    in.get();
+    Node * r = ParseTERM(in); if (!r) { delete l; return NULL; }
+    return new Node('*',l,r); }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseTERM(in);
+    if (!l) return NULL;
+..
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {
+    if (!isdigit(in.peek())) return NULL;
+    return new Node(in.get()-'0',NULL,NULL); }
+  static Node * ParseTERM(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;
+    if (in.peek()!='*') return new Node('T',l,NULL);
+    in.get();
+    Node * r = ParseTERM(in); if (!r) { delete l; return NULL; }
+    return new Node('*',l,r); }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseTERM(in);
+    if (!l) return NULL;
+    if (in.peek()!='+') return new Node('E',l,NULL);
+    in.get();
+    Node * r = ParseE(in); if (!r) { delete l; return NULL; }
+    return new Node('+',l,r); }
+..
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {       // NUM rule
+    if (!isdigit(in.peek())) return NULL;      // not digit, error
+    return new Node(in.get()-'0',NULL,NULL); } // else build Node
+  static Node * ParseTERM(istream & in) {
+    Node * l = ParseNUM(in);
+    if (!l) return NULL;
+    if (in.peek()!='*') return new Node('T',l,NULL);
+    in.get();
+    Node * r = ParseTERM(in); if (!r) { delete l; return NULL; }
+    return new Node('*',l,r); }
+  static Node * ParseE(istream & in) {
+    Node * l = ParseTERM(in);
+    if (!l) return NULL;
+    if (in.peek()!='+') return new Node('E',l,NULL);
+    in.get();
+    Node * r = ParseE(in); if (!r) { delete l; return NULL; }
+    return new Node('+',l,r); }
+..
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {       // NUM rule
+    if (!isdigit(in.peek())) return NULL;      // not digit, error
+    return new Node(in.get()-'0',NULL,NULL); } // else build Node
+  static Node * ParseTERM(istream & in) {      // TERM rule
+    Node * l = ParseNUM(in);   	       	       // First a NUM
+    if (!l) return NULL;		       // Bail on error
+    if (in.peek()!='*') return new Node('T',l,NULL); // Check mult
+    in.get(); 				       // Eat '*'
+    Node * r = ParseTERM(in); if (!r) { delete l; return NULL; }
+    return new Node('*',l,r); }		       // Clean up or win
+  static Node * ParseE(istream & in) {
+    Node * l = ParseTERM(in);
+    if (!l) return NULL;
+    if (in.peek()!='+') return new Node('E',l,NULL);
+    in.get();
+    Node * r = ParseE(in); if (!r) { delete l; return NULL; }
+    return new Node('+',l,r); }
+..
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node { ..
+  static Node * ParseNUM(istream & in) {       // NUM rule
+    if (!isdigit(in.peek())) return NULL;      // not digit, error
+    return new Node(in.get()-'0',NULL,NULL); } // else build Node
+  static Node * ParseTERM(istream & in) {      // TERM rule
+    Node * l = ParseNUM(in);		       // First a NUM
+    if (!l) return NULL;		       // Bail on error
+    if (in.peek()!='*') return new Node('T',l,NULL); // Check mult
+    in.get(); 				       // Eat '*'
+    Node * r = ParseTERM(in); if (!r) { delete l; return NULL; }
+    return new Node('*',l,r); }		       // Clean up or win
+  static Node * ParseE(istream & in) {         // E rule
+    Node * l = ParseTERM(in);		       // First a TERM
+    if (!l) return NULL; 		       // Bail on error
+    if (in.peek()!='+') return new Node('E',l,NULL); // Check add
+    in.get();				       // Eat '+'
+    Node * r = ParseE(in); if (!r) { delete l; return NULL; }
+    return new Node('+',l,r); }		       // Clean up or win
+..
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+int main() {
+  istrstream s ("6+7*8+9");
+...
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+  E <- TERM | TERM + "+" + E
+  TERM <- NUM |	NUM + "*" + TERM
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+int main() {
+  istrstream s ("6+7*8+9");
+...
+  return 0;
+}
+
+  E
+   T
+    NUM=9
+ E+
+   T
+    NUM=8
+  T*
+   NUM=7
+E+
+ T
+  NUM=6
+ = 71
+Parse error, exiting
+
+TOP-DOWN PARSING - UPSHOTS
+
+ - Recursive descent top-down parsing works well for certain
+   sorts of grammars and not for others.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - UPSHOTS
+
+ - Recursive descent top-down parsing works well for certain
+   sorts of grammars and not for others.
+
+ - They're the easiest kind of parsers to write by hand.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - UPSHOTS
+
+ - Recursive descent top-down parsing works well for certain
+   sorts of grammars and not for others.
+
+ - They're the easiest kind of parsers to write by hand.
+
+ - Because of the restrictions on the grammars they can handle
+   (e.g., no left recursion), other kinds of parsers are used
+   more commonly.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - UPSHOTS
+
+ - Recursive descent top-down parsing works well for certain
+   sorts of grammars and not for others.
+
+ - They're the easiest kind of parsers to write by hand.
+
+ - Because of the restrictions on the grammars they can handle
+   (e.g., no left recursion), other kinds of parsers are used
+   more commonly.
+
+ - The main group of which is called `bottom up' parsers.
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - UPSHOTS
+
+ - Recursive descent top-down parsing works well for certain
+   sorts of grammars and not for others.
+
+ - They're the easiest kind of parsers to write by hand.
+
+ - Because of the restrictions on the grammars they can handle
+   (e.g., no left recursion), other kinds of parsers are used
+   more commonly.
+
+ - The main group of which is called `bottom up' parsers.
+
+ - Which we don't have to mess with in this class.
+
+
+
+
+
+
+
+
+
+
+THE REST OF C++
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE REST OF C++
+
+ - Inheritance
+
+ - Exceptions
+
+ - STL
+
+ - ( RTTI, etc etc etc )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INHERITANCE
+
+#include <iostream.h>
+int func(istream& in) {
+  int i;
+  in >> i;
+  return i;
+}
+
+#include <strstream.h>
+int main() {
+  istrstream s("1234");
+  cout << func(s) << endl
+  return 0;
+}
+
+% ./foo
+1234
+%
+
+
+
+
+
+INHERITANCE
+
+#include <iostream.h>
+int func(istream& in) {
+  int i;
+  in >> i;        		     But.. Why does this even
+  return i;                    	     compile?
+}
+
+#include <strstream.h>
+int main() {
+  istrstream s("1234");
+  cout << func(s) << endl
+  return 0;
+}
+
+% ./foo
+1234
+%
+
+
+
+
+
+INHERITANCE
+
+#include <iostream.h>
+int func(istream& in) {
+  int i;       ^
+  in >> i;     |  		     But.. Why does this even
+  return i;    \-------------\ 	     compile?
+}		       	      \
+       	       	       	       \
+#include <strstream.h> 	       	\
+int main() {		       	 func takes an 'istream&' argument
+  istrstream s("1234");<---------and 's' is an 'istrstream'!
+  cout << func(s) << endl      	 They're not the same type!
+  return 0;
+}
+
+% ./foo
+1234
+%
+
+
+
+
+
+INHERITANCE
+
+#include <iostream.h>
+int func(istream& in) {
+  int i;       ^
+  in >> i;     |  		     But.. Why does this even
+  return i;    \-------------\ 	     compile?
+}		       	      \
+       	       	       	       \
+#include <strstream.h> 	       	\
+int main() {		       	 func takes an 'istream&' argument
+  istrstream s("1234");<---------and 's' is an 'istrstream'!
+  cout << func(s) << endl	 They're not the same type!
+  return 0;
+}
+		     But 'istrstream' INHERITS FROM 'istream'
+% ./foo		   (AKA) 'istrstream' IS A SUBCLASS OF 'istream'
+1234   	       	   (AKA) 'istrstream' IS DERIVED FROM 'istream'
+%
+
+
+
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+
+
+
+
+
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+
+
+
+
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+
+
+
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+class Human : public Animal {.. int _ssn; }
+
+
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+class Human : public Animal {.. int _ssn; }
+class Politician : public Human {..bool ProChoice;.. bool ProGun;
+
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+class Human : public Animal {.. int _ssn; }
+class Politician : public Human {..bool ProChoice;.. bool ProGun;
+ .. void BlowSmoke(char * issue).. List<Thing*> _favorsowedto;..};
+
+
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+class Human : public Animal {.. int _ssn; }
+class Politician : public Human {..bool ProChoice;.. bool ProGun;
+ .. void BlowSmoke(char * issue).. List<Thing*> _favorsowedto;..};
+class Republican : public Politician {};
+class Democrat : public Politician {};
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+class Human : public Animal {.. int _ssn; }
+class Politician : public Human {..bool ProChoice;.. bool ProGun;
+ .. void BlowSmoke(char * issue).. List<Thing*> _favorsowedto;..};
+class Republican : public Politician {?};
+class Democrat : public Politician {?};
+INHERITANCE
+#include <iostream.h>
+struct Foo {
+  void Fite() { cout << _foodata; }
+  int _foodata;
+};
+struct Bar : public Foo {     // Bar is derived from Foo
+  int _bardata;
+};
+int main() {
+  Bar b;
+  b._bardata = 6;
+  b._foodata = 7;    // b inherited 'int _foodata'
+  b.Fite();          // and 'void Fite()'..  Prints 7
+  return 0;
+}
+
+class Thing {.. int _mass; .. };
+class Animal : public Thing {.. int LegCount();.. }
+class Human : public Animal {.. int _ssn; }
+class Politician : public Human {..bool ProChoice;.. bool ProGun;
+ .. void BlowSmoke(char * issue).. List<Thing*> _favorsowedto;..
+ char _party[32]; .. };
+
+EXCEPTIONS
+
+Persistent design problem:
+  What should we do about errors??
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXCEPTIONS
+
+Persistent design problem:
+  What should we do about errors??
+
+    nothing ?
+    return a flag ?
+    assert(..) ?
+    abort() ?
+    exit(1) ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXCEPTIONS
+
+Persistent design problem:
+  What should we do about errors??
+
+    nothing ?
+    return a flag ?
+    assert(..) ?
+    abort() ?
+    exit(1) ?
+
+Old days:
+  Non-interactive batch processing.
+  When something goes wrong, no real alternative except to die.
+
+New days:
+  Interactive online services.
+  No matter what, DON'T DIE!
+
+
+
+
+
+

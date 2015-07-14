@@ -1,0 +1,3 @@
+clear
+echo "g++ -g -Wall -pedantic -c -Werror Bignum.C"
+g++ -g -Wall -pedantic -c -Werror Bignum.C 

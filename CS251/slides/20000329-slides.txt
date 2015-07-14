@@ -1,0 +1,1946 @@
+QUESTIONS	 
+
+LAST TIME:
+ - Binary search, O(log n)     	       	  
+ - Programming notes: friends, operator overloading, istrstream
+ - Dequer return			  
+
+TODAY:
+ - Administrivia
+ - Programming notes: Hacking on linked lists
+
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365) 
+           				  
+   Program 3 due: 1PM MON Apr 3, 2000	  
+	       	  UNDER 4 days 23 hours REMAINING	     
+
+   On CIRT AIX:   ~ackley/public/TurnInBignum   NOW AVAILABLE
+
+   Second in-class quiz 2PM FRI APR 7, 2000
+
+
+ Ackley office hour GAP today. NO  office hours 3:15-4pm 3/29/00
+                               YES office hours 4-5:45pm 3/29/00
+
+ADMINISTRIVIA
+   On CIRT AIX:   ~ackley/public/TurnInBignum   NOW AVAILABLE	 
+
+Program 3: UNDER 4 days 23 hours REMAINING    vvv
+     Due: 1PM MON Apr 3, 2000  NOTE THAT'S >>>1PM<<<
+                                              ^^^
+  Deadline for +3% in 23 hours: 1PM THU Mar 30, 2000
+
+Free                 TIME PENALTIES FOR PROGRAM 3
+Late           	     Last turned in BEFORE 1PM on:
+DaysTHU3/30 FRI3/31 SAT4/1 SUN4/2  MON4/3 TUE4/4 WED4/5 LATER
++------------------------------------------------------------+
+| 0 |  +3% |   0%  |   0% |   0%  |   0% | -33% | -66% |-100%|
++------------------------------------------------------------+
+| 1 |  +3% |   0%  |   0% |   0%  |   0% |   0% | -33% |-100%|
++------------------------------------------------------------+
+| 2 |  +3% |   0%  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+| 3 |  +3% |   0%  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+
+Reminder:
+	 
+  NO CREDIT FOR PROGRAM 3 AFTER CLASS STARTS ON WED APR 5, 2000.
+BIGNUM STATUS SURVEY
+	 
+`Clean frontier' (highest test level passed) is:
+       	    T-13d  T-11d  T-9d   T-6d    T-4d
+     level 9: 1      0 	       	   
+     level 8: 0	     0	   	   
+     level 7: 0	     0	   	   2
+     level 6: 0	     1	   1	   3
+     level 5: 0	     1	   1	    
+     LEVEL 4: 1	     0 	   2   	   1
+     LEVEL 3: 0	     3	   4	   9
+     LEVEL 2: 6	     4	   8	  10
+     LEVEL 1: 0	     1	   5	  11
+     LEVEL 0: 5	     22	  11	   
+Planning to	       	    	       	    
+ drop CS251	       	    	   
+     anyway : oo     oo	 <oo   	   
+		     		   
+				   
+				   
+				   
+				   
+				   
+				   
+POINTER HACKING
+
+ search and destroy on a linked list
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING
+
+ search and destroy on a linked list
+       
+#include <iostream.h>
+class List {
+public:
+  List() { _head = NULL; }
+  void Insert(char c);           // Insert at head {O(1)}
+  bool Delete(char c);	       	 // Delete from anywhere {O(n)}
+  ~List() { ... }
+ private:	 
+  struct _Elt {	 
+    _Elt(char c,_Elt *n) { ch = c; next = n; }
+    char ch;	 
+    _Elt * next;
+  };
+  _Elt * _head;
+};   
+
+...
+
+
+
+POINTER HACKING
+
+ ...
+void List::Insert(char c) { _head = new _Elt(c,_head); }
+bool List::Delete(char c) { ... }
+
+int main() {
+  List l;
+  l.Insert('a');  l.Insert('b'); l.Insert('c');
+  cout << l.Delete('e') << ' ';
+  cout << l.Delete('b') << ' ';
+  cout << l.Delete('b') << ' ';
+  return 0;
+}
+
+0 1 0
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+>>if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  
+  
+  	       	   
+  	
+  	
+  	
+  	
+  	
+_head  	
++------+
+|  NULL|    return false 
++------+
+	
+
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+>>if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+
+
+
+
+
+
+
+
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+>>if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+
+
+
+
+
+
+
+
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+>>  _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+
+
+           temp    
+       	   +-----+ 
+	   |   	 | 
+	   +-|---+ 
+	     | 	
+	     v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+>>  _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  
+  
+           temp    
+       	   +-----+ 
+  	   |   	 | 
+  	   +-|---+ 
+  	     | 	
+  	     v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     -\   |---| /|  |---| /   |---|
++------+\  |  --/ /  | 	--/    |NUL|
+	 \ +---+ /   +---+     +---+
+       	  \-----/
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+>>  delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  
+  
+           temp    
+       	   +-----+ 
+  	   |   	 | 
+  	   +-|---+ 
+  	     | 	
+       	     v
+_head  	   + - +   ->+---+   ->+---+
++------+     ?    /  |'b'|  /  |'a'|
+|     -\   | - |  |  |---| /   |---|
++------+\    ?    /  | 	--/    |NUL|
+	 \ + - + /   +---+     +---+
+	  \-----/
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+>>  return true;		// found it, killed it
+  }
+       	       	       	       	       	
+  					
+           temp    			
+       	   +-----+ 			
+  	   |   	 | 			
+  	   +-|---+ 			
+  	     | 				
+       	     v				
+_head  	   + - +   ->+---+   ->+---+	
++------+     ?    /  |'b'|  /  |'a'|	    
+|     -\   | - |  |  |---| /   |---|	    return true
++------+\    ?    /  | 	--/    |NUL|
+	 \ + - + /   +---+     +---+
+	  \-----/
+POINTER HACKING - Take 1 - delete 'c'
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+>>}
+       	       	       	       	       	
+  					
+   
+       	  
+  	  
+  	  
+  	  
+       	  
+_head  	           ->+---+   ->+---+	
++------+          /  |'b'|  /  |'a'|	    
+|     -\          |  |---| /   |---|	    return true
++------+\         /  | 	--/    |NUL|
+	 \       /   +---+     +---+
+	  \-----/
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+
+
+
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+
+
+POINTER HACKING - Take 1
+
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+  return false;			// didn't find it
+}
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+
+
+
+
+	       	
+
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+>>_Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }		   
+           last    
+       	   +-----+ 
+	   |   	 | 
+	   +-|---+ 
+	     | 	
+	     v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+>>_Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+       	   +-|---+    +|----+
+	     | 	       |
+	     v	       v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+>>  if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+	   +-|---+    +|----+
+	     | 	       |
+	     v	       v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+>>  last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+	   +----\+    +|----+
+	         \     |
+       	          \    v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+>>  curr = curr->next;		// so move on
+  }    	       	      
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+	   +----\+    +----\+
+	         \          \
+       	          \          \
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+>>  if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }    	       	      
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+	   +----\+    +----\+
+	         \          \
+       	          \          \
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+>>  last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }    	       	      
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+	   +----\+    +----\+
+	         \          \
+       	          ----------\\
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+>>  curr = curr->next;		// so move on
+  }    	       	      
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	NULL|
+	   +----\+    +-----+
+	         \           
+       	          ----------\ 
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+>>while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }    	       	      
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	NULL|
+	   +----\+    +-----+
+	         \           
+       	          ----------\ 
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'e'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }    	       	      
+>>return false;
+}<<
+
+
+
+ 
+_head  	   +---+   ->+---+   ->+---+    return false;
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }		   
+
+
+
+
+
+
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'b'
+>>_Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }		   
+           last    
+       	   +-----+ 
+	   |   	 | 
+	   +-|---+ 
+	     | 	
+	     v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+>>_Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+       	   +-|---+    +|----+
+	     | 	       |
+	     v	       v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+>>  if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+           last       curr
+       	   +-----+    +-----+
+	   |   	 |    |	    |
+	   +-|---+    +|----+
+	     | 	       |
+	     v	       v
+_head  	   +---+   ->+---+   ->+---+
++------+   |'c'|  /  |'b'|  /  |'a'|
+|     ---->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+>>    last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+           last       curr
+       	   +-----+    +-----+
+  	   |   	 |    |	    |
+       	   +-|---+    +|----+
+  	     | 	       |
+       	     v 	       v
+_head  	   +---+     +---+   ->+---+
++------+   |'c'|     |'b'|  /| |'a'|
+|     ---->|---|     |---| / | |---|
++------+   |  --\    | 	--/  | |NUL|
+	   +---+ \   +---+  /  +---+
+		  \--------/
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+>>    delete curr;		// nuke it
+      return true;		// did it
+    }  	       	      
+    last = curr;      		// else current is not it
+    curr = curr->next;		// so move on
+  }		      
+           last       curr
+       	   +-----+    +-----+
+  	   |   	 |    |	    |
+       	   +-|---+    +|----+
+  	     | 	       |
+       	     v 	       v
+_head  	   +---+     + - +     +---+
++------+   |'c'|       ?       |'a'|
+|     ---->|---|     | - |     |---|
++------+   |  --\      ?     ->|NUL|
+	   +---+ \   + - +  /  +---+
+		  \--------/
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+>>    return true;		// did it
+    }  	       	      
+    last = curr;      		// else current is not it
+    curr = curr->next;		// so move on
+  }  		      
+           last       curr
+       	   +-----+    +-----+
+  	   |   	 |    |	    |
+       	   +-|---+    +|----+
+  	     | 	       |
+       	     v 	       v
+_head  	   +---+     + - +     +---+     return true
++------+   |'c'|       ?       |'a'|
+|     ---->|---|     | - |     |---|
++------+   |  --\      ?     ->|NUL|
+	   +---+ \   + - +  /  +---+
+		  \--------/
+POINTER HACKING - Take 1 : delete 'b'
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }  	       	      
+    last = curr;      		// else current is not it
+    curr = curr->next;		// so move on
+  }  		      
+  return false;
+}<<    	       	   
+		   
+		   
+		   
+		   
+_head  	   +---+      /------->+---+     return true
++------+   |'c'|     /         |'a'|
+|     ---->|---|    /          |---|
++------+   |  -----/           |NUL|
+	   +---+               +---+
+		            
+POINTER HACKING - Take 1
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+  if (_head->ch == c) {		// if it's the first element..
+    _Elt * temp = _head;	// ..remember the element, then..
+    _head = _head->next;	// ..off with its head
+    delete temp;		// clean up
+    return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+    if (curr->ch == c) {	// found it
+      last->next = curr->next;	// splice out curr
+      delete curr;		// nuke it
+      return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+  return false;			// didn't find it
+} 
+
+POINTER HACKING - Take 1
+bool List::Delete(char c) { 
+  if (!_head) return false;	// if empty, we don't have it
+>>if (_head->ch == c) {		// if it's the first element..
+>>  _Elt * temp = _head;	// ..remember the element, then..
+>>  _head = _head->next;	// ..off with its head
+>>  delete temp;		// clean up
+>>  return true;		// found it, killed it
+  }
+  // list not empty, first element is not it
+  _Elt * last = _head;		// remember where we were
+  _Elt * curr = last->next;
+  while (curr) {
+>>  if (curr->ch == c) {	// found it
+>>    last->next = curr->next;	// splice out curr
+>>    delete curr;		// nuke it
+>>    return true;		// did it
+    }
+    last = curr;		// else current is not it
+    curr = curr->next;		// so move on
+  }
+  return false;			// didn't find it
+} 
+  Have some (nearly) repeated code here..  Can we do better?
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	
+	
+  _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+	   +---+     +---+     +---+
+
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+
+
+
+
+
+
+
+
+
+
+
+
+       	    
+	    
+       	  _Elt      _Elt      _Elt
+_Elt * 	    char ch;  char ch; 	char ch;
+  _head	 ->+---+   ->+---+   ->+---+	
++------+/  |'c'|  /  |'b'|  /  |'a'|	
+|     -/   |---| /   |---| /   |---|	
++------+   |  --/    | 	--/    |NUL|	
+           +---+     +---+     +---+	
+	   _Elt*next;_Elt*next;_Elt*next;
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+_Elt *      char      char     	char
+  _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+           +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	  
+	  
+       	  
+  _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+  _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+>>_Elt ** pptr = &_head;
+
+
+
+
+
+
+
+
+
+  pptr _Elt**
+  +-------+
+  |    	  |
+  +/------+
+  /  
+ /     	   
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+>>_Elt ** pptr = &_head;
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+
+
+
+
+
+
+
+
+  pptr _Elt**
+  +-------+
+  |    	  |
+  +/------+
+  /  
+ /    
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+       ^^^^^^^^^^^
+       
+
+
+
+
+
+       	       	 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+	 |    ?	   |
+  |    	  |	 +---------+
+  +/------+    	       	    
+  /  
+ /     	 		    
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+                    ^^^^^^^^^^^^^^
+       				  
+				  
+				  
+				  
+				  
+				  
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+  /-----    	   |	  
+  |    	  | /  	 +---------+	  
+  +/------+/  
+  /        | 
+ /     	   V
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+ 	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+  return false;
+} 		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+  /-----    	   |   	  
+  |    	  | /  	 +---------+
+  +/------+/
+  /        |   
+ /     	   V
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+  
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+  /-----    	   |   	  
+  |    	  | /  	 +---------+
+  +/------+/
+  /        |   
+ /     	   V
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+>>  if (curr->ch == c) {
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+  /-----    	   |   	  
+  |    	  | /  	 +---------+
+  +/------+/
+  /        |   
+ /     	   V
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    vvvvvvvvvvvvvvvvvvv
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    ^^^^^^^^^^^^^^^^^^^
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+  /-----    	   |   	  
+  |    	  | /  	 +---------+
+  +/------+/
+  /        |   
+ /     	   V
+v _head	 ->+---+   ->+---+   ->+---+
++------+/  |'c'|  /  |'b'|  /  |'a'|
+|     -/   |---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    vvvvvvvvvvvvvvvvvvv
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    ^^^^^^^^^^^^^^^^^^^
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+  /-----    	   |   	  
+  |    	  | /  	 +---------+
+  +---\---+/
+       \   |   
+       	\  V
+  _head	 \>+---+   ->+---+   ->+---+
++------+/| |'c'|  /  |'b'|  /  |'a'|
+|     -/ ->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_hvvvvvvvvvvvvvv                     
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == ^^^^^^^^^^^^^^                     
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \  
+       \       	    \ 
+       	\            v
+  _head	 \>+---+   ->+---+   ->+---+
++------+/| |'c'|  /  |'b'|  /  |'a'|
+|     -/ ->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+>>  if (curr->ch == c) {	    
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \  
+       \       	    \ 
+       	\            v
+  _head	 \>+---+   ->+---+   ->+---+
++------+/| |'c'|  /  |'b'|  /  |'a'|
+|     -/ ->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+       	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    
+>>    *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \  
+       \       	    \ 
+       	\            v
+  _head	 \>+---+   ->+---+   ->+---+
++------+/| |'c'|  /  |'b'|  /  |'a'|
+|     -/ ->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+       	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    
+>>    *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }			   	  
+  }			   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \  
+       \       	    \ 
+       	\            v
+  _head	 \>+---+     +---+   ->+---+
++------+/| |'c'|     |'b'|  /  |'a'|
+|     -/ ->|---|     |---| /|  |---|
++------+   |  --\    | 	--/ /  |NUL|
+   _Elt*   +---+ \   +---+ /   +---+
+	   _Elt*  --------/    _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    
+      *pptr = curr->next;  	  
+>>    delete curr;	   	  
+      return true;	   	  
+    }  	       	   	   	  
+  }		   	   	  
+
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   
+       \       	    \ 	    
+       	\            v 
+  _head	 \>+---+     + - +   ->+---+
++------+/| |'c'|       ?    /  |'a'|
+|     -/ ->|---|     | - |  |  |---|
++------+   |  --\      ?    /  |NUL|
+   _Elt*   +---+ \   + - + /   +---+
+	   _Elt*  --------/    _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+>>    return true;	   	  
+    }  	       	   	   	  
+  }  		   	   	  
+     
+     		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   
+       \       	    \ 	    
+       	\            v 
+  _head	 \>+---+     + - +   ->+---+      return true
++------+/| |'c'|       ?    /  |'a'|
+|     -/ ->|---|     | - |  |  |---|
++------+   |  --\      ?    /  |NUL|
+   _Elt*   +---+ \   + - + /   +---+
+	   _Elt*  --------/    _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }  	       	   	   	  
+  }<<		   	   	  
+       	       
+     	       	             	   
+  pptr _Elt**  	              
+  +-------+    
+  |    	  |    
+  +---\---+    	       
+       \       	      	    
+       	\              
+  _head	 \>+---+             ->+---+      return true
++------+/| |'c'|            /  |'a'|
+|     -/ ->|---|            |  |---|
++------+   |  --\           /  |NUL|
+   _Elt*   +---+ \         /   +---+
+	   _Elt*  --------/    _Elt*
+POINTER HACKING - Take 2 - delete 'b'
+bool List::Delete(char c) { 
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch == c) {	    
+      *pptr = curr->next;  	  
+      delete curr;	   	  
+      return true;	   	  
+    }  	       	   	   	  
+  }		   	   	  
+  return false;	   	   	  
+}<<   
+
+
+       	       	   
+	   	   
+       	       	    
+   		   
+  _head	   +---+             ->+---+   	  return true 
++------+   |'c'|            /  |'a'|
+|     ---->|---|            |  |---|
++------+   |  --\           /  |NUL|
+   _Elt*   +---+ \         /   +---+
+	   _Elt*  --------/    _Elt*
+POINTER HACKING - List traversal operations
+ List traversal for read-only (visiting all, finding one, etc):
+   for (_Elt * p = _head; p; p = p->next) {		      
+      <do stuff with the element p points at>		      
+   }					     
+    
+ List traversal for delete-from-middle
+  _Elt ** pptr = &_head;       	     
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (<curr is the element to kill>) {
+      *pptr = curr->next;  	     
+      delete curr;	   	     
+      break; // Or some other way out of the loop
+    }  	       	   	   	     
+  }		   	   	     
+ 				     
+ List traversal for insert-in-middle  
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (<you want to insert BEFORE curr>) {
+      *pptr = new _Elt(<newdata>,curr);
+      break; // Or some other way out of the loop
+    }  	       	   	   	  
+  }		   	   	  
+POINTER HACKING - E.g. Insert before 'K'
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {
+      *pptr = new _Elt(newdata,curr);
+      return true;
+    }  	       	   	   	  
+  }		   	   	  
+  return false;   // was no 'K' (you bozo)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTER HACKING - E.g. Insert before 'K'
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {
+      *pptr = new _Elt(newdata,curr);
+      return true;
+    }  	       	   	   	  
+  }		   	   	  
+  return false;   // was no 'K' (you bozo)
+}
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   
+       \       	    \  
+       	\            v 
+  _head	 \>+---+   ->+---+   ->+---+
++------+/| |'c'|  /  |'K'|  /  |'a'|
+|     -/ ->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K'
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {
+>>    *pptr = new _Elt(newdata,curr);
+      return true;
+    }  	       	   	   	  
+  }		   	   	  
+  return false;   // was no 'K' (you bozo)
+}      	       	
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   
+       \       	    \  
+       	\            v 
+  _head	 \>+---+   ->+---+   ->+---+
++------+/| |'c'|  /  |'K'|  /  |'a'|
+|     -/ ->|---| /   |---| /   |---|
++------+   |  --/    | 	--/    |NUL|
+   _Elt*   +---+     +---+     +---+
+	   _Elt*     _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K'
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {
+>>    *pptr = new _Elt(newdata,curr);
+      return true;
+    }  	       	   	   	  
+  }		   	   	  
+  return false;   // was no 'K' (you bozo)
+}
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   
+       \       	    \--------------\
+       	\              	       	    V  	       	   
+  _head	 \>+---+   ---------------->+---+   ->+---+
++------+/| |'c'|  /  		    |'K'|  /  |'a'|
+|     -/ ->|---| /   		    |---| /   |---|
++------+   |  --/    		    |  --/    |NUL|
+   _Elt*   +---+     		    +---+     +---+
+       	   _Elt*     		    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K'
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {
+>>    *pptr = new _Elt(newdata,curr);
+      return t^^^;
+    }  	       	   	   	  
+  }		   	   	  
+  return false;   // was no 'K' (you bozo)
+}
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   
+       \       	    \--------------\
+       	\              	       	    V  	       	   
+  _head	 \>+---+   ---------------->+---+   ->+---+
++------+/| |'c'|  /    +----+	    |'K'|  /  |'a'|
+|     -/ ->|---| /     | ?  |	    |---| /   |---|
++------+   |  --/      |----|	    |  --/    |NUL|
+   _Elt*   +---+       | ?  |	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K' (Say, insert a 'Z')
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {    
+>>    *pptr = new _Elt(newdata,curr);
+      return true;^^^^^^^^^^^^
+    }  	       	   	    	  
+  }		   	    	  
+  return false;   // was no 'K' (you bozo)
+}			    
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   	    
+       \       	    \--------------\
+       	\              	       	    V  	       	   
+  _head	 \>+---+   ---------------->+---+   ->+---+
++------+/| |'c'|  /    +----+	    |'K'|  /  |'a'|
+|     -/ ->|---| /     | 'Z'|       |---| /   |---|
++------+   |  --/      |----|  	    |  --/    |NUL|
+   _Elt*   +---+       |    | 	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K' (Say, insert a 'Z')
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {    
+>>    *pptr = new _Elt(newdata,curr);
+      return true;^^^^^^^^^^^^^^^^^^
+    }  	       	   	    	  
+  }		   	    	  
+  return false;   // was no 'K' (you bozo)
+}			    
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   	    
+       \       	    \--------------\
+       	\              	       	    V  	       	   
+  _head	 \>+---+   ---------------->+---+   ->+---+
++------+/| |'c'|  /    +----+	/   |'K'|  /  |'a'|
+|     -/ ->|---| /     | 'Z'|  /    |---| /   |---|
++------+   |  --/      |----| /	    |  --/    |NUL|
+   _Elt*   +---+       |   --/	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K' (Say, insert a 'Z')
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {    
+>>    *pptr = new _Elt(newdata,curr);
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }  	       	   	    	    
+  }		   	    	    
+  return false;   // was no 'K' (you bozo)
+}			    	    
+  		 curr  _Elt*	    
+  pptr _Elt**  	 +---------+	    
+  +-------+      |     	   |   	    
+  |    	  |    	 +-|-------+	    
+  +---\---+    	   \   	    	    
+       \       	    \--------------\
+       	\              	       	    V  	       	   
+  _head	 \>+---+                 -->+---+   ->+---+
++------+/| |'c'|  /--->+----+	/   |'K'|  /  |'a'|
+|     -/ ->|---| /     | 'Z'|  /    |---| /   |---|
++------+   |  --/      |----| /	    |  --/    |NUL|
+   _Elt*   +---+       |   --/	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K' (Say, insert a 'Z')
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {    
+      *pptr = new _Elt(newdata,curr);
+>>    return true;
+    }  	       	   	    	  
+  }		   	    	  
+  return false;   // was no 'K' (you bozo)
+} 			    
+  		 curr  _Elt*	   
+  pptr _Elt**  	 +---------+
+  +-------+      |     	   |   	  
+  |    	  |    	 +-|-------+
+  +---\---+    	   \   	    
+       \       	    \--------------\
+       	\              	       	    V  	       	   
+  _head	 \>+---+                 -->+---+   ->+---+
++------+/| |'c'|  /--->+----+	/   |'K'|  /  |'a'| return true
+|     -/ ->|---| /     | 'Z'|  /    |---| /   |---|
++------+   |  --/      |----| /	    |  --/    |NUL|
+   _Elt*   +---+       |   --/	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K' (Say, insert a 'Z')
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {    
+      *pptr = new _Elt(newdata,curr);
+      return true;
+    }  	       	   	    	  
+  }<<		   	    	  
+  return false;   // was no 'K' (you bozo)
+}      	      		    
+  	      
+  pptr _Elt** 
+  +-------+   
+  |    	  |   
+  +---\---+   
+       \       	 
+       	\        
+  _head	 \>+---+                 -->+---+   ->+---+
++------+/| |'c'|  ---->+----+	/   |'K'|  /  |'a'| return true
+|     -/ ->|---| /     | 'Z'|  /    |---| /   |---|
++------+   |  --/      |----| /	    |  --/    |NUL|
+   _Elt*   +---+       |   --/	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+POINTER HACKING - E.g. Insert before 'K' (Say, insert a 'Z')
+bool List::InsertBeforeK(char newdata) {
+  _Elt ** pptr = &_head;       	    
+  for (_Elt * curr; (curr = *pptr); pptr = & curr->next) {
+    if (curr->ch=='K') {    
+      *pptr = new _Elt(newdata,curr);
+      return true;
+    }  	       	   	    	  
+  }
+  return false;   // was no 'K' (you bozo)
+}<<    	      		    
+   	      
+
+
+
+
+
+       	 
+  _head	 ->+---+                 -->+---+   ->+---+
++------+/  |'c'|  ---->+----+	/   |'K'|  /  |'a'| return true
+|     -/   |---| /     | 'Z'|  /    |---| /   |---|
++------+   |  --/      |----| /	    |  --/    |NUL|
+   _Elt*   +---+       |   --/	    +---+     +---+
+       	   _Elt*       +----+	    _Elt*     _Elt*
+
+

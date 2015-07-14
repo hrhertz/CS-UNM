@@ -1,0 +1,744 @@
+QUESTIONS
+
+LAST TIME:
+ - Expressions, types, and pointers
+ - Dave's dequer
+	       
+	       
+TODAY:	       
+ - Dave's dequer
+ - Linked lists
+	       	      
+	       
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365)	   
+	       			      	   
+ Program 3 out by class FRIDAY.		   
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+  - Need to be able to resize deque over huge range of sizes
+    -> Use a dynamic array allocated on the heap, and have
+       a Deque method to initialize to a new size	  
+       -> Deque will need deep-copying copy ctor and op=
+  
+  - Need to distinguish IsFull from IsEmpty in wraparoundland.
+    -> Reserve one extra spot				      
+    -> (Alternative: Extra data member for the element count.)
+
+  - Need to output 'dequer protocol responses' in various places
+    -> Do all dequer stuff in class Dequer.  Don't pollute 
+       beautiful clean general class Deque with foul iostream.h
+       business..					       
+DAVE'S DEQUER - Deque.h
+
+#ifndef DEQUE_H        /* -*- C++ -*- */
+#define DEQUE_H
+
+class Deque {
+ public:
+  Deque(int size=1);               // Default and given-size ctors
+  Deque(const Deque &);            // Deep copying
+  Deque & operator=(const Deque &);// Deep copying
+  ~Deque();					  
+  void Init(int size);		   // Reinitialize to given size
+  bool Insert(const char c,bool left=true); // Only insert method
+  bool Remove(char & c,bool left=true);	    // Only remove method 
+  bool IsEmpty() const;		   // True iff deque is empty  	 
+  bool IsFull() const;		   // True iff deque is full 
+  void Empty();			   // Empty out the deque
+ private:						 
+  char * _data;			   // Ptr to dynamic array 
+  int _max;			   // Current size of _data
+  int _left, _right;		   // Indices of deque endpoints
+};
+
+#endif
+DAVE'S DEQUER - Deque.C
+
+#include "Deque.h"
+#include <stdlib.h>         /* for NULL */
+
+Deque::Deque(int size)
+{			       
+  _data = NULL;             // Init ptr
+  Init(size);  	       	    // Initialize to requested size
+}			       	       		    
+			       	       		    
+Deque::Deque(const Deque & d)  	       	       	    
+{      	       	       	    
+  _data = NULL;		    // Init ptr
+  *this = d;		    // Invoke op= to do the work
+}
+
+Deque::~Deque()
+{
+  delete [] _data;          // Clean up
+}
+
+
+
+DAVE'S DEQUER - Deque.C
+ 
+void Deque::Init(int size)       // (Re)init to a given size
+{		       				 	  
+  if (size<0) size = 0;		 // Stop the insanity  	  
+  _max = size+1;		 // Alloc one extra for full test
+  delete [] _data;     	       	 // Toss old cookies		 
+  _data = new char [_max];	 // Alloc new cookies
+  Empty();			 // Flush us out
+}					    
+					    
+Deque & Deque::operator=(const Deque &d )   
+{					    
+  if (&d==this) return *this;     // Avoid self-abuse
+  Init(d._max-1);                 // Reinit ourselves to d's size
+  _left = d._left;		  // Copy d's fingers  	       	 
+  _right = d._right;               		     
+  for (int i = 0;i<_max;++i) 	  // Copy d's data (note this is
+    _data[i] = d._data[i]; 	  //  O(size), not O(n)!  Bogus!)
+  return *this;			  // Done      	       	       	 
+}
+
+void Deque::Empty() { _left = _right = 0; } // We're empty in O(1)
+
+DAVE'S DEQUER - Deque.C
+
+bool Deque::Insert(const char c, bool left) // True iff did it
+{				     			      
+  if (IsFull()) return false;          // No room at the inn  
+  if (left) {			       // Which side?  	    
+    _data[_left] = c;		       // Store and increment..
+    _left = (_left+1)%_max;	       // ..with wrap-around   
+  } else {     	    			       	       	    
+    _right = (_right+_max-1)%_max;     // Decrement with wrap-
+    _data[_right] = c;		       // around and store     
+  }
+  return true;                         // Did it
+}						
+						
+bool Deque::IsFull() const			
+{						
+  return _right==(_left+1)%_max;       // Full when only one left 
+}
+
+
+
+
+
+DAVE'S DEQUER - Deque.C
+
+bool Deque::Remove(char &c, bool left) // True iff c was set
+{							    
+  if (IsEmpty()) return false;	       // Nobody home  	    
+  if (left) {                          // Which side?
+    _left = (_left+_max-1)%_max;       // Decrement w/wrap..
+    c = _data[_left];		       // ..and read   	    
+  } else {					    
+    c = _data[_right];		       // Read and 
+    _right = (_right+1)%_max;	       // ..increment w/wrap
+  }							    
+  return true; 			       // Did it       	    
+}					     
+ 					     
+bool Deque::IsEmpty() const		     
+{					     
+  return _left==_right;		       // Pointers match, empty
+}
+
+
+
+
+
+DAVE'S DEQUER - Dequer.h
+#ifndef DEQUER_H         /* -*- C++ -*- */
+#define DEQUER_H
+
+#include "Deque.h"
+class Dequer {
+public:
+  Dequer();			// Once-only dequer inits
+  void Run();			// Engine entry point
+private:       	 
+  bool _Command();              // Main dispatch, false on quit
+  bool _Author();               // Command routines  
+  bool _Circulate();				   
+  bool _Delay();				   
+  bool _Insert();				   
+  bool _Load(); 				   
+  bool _Remove(); 				   
+  bool _Size();					   
+  bool _Unload(); 				   
+  bool _Error(const char * msg);// Error routine w/message
+  bool _Fail(const char ch);    // ch tells which cmd failed
+  Deque _deque;			// Data storage
+};
+#endif
+DAVE'S DEQUER - Dequer.C
+
+#include "Dequer.h"
+#include <iostream.h>
+#include <ctype.h>               /* For toupper */
+
+// PUBLIC METHODS
+Dequer::Dequer() { }             // Nothing to do
+						 
+void Dequer::Run() { while (_Command()) ; }	 
+					   
+// PRIVATE METHODS			   
+bool Dequer::_Error(const char * msg)	   
+{
+  if (msg) cout << "Error: " << msg << endl;
+  cout << "QUIT" << endl;
+  return false;
+}
+
+bool Dequer::_Fail(const char ch)
+{
+  cout << "FAIL " << ch << endl;
+  return true;
+}
+DAVE'S DEQUER - Dequer.C
+			
+bool Dequer::_Command()         // Command read & dispatch
+{			
+  char c;		
+  cin >> c;		
+  if (!cin) c = 'Q';		// Quit on eof
+  switch (toupper(c)) {	
+  default: return _Error("Unrecognized command");
+  case 'A': return _Author(); 
+  case 'D': return _Delay();
+  case 'S': return _Size();
+  case 'I': return _Insert();
+  case 'C': return _Circulate();
+  case 'R': return _Remove();
+  case 'L': return _Load();
+  case 'U': return _Unload();
+  case 'Q': return _Error(NULL); // clean quit
+  }			
+  return true;		
+}  			
+			
+
+
+DAVE'S DEQUER - Dequer.C
+	   		
+// COMMAND IMPLEMENTATIONS
+bool Dequer::_Author()	
+{	   		
+  cout 	   
+   << "AUTHOR \"David Ackley (dequer v1.2)\""
+   << endl;
+  return true;
+}	   
+	   
+bool Dequer::_Delay()
+{	   
+  int ms;  
+  cin >> ms;
+  if (!cin) return _Error("Bad argument to 'D'");
+  if (ms<0) return _Error("Illegal milliseconds to 'D'");
+  cout << "DELAY " << ms << endl;
+  return true;
+}	   
+	   
+
+
+
+DAVE'S DEQUER - Dequer.C
+			
+bool Dequer::_Size()	
+{			
+  int size;		
+  cin >> size;		
+  if (!cin || size<0) return _Error("Bad argument to 'S'");
+  if (size>10000000) return _Error("There is a 10M size limit \
+(just for this special web version of dequer)");
+  _deque.Init(size);			       		       
+  cout << "SIZE " << size << endl;	       
+  return true;				       
+}					       
+
+
+
+
+
+
+
+       
+       
+       
+       
+DAVE'S DEQUER - Dequer.C
+       
+bool Dequer::_Insert()
+{      
+  char ch;
+  cin >> ch;
+  if (!cin) return _Error("Bad argument(s) to 'I'nsert");
+  bool left;
+  switch (ch) {
+  case 'L': case 'l': left = true; break;
+  case 'R': case 'r': left = false; break;
+  default: return _Error("unknown argument to 'I'nsert");
+  }    
+  do { cin.get(ch); } while (cin && ch=='\r');
+  if (!cin || ch=='\n') return _Error("no char to 'I'nsert");
+  if (!_deque.Insert(ch,left)) return _Fail('I');
+  cout << "INSERT " << (left?'L':'R') << ch << endl;
+  return true;
+}
+
+
+
+
+
+DAVE'S DEQUER - Dequer.C
+			
+bool Dequer::_Remove()	
+{			
+  char ch;		
+  cin >> ch;		
+  if (!cin) return _Error("Bad argument(s) to 'R'emove");
+  bool left;		
+  switch (ch) {		
+  case 'L': case 'l': left = true; break;
+  case 'R': case 'r': left = false; break;
+  default: return _Error("unknown argument to 'R'emove");
+  }			
+  if (!_deque.Remove(ch,left)) return _Fail('R');
+  else cout << "REMOVE " << (left?'L':'R') << ch << endl;
+  return true;		
+}			
+			
+			
+
+
+
+
+
+DAVE'S DEQUER - Dequer.C
+			
+bool Dequer::_Circulate()
+{			
+  char side;		
+  cin >> side;		
+  if (!cin) return _Error("Bad argument to 'C'irculate");
+  side = toupper(side);
+  bool left;
+  switch (side) {
+  case 'L': left = true; break;
+  case 'R': left = false; break;
+  default: return _Error("unknown argument to 'C'irculate");
+  }
+  if (_deque.IsEmpty()) cout << "FAIL C" << endl;
+  else {
+    char item;
+    _deque.Remove(item,left);
+    _deque.Insert(item,!left);
+    cout << "CIRCULATE " << side << item << endl;
+  }
+  return true;
+}
+
+DAVE'S DEQUER - Dequer.C
+
+bool Dequer::_Load()
+{
+  bool failed = false;
+  while (1) {
+    char ch;
+    do { cin.get(ch); } while (cin && ch=='\r'); // Web:Flush \r's
+    if (!cin) return _Error("Missing newline in 'L'oad");    	  
+    if (ch=='\n') break;
+    if (!_deque.Insert(ch,false)) failed = true;
+  }
+  if (failed) return _Fail('L');
+  return true;
+}
+
+bool Dequer::_Unload()
+{
+  cout << "UNLOAD ";
+  char ch;
+  while (_deque.Remove(ch,true)) cout << ch;
+  cout << endl;
+  return true;
+}
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+
+
+
+
+
+
+       	     		     
+
+
+
+
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+
+
+
+
+       	     		     
+
+
+
+
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.  	   
+
+      Make a class that has one data item (of whatever
+      type one wants to deal with) and also has a pointer   
+      to another object of the same class!     
+ 
+
+
+
+
+
+
+
+    
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.  	   
+
+      Make a class that has one data item (of whatever
+      type one wants to deal with) and also has a pointer   
+      to another object of the same class!     
+ 
+   class ListElt {      // a Linked List Element
+   public: ...        	      				 
+   private: 	      	      				 
+     ...	      
+     int _data;         // the payload for this element
+     ListElt * _next;   // pointer to more elements if any
+   };  	
+    
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+
+   class ListElt {      // a Linked List Element
+     ...       	       	 
+     int _data;         // the payload for this element
+     ListElt * _next;   // pointer to more elements if any
+   };  	
+             +-------+
+             |     87| int _data
+	     |-------|	       	
+             |      0| ListElt * _next
+	     +-------+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+
+
+
+
+
+
+             +-------+
+             |     87| 
+	     |-------| 	       	
+             |      0| 
+	     +-------+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+       	       	       	 	   
+ListElt * _head   	 
+ +-------+		 
+ |    ---\ 		 
+ +-------+\  		 
+       	   \   		 
+ 	    >+-------+	 
+  	     |     87|	 
+	     |-------|	 
+       	     |      0| 	 
+	     +-------+	 
+			 
+			 
+			 
+			 
+			 
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+				   
+ListElt * _head   	       	             (e.g.)           
+ +-------+     	       	  	    _head = new ListElt;
+ |    ---\ 		  	    (*_head)._data = 87;      
+ +-------+\  		  	    (*_head)._next = 0;       
+       	   \   		  
+ 	    >+-------+	  
+  	     |     87|	  
+	     |-------|	  
+       	     |      0| 	  
+	     +-------+	 
+			 
+			 
+			 
+			 
+			 
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+				   
+ListElt * _head   	       	             (e.g.)           
+ +-------+			    _head = new ListElt;
+ |    ---\ 			    (*_head)._data = 87;      
+ +-------+\  			    (*_head)._next = 0;       
+       	   \   	       	     	             (or)             
+ 	    >+-------+	 	    _head = new ListElt; 
+  	     |     87|	 	    _head->_data = 87;        
+	     |-------|	 	    _head->_next = 0;         
+       	     |      0| 	 
+	     +-------+	 
+			 
+			 
+			 
+			 
+			 
+
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+				   
+ListElt * _head   	       	             (e.g.)           
+ +-------+			    _head = new ListElt;
+ |    ---\ 			    (*_head)._data = 87;      
+ +-------+\  			    (*_head)._next = 0;       
+       	   \   		     	             (or)             
+ 	    >+-------+		    _head = new ListElt; 
+  	     |     87|		    _head->_data = 87;        
+       	     |-------| 	       	    _head->_next = 0;         
+       	     |      0| 	       	    	   (or better)	      
+       	     +-------+ 	ListElt::ListElt(int item,ListElt * ptr) {
+			   _data = item;      	       	       
+			   _next = ptr;	 
+			}      	       
+			..	       
+			_head = new ListElt(87,0);
+			
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 12;
+  return 0;			   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 12;
+  return 0;			   
+}
+foo.C:4: warning: assignment to `char *' from `int' lacks a cast
+
+
+
+
+
+
+
+
+
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 12;
+  return 0;			   
+}
+foo.C:4: warning: assignment to `char *' from `int' lacks a cast
+
+How about this?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 0;
+  return 0;			   
+}
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 12;
+  return 0;			   
+}
+foo.C:4: warning: assignment to `char *' from `int' lacks a cast
+
+How about this?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 0;
+  return 0;			   
+}
+
+CLEAN!  Why?
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 12;
+  return 0;			   
+}
+foo.C:4: warning: assignment to `char *' from `int' lacks a cast
+
+How about this?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 0;
+  return 0;			   
+}
+
+CLEAN!  Why?
+  Normally, assigning an int to a pointer is suspect.  A special
+  exception is made for 0, because 'null pointers' are so basic.

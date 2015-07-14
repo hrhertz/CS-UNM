@@ -1,0 +1,888 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Efficiency and class design: Stack	   
+ - Dave's blocks
+
+TODAY:
+ - Administrivia
+ - Dave's blocks
+ - Stacks & Queues
+
+HOMEWORK: PC++P Ch 8 & 9
+
+
+
+
+ BIG ROOM, THE n. The extremely large room with the blue ceiling
+   and intensely bright light (during the day) or black ceiling
+ with lots of tiny night-lights (during the night) found outside
+  all computer installations.  "He can't come to the phone right
+	    now, he's somewhere out in the Big Room."
+
+
+ADMINISTRIVIA
+ - Scheduling:
+    o Program 2 (Stacks & Queues): Out before class Friday
+    o FIRST IN-CLASS QUIZ NEXT WEDNESDAY, FEB 23
+
+ - `Request to use free late days' page is NOW up on the
+   student resources site.
+    o Procedure reminder:     	  
+      (1) Try to connect with your web browser.		    
+      (2) Authorization dialog pops up.  Pick `Cancel'.
+      (3) Authorization failed page comes up.  Follow link to
+          the registration page.                             
+      (4) Fill in your CIRT id, your UNM student id #, and your
+       	  full name.  Click `Continue'.	      	      	       
+      (5) If an error page comes up, read it to see what it says
+       	  and try again.  IF YOU GET STUCK HERE, send an email to
+       	  the professor indicating what error you receive
+       	  (Student ID `123456789' not found, etc).  Include your
+       	  full name and student id number in the email message.	
+      (6) Otherwise a confirmation page comes up. Click `confirm'.
+      (7) Email is sent to your UNM account.  Go read that email.
+       	  Extract your CS251 password from it.			 
+      (8) Try to connect with your browser. Authorization box pops
+       	  up.  Supply your UNM loginid and your CS251 password.	 
+DESIGNING A STACK
+       	     
+ - What public member functions should a stack provide?
+
+   PC++P Ch 13:
+     void init();
+     void push(const int item);
+     int pop();	       	       
+	       
+   Defend:
+   + Simple			 
+   + Small
+	  			     
+   Attack
+   - No ctor.. Stack not ready-to-wear out-of-the-box
+   - No overflow/underflow handling  
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+
+DESIGNING A STACK
+       Stack();            // Build empty stack
+       ~Stack();	   // Destroy a stack
+       bool Insert(int);   // Push int, return true if fit
+       bool Remove(int &); // Pop to int&, return true if did it
+       bool IsFull();	   // True if no more room 
+       bool IsEmpty();     // True if no items on stack at all
+       void Empty();       // Empty out stack completely       	
+       	     
+ Why provide 'void Empty()'?
+ 
+ATTACK				       	     
+ - It's unnecessary.  The class user      / (s is a Stack..)      
+   can get the effect without it, just ---| int i;                
+   using the other public methods.    	  \ while (s.Remove(i)) ;
+ - Given that it's unnecessary, the    	    \-------------------/
+   general principle of keeping our	   	  |	       
+   interfaces small says get rid of it.	  	  |	       
+DEFEND 	       	       	       	      Using public methods is O(n)
+ + The class user cannot implement it 	but we can do it privately
+   as EFFICIENTLY as we can.   	       	in O(1) 
+       	       	       	       	       	    |
+			       /---------------------------------\
+	       		       void Stack::Empty() { _count = 0; }
+CLASS DESIGN: UPSHOTS
+    	    
+ - Only the paranoid survive: Always need to worry about insane
+   class users (vs `nobody would pop more than they pushed'...)
+    	    	 
+ - Small class interfaces are safer and more maintainable than
+   large ones.		 
+	      		 
+ - (But) It's also desirable to provide a `natural' interface,
+   even if not strictly minimal.
+			 
+ - Design is about tradeoffs.  
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS
+
+ - Chewing on the spec; playing with the reference implementation
+      			
+   - Small, fixed, max blocks --> use an array of Blocks
+      
+   - Small, fixed, max board width & height --> use 2d array?
+      2d array of what?  Of blocks?  Of int block nums?
+      Reading on..
+       "where in fact both block 0 and block 1 are in (0,0)" 
+      							     
+       o  Multiple blocks can be in one position!  Gag!
+ 	  -> So what happens if you bump into a pile of blocks?
+       	     --> The lowest numbered one gets pushed..
+
+       o  So, *could* use 2D array of int holding lowest block
+       	  number..  maybe..  but then would have to maintain
+       	  that array..  what happens when the lowest block# gets
+       	  knocked away?  would have to search for the *next*
+       	  lowest block# in that same (x,y) position..  ugh. 
+
+       o  Hey..  If we('d have to) search through the blocks to
+       	  find who's in some position (anyway), then we don't
+       	  need a 2d array for the board at all!		     
+DAVE'S BLOCKS - DESIGN DECISIONS
+				
+ - Follow the Booth/Voter scheme where possible
+
+ - Use an array of Block as a data member of Board, search it as
+   needed to check occupancy at (x,y) (so no 2D array needed to
+   represent the board)			    
+   		       			 
+ - Each Block remembers (x,y), (initx,inity), its 'state' and
+   its 'initial state'. 
+
+ - Block state is a char, 'N','S','E','W' if moving, or 'H' if
+   "halted but movable", or 'F' if "fixed and immovable".  
+
+ - Block will also store its own 'block number'
+
+ - Board will handle command reading and sanity checking.
+
+ - A Block will handle moving itself  
+      				      			     
+ - The Board will know who's moving, and handle change-of-mover
+   when there's a bump
+
+
+DAVE'S BLOCKS - Block.h
+
+#ifndef BLOCK_H        /* -*- C++ -*- */
+#define BLOCK_H
+
+#include <iostream.h>
+
+class Block {
+ public:
+  Block();                    // Set up a block    
+  void SetIndex(int idx);     // Tell a block its index
+  bool At(int x,int y);       // True if block is at (x,y)
+  bool Move(class Board &);   // True if block wanted to move
+  void Push(const char c);    // Changes block state if movable
+  void Init(int x, int y,bool movable); // Sets block parameters
+  void Reset();               // Resets block to init parameters 
+ private:
+  int _initx, _inity, _x, _y; // Initial and current position
+  char _initstate, _state;    // Initial and current state
+  int _index;                 // Block number
+};
+
+#endif
+ 
+DAVE'S BLOCKS - Board.h
+#ifndef BOARD_H         /* -*- C++ -*- */
+#define BOARD_H
+#include "Block.h"
+class Board {
+public:
+  Board();                   // Once-only board inits
+  void Run();                // Engine entry point
+  bool Bumped(int x, int y, const char c);  // True if (x,y) hit..
+private:  		     					  
+  bool _Command();	     // Returns false on error or quit
+  bool _Error(const char * msg);  // Always returns false     
+			     				      
+  bool _Author(); bool _Delay(); bool _Init();  // Command impl..
+  bool _Block(); bool _Push(); bool _Reset();   //  false on error
+			     
+  enum {_MAXW=50, _MAXH=50, _MAXBLOCKS=100}; // Size limits
+  Block _blocks[_MAXBLOCKS]; // The blocks
+  int _blockcount;           // Number of blocks in use
+  int _boardw,_boardh;       // Current size of board
+  int _mover;                // Moving block or -1 if none
+  bool _reset;               // True if we've 'R'd since last 'I'
+};
+#endif
+DAVE'S BLOCKS - Block.C
+		     
+void Block::Reset()  
+{		     
+  _x = _initx;	     
+  _y = _inity;	     
+  _state = _initstate;
+  cout << "BLOCK " << _index << ' '    // Announce our position
+       << _x << ' ' << _y << ' '
+       << (_state!='F') 
+       << endl;	     
+}		     
+		     
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Block.C
+		     
+void Block::Reset()  
+{		     
+  _x = _initx;	     
+  _y = _inity;	     
+  _state = _initstate; 	       	  
+  cout << "BLOCK " << _index << ' '    // Announce our position
+       << _x << ' ' << _y << ' '
+       << (_state!='F') 
+       << endl;	     
+}		     
+		     
+void Block::Push(const char c)
+{		     
+  if (_state!='F') {                    // If not 'F'ixed.. 
+    cout << "PUSHED " << _index << endl; 		    
+    _state = c;	       	       	       	// ..we want to move
+  }		
+}		     			 
+
+
+
+
+DAVE'S BLOCKS - Block.C
+		     
+bool Block::Move(Board & g)   // Try to move if you want to...
+{		     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		     
+
+
+DAVE'S BLOCKS - Block.C
+		     
+bool Block::Move(Board & g)   // Try to move if you want to...
+{		     
+  int newx, newy;    
+  switch (_state) {  
+  case 'n': case 'N':   newy = _y-1;   newx = _x;     break;
+  case 's': case 'S':   newy = _y+1;   newx = _x;     break;
+  case 'e': case 'E':   newy = _y;     newx = _x+1;   break;
+  case 'w': case 'W':   newy = _y;     newx = _x-1;   break;
+  default:  return false;     // Didn't want to move
+  }		     
+
+
+
+
+
+
+
+
+
+		     
+
+
+DAVE'S BLOCKS - Block.C
+		     
+bool Block::Move(Board & g)   // Try to move if you want to...
+{		     
+  int newx, newy;    
+  switch (_state) {  
+  case 'n': case 'N':   newy = _y-1;   newx = _x;     break;
+  case 's': case 'S':   newy = _y+1;   newx = _x;     break;
+  case 'e': case 'E':   newy = _y;     newx = _x+1;   break;
+  case 'w': case 'W':   newy = _y;     newx = _x-1;   break;
+  default:  return false;     // Didn't want to move
+  }		     
+  if (g.Bumped(newx,newy,_state)) {
+    cout << "HALT " << _index << endl;
+    _state = 'H';    
+  }
+
+
+
+
+
+		     
+
+
+DAVE'S BLOCKS - Block.C
+		     
+bool Block::Move(Board & g)   // Try to move if you want to...
+{		     
+  int newx, newy;    
+  switch (_state) {  
+  case 'n': case 'N':   newy = _y-1;   newx = _x;     break;
+  case 's': case 'S':   newy = _y+1;   newx = _x;     break;
+  case 'e': case 'E':   newy = _y;     newx = _x+1;   break;
+  case 'w': case 'W':   newy = _y;     newx = _x-1;   break;
+  default:  return false;     // Didn't want to move
+  }		     
+  if (g.Bumped(newx,newy,_state)) {
+    cout << "HALT " << _index << endl;
+    _state = 'H';    
+  } else {	     
+    _x = newx; _y = newy;
+    cout << "MOVE " << _index << " " << _x << " " << _y << endl;
+  } 		     
+
+
+		     
+
+
+DAVE'S BLOCKS - Block.C
+		     
+bool Block::Move(Board & g)   // Try to move if you want to...
+{		     
+  int newx, newy;    
+  switch (_state) {  
+  case 'n': case 'N':   newy = _y-1;   newx = _x;     break;
+  case 's': case 'S':   newy = _y+1;   newx = _x;     break;
+  case 'e': case 'E':   newy = _y;     newx = _x+1;   break;
+  case 'w': case 'W':   newy = _y;     newx = _x-1;   break;
+  default:  return false;     // Didn't want to move
+  }		     
+  if (g.Bumped(newx,newy,_state)) {
+    cout << "HALT " << _index << endl;
+    _state = 'H';    
+  } else {	     
+    _x = newx; _y = newy;
+    cout << "MOVE " << _index << " " << _x << " " << _y << endl;
+  } 		     
+  return true;                // (Tried to) move
+}		     
+		     
+
+
+DAVE'S BLOCKS - Block.C - Upshots
+       	      	     	  
+ - Block::Push changes the Block's state, announces that, and
+   returns; it does not actually move anything		     
+
+ - Block::Move checks the Block's state, and if it wants to move,
+   determines where.  It uses Board::Bumped to see if the	 
+   destination is available.				    
+       	     
+ - Block methods do NOT deal with:
+   (1) Doing an original Push, or
+   (2) `Transmitting' a push from one Block to another, or
+   (3) Calling Block::Move over and over as needed.		  
+
+
+
+
+
+
+
+
+
+
+		     
+DAVE'S BLOCKS - Board.C	          
+
+#include "Board.h"
+Board::Board()
+{  
+  _boardw = 1; _boardh = 1; _blockcount = 1; 
+  _reset = false; _mover = -1;
+  for (int i = 0; i<_MAXBLOCKS; ++i) _blocks[i].SetIndex(i);
+}  			      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+#include "Board.h"
+Board::Board()
+{  
+  _boardw = 1; _boardh = 1; _blockcount = 1; 
+  _reset = false; _mover = -1;
+  for (int i = 0; i<_MAXBLOCKS; ++i) _blocks[i].SetIndex(i);
+}  			      
+void Board::Run() { while (_Command()) ; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+#include "Board.h"
+Board::Board()
+{  
+  _boardw = 1; _boardh = 1; _blockcount = 1; 
+  _reset = false; _mover = -1;
+  for (int i = 0; i<_MAXBLOCKS; ++i) _blocks[i].SetIndex(i);
+}  			      
+void Board::Run() { while (_Command()) ; }
+
+bool Board::Bumped(int x, int y,const char c)
+{   			      
+  if (x<0 || x>=_boardw || y<0 || y>=_boardh) { 
+    _mover = -1;            // Nobody moving now..
+    return true;	
+  }
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+#include "Board.h"
+Board::Board()
+{  
+  _boardw = 1; _boardh = 1; _blockcount = 1; 
+  _reset = false; _mover = -1;
+  for (int i = 0; i<_MAXBLOCKS; ++i) _blocks[i].SetIndex(i);
+}  			      
+void Board::Run() { while (_Command()) ; }
+
+bool Board::Bumped(int x, int y,const char c)
+{   			      
+  if (x<0 || x>=_boardw || y<0 || y>=_boardh) { 
+    _mover = -1;            // Nobody moving now..
+    return true;	
+  }
+  for (int i = 0;i<_blockcount; ++i) 
+    if (_blocks[i].At(x,y)) { 
+
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+#include "Board.h"
+Board::Board()
+{  
+  _boardw = 1; _boardh = 1; _blockcount = 1; 
+  _reset = false; _mover = -1;
+  for (int i = 0; i<_MAXBLOCKS; ++i) _blocks[i].SetIndex(i);
+}  			      
+void Board::Run() { while (_Command()) ; }
+
+bool Board::Bumped(int x, int y,const char c)
+{   			      
+  if (x<0 || x>=_boardw || y<0 || y>=_boardh) { 
+    _mover = -1;            // Nobody moving now..
+    return true;	
+  }
+  for (int i = 0;i<_blockcount; ++i) 
+    if (_blocks[i].At(x,y)) { 
+      _blocks[i].Push(c); _mover = i; 
+      return true;				      
+    }
+
+
+DAVE'S BLOCKS - Board.C	          
+
+#include "Board.h"
+Board::Board()
+{  
+  _boardw = 1; _boardh = 1; _blockcount = 1; 
+  _reset = false; _mover = -1;
+  for (int i = 0; i<_MAXBLOCKS; ++i) _blocks[i].SetIndex(i);
+}  			      
+void Board::Run() { while (_Command()) ; }
+
+bool Board::Bumped(int x, int y,const char c)
+{   			      
+  if (x<0 || x>=_boardw || y<0 || y>=_boardh) { 
+    _mover = -1;            // Nobody moving now..
+    return true;	
+  }
+  for (int i = 0;i<_blockcount; ++i) 
+    if (_blocks[i].At(x,y)) { 
+      _blocks[i].Push(c); _mover = i; 
+      return true;				      
+    }
+  return false;
+}    
+DAVE'S BLOCKS - Board.C	          
+bool Board::_Error(const char * msg)
+{
+  cout << "Error: " << msg << endl;
+  cout << "QUIT" << endl;
+  return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+bool Board::_Error(const char * msg)
+{
+  cout << "Error: " << msg << endl;
+  cout << "QUIT" << endl;
+  return false;		 
+}			 
+bool Board::_Command()	 
+{			 
+  char c;		 
+  cin >> c;		 
+  if (!cin) c = 'Q';	 	// Quit on eof
+  switch (c) {		 
+  default: return _Error("Unrecognized command");
+  case 'a': case 'A': return _Author(); 
+  case 'd': case 'D': return _Delay();
+  case 'i': case 'I': return _Init();
+  case 'b': case 'B': return _Block();
+  case 'p': case 'P': return _Push();
+  case 'r': case 'R': return _Reset();
+  case 'q': case 'Q': cout << "QUIT" << endl; return false;
+  }
+  return true;
+}  
+DAVE'S BLOCKS - Board.C	          
+// COMMAND IMPLEMENTATIONS	  
+
+bool Board::_Author() { 
+  cout << "AUTHOR \"David Ackley (blocks v1.1)\"" << endl;
+  return true; 
+}
+
+bool Board::_Delay()
+{
+  int ms;
+  cin >> ms;
+  if (!cin) return _Error("Bad argument to 'D'");
+  if (ms<0) return _Error("Illegal milliseconds to 'D'");
+  cout << "DELAY " << ms << endl;
+  return true;
+}
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+bool Board::_Init()		  
+{				  
+    int w,h,b;			  
+
+    cin >> w >> h >> b;		  
+
+    if (!cin) return _Error("Bad argument(s) to 'I'");
+    if (!(w>=1&&w<=_MAXW)) return _Error("Illegal width to 'I'");
+    if (!(h>=1&&h<=_MAXH)) return _Error("Illegal height to 'I'");
+    if (!(b>=1&&w<=_MAXBLOCKS)) 
+      return _Error("Illegal block count to 'I'");
+
+    _boardw = w; _boardh = h; _blockcount = b;
+    for (int i = 0; i<_blockcount; ++i) _blocks[i].Init(0,0,1);
+    _reset = false;		  
+
+    return true;
+}
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+bool Board::_Block()
+{
+  int b,movable,x,y;
+
+  cin >> b >> x >> y >> movable;
+
+  if (!cin) return _Error("Bad argument(s) to 'B'");
+  if (b<0 || b>=_blockcount) 
+    return _Error("Illegal block number to 'B'");
+  if (x<0 || x>=_boardw) return _Error("Illegal x to 'B'");
+  if (y<0 || y>=_boardh) return _Error("Illegal y to 'B'");
+  if (movable!=0 && movable!=1) 
+    return _Error("Illegal 'movable' to 'B'");
+
+  _blocks[b].Init(x,y,movable);
+
+  return true;
+}  
+
+
+
+
+DAVE'S BLOCKS - Board.C	          
+
+bool Board::_Push()
+{
+  if (!_reset) return _Error("Can't 'P'ush before 'R'eset");
+
+  int b;
+  char c;
+
+  cin >> b >> c;
+
+  if (!cin) return _Error("Bad argument(s) to 'P'");
+  if (b<0 || b>=_blockcount) 
+    return _Error("Illegal block number to 'P'");
+
+  _mover = b;
+  _blocks[_mover].Push(c);
+  // Here finally is where blocks can move!
+  while (_mover>=0) _blocks[_mover].Move(*this);
+
+  return true;
+}
+
+
+DAVE'S BLOCKS - Board.C	          
+
+bool Board::_Reset()
+{
+  cout << "RESET " << _boardw << ' ' << _boardh << endl;
+  for (int j = 0; j<_blockcount; ++j) _blocks[j].Reset();
+  _reset = true;
+  return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+
+  				    
+
+
+  		
+
+
+
+
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+ - Far from the only design approach
+  				    
+
+
+  		
+
+
+
+
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+ - Far from the only design approach
+  				    
+ - Blocks have business to attend to; fights `container creep'
+   (tendency for behavior to migrate toward container class). 
+  		
+
+
+
+
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+ - Far from the only design approach
+  				    
+ - Blocks have business to attend to; fights `container creep'
+   (tendency for behavior to migrate toward container class). 
+  		
+ - Still some remaining flaws
+
+
+
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+ - Far from the only design approach
+  				    
+ - Blocks have business to attend to; fights `container creep'
+   (tendency for behavior to migrate toward container class). 
+  		
+ - Still some remaining flaws, e.g.,
+   o Coding: No bool Board::_Quit routine, so some duplicated code
+
+
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+ - Far from the only design approach
+  				    
+ - Blocks have business to attend to; fights `container creep'
+   (tendency for behavior to migrate toward container class). 
+  		
+ - Still some remaining flaws, e.g.,
+   o Coding: No bool Board::_Quit routine, so some duplicated code
+   o Design: Block::Move returns bool but Board doesn't check 
+     it or care!
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S BLOCKS - Upshots
+
+ - Far from the only design approach
+  				    
+ - Blocks have business to attend to; fights `container creep'
+   (tendency for behavior to migrate toward container class). 
+  		
+ - Still some remaining flaws, e.g.,
+   o Coding: No bool Board::_Quit routine, so some duplicated code
+   o Design: Block::Move returns bool but Board doesn't check 
+     it or care!
+  		
+% wc p1-0.8.html 
+   1233    4185   38447 p1-0.8.html
+% wc [MB]*.[Ch]
+     54     229    1258 Block.C
+     21     107     721 Block.h
+    103     421    2847 Board.C
+     25     127     944 Board.h
+      8      11      68 Main.C
+      6       7      58 Main.h
+    217     902    5896 total
+%   	 
+The solution has only 18% as many lines as the problem! (217/1233)

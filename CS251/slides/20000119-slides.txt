@@ -1,0 +1,816 @@
+QUESTIONS
+	     C S  2 5 1  -  I n t r o d u c t i o n
+ 	       t o   d a t a   s t r u c t u r e s
+
+LAST TIME:
+ - Was no last time this is the first time
+
+TODAY:
+ - Administrivia
+ - Introduction/overview
+ - An OOP HOWTO
+
+
+HOMEWORK: PC++P Ch 1,2,3
+
+
+
+		     Definition of the day
+
+ NINETY-NINETY RULE n.  "The first 90% of the code accounts for
+the first 90% of the development time. The remaining 10% of the
+  code accounts for the other 90% of the development time."
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+  - TAs, office hours, opening day handout..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+  - TAs, office hours, opening day handout
+     -- working on it.. :(
+		   	  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+  - TAs, office hours, opening day handout
+     -- working on it.. :(
+		   	  
+  - No lab sections meet this week!  Lab sections
+    will start NEXT Monday 			 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+  - TAs, office hours, opening day handout
+     -- working on it.. :(
+		   	  
+  - No lab sections meet this week!  Lab sections
+    will start NEXT Monday 			 
+
+ 
+    Warning:
+
+        CS 251 Spring 2000: Second systemitis
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+  - TAs, office hours, opening day handout
+     -- working on it.. :(
+		   	  
+  - No lab sections meet this week!  Lab sections
+    will start NEXT Monday 			 
+
+ 
+    Warning:
+
+        CS 251 Spring 2000: Second systemitis
+
+
+    WARNING:
+
+	NO AUDITS
+	NO AUDITS
+
+
+
+
+ADMINISTRIVIA
+
+  - Attendance.. sign your initials next to your name
+
+  - TAs, office hours, opening day handout
+     -- working on it.. :(
+		   	  
+  - No lab sections meet this week!  Lab sections
+    will start NEXT Monday 			 
+
+ 
+    Warning:
+
+        CS 251 Spring 2000: Second systemitis
+
+
+    WARNING:
+
+	NO AUDITS
+	NO AUDITS
+
+	GO FOR CR/NC EARLY IF YOU NEED TO, BUT
+
+	       NO AUDITS
+INTRODUCTION
+
+- Goals
+	C++ + OOP + the craft of programming
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION
+
+- Goals
+	C++ + OOP + the craft of programming
+
+- Text
+
+  Oualline, Practical C++ Programming  (PC++P)
+
+         Not great but not awful
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION
+
+- Goals
+	C++ + OOP + the craft of programming
+
+- Text
+
+  Oualline, Practical C++ Programming  (PC++P)
+
+         Not great but not awful
+
+- Structure
+						     Total credit
+  - Approximately five programs of varying size          50%
+      Program 1, out next week
+       Then another program every 1-3 weeks
+
+  - Two one-hour in-class quizzes                        20%
+
+  - Final examination                                    20%
+
+  - 8-10 quizzes in lab sections                         10%
+                                                        ----
+                                                        100%
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+ - The tools
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+ - The tools
+ - Basics of sane software design
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+ - The tools
+ - Basics of sane software design
+
+
+ - The big three: KCC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+ - The tools
+ - Basics of sane software design
+
+
+ - The big three: KCC
+    Knowledge
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+ - The tools
+ - Basics of sane software design
+
+
+ - The big three: KCC
+    Knowledge
+    Competence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION: THE GOAL IS CREDIBLE C++ PROGRAMMING
+
+ - The language
+ - The tools
+ - Basics of sane software design
+
+
+ - The big three: KCC
+    Knowledge
+    Competence
+    Confidence
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION
+
+  - Mechanics
+
+	Hacking
+
+	Programs
+
+	Getting help
+
+ 	  Lectures
+
+	  Labs - TAs
+
+	  Office hours
+		Ackley:  MWF 3-5PM FEC 349E
+       	       	   TAs:  to come
+	  Email ackley@cs.unm.edu
+
+	  Asking questions
+
+	Web page - http://www.cs.unm.edu/~ackley/cs251/
+
+
+INTRODUCTION
+
+- Mechanics
+
+ Grading
+ 50% PROGRAMMING
+	Distributed non-linearly over five programs
+ 50% TESTING = (Lab quizzes) 10% +
+               (In-class quizzes) 20% +
+               (Final exam) 20%
+ ---
+ 100%
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION
+
+	Copying (aka CHEATING)
+
+	  From other students
+
+	  From other sources
+
+	    RL vs this class
+
+	  `but I WROTE it all myself!'
+
+
+
+  YOU HAVE BEEN WARNED
+
+	==> Student Declarations distributed Friday
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+ Objects and classes; data members, member functions
+ Where is an object? Memory: Global, stack, heap
+ Constructors and destructors, operator overloading
+
+
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+ Objects and classes; data members, member functions
+ Where is an object? Memory: Global, stack, heap
+ Constructors and destructors, operator overloading
+
+Week 4: C++ Classes (Chapter 13,14)
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+ Objects and classes; data members, member functions
+ Where is an object? Memory: Global, stack, heap
+ Constructors and destructors, operator overloading
+
+Week 4: C++ Classes (Chapter 13,14)
+ Stacks
+ OOP style, boilerplate, checklists
+ Friend, const...
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+ Objects and classes; data members, member functions
+ Where is an object? Memory: Global, stack, heap
+ Constructors and destructors, operator overloading
+
+Week 4: C++ Classes (Chapter 13,14)
+ Stacks
+ OOP style, boilerplate, checklists
+ Friend, const...
+
+Week 5-6: Pointers and the heap (Chapter 14)
+
+
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+ Objects and classes; data members, member functions
+ Where is an object? Memory: Global, stack, heap
+ Constructors and destructors, operator overloading
+
+Week 4: C++ Classes (Chapter 13,14)
+ Stacks
+ OOP style, boilerplate, checklists
+ Friend, const...
+
+Week 5-6: Pointers and the heap (Chapter 14)
+ Pointers; new and delete; the null pointer
+ Boxes and arrows
+ Constructors and destructors again
+ Pointers to pointers
+
+
+OVERVIEW
+
+Week 7-8: Dynamic arrays and linked lists (Chapter 20)
+ Linked list fundamentals
+ Linked list implementation of ADTs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 7-8: Dynamic arrays and linked lists (Chapter 20)
+ Linked list fundamentals
+ Linked list implementation of ADTs
+
+Week 9: Recursion (Chapter 9, 20)
+ Recursive functions
+ Recursion, iteration, induction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 7-8: Dynamic arrays and linked lists (Chapter 20)
+ Linked list fundamentals
+ Linked list implementation of ADTs
+
+Week 9: Recursion (Chapter 9, 20)
+ Recursive functions
+ Recursion, iteration, induction
+
+Week 10-11: Memory, objects, and classes II
+ Object lifetime, ownership, and transfers
+ Programming by contract
+ Pointers and references, copying objects
+
+
+
+
+
+
+
+
+
+
+OVERVIEW
+
+Week 7-8: Dynamic arrays and linked lists (Chapter 20)
+ Linked list fundamentals
+ Linked list implementation of ADTs
+
+Week 9: Recursion (Chapter 9, 20)
+ Recursive functions
+ Recursion, iteration, induction
+
+Week 10-11: Memory, objects, and classes II
+ Object lifetime, ownership, and transfers
+ Programming by contract
+ Pointers and references, copying objects
+
+Week 11-12: Trees and class design
+ Binary Trees
+ Tree implementations and algorithms
+ Interfaces, .h's and .C's
+
+
+
+
+
+OVERVIEW
+
+Week 7-8: Dynamic arrays and linked lists (Chapter 20)
+ Linked list fundamentals
+ Linked list implementation of ADTs
+
+Week 9: Recursion (Chapter 9, 20)
+ Recursive functions
+ Recursion, iteration, induction
+
+Week 10-11: Memory, objects, and classes II
+ Object lifetime, ownership, and transfers
+ Programming by contract
+ Pointers and references, copying objects
+
+Week 11-12: Trees and class design
+ Binary Trees
+ Tree implementations and algorithms
+ Interfaces, .h's and .C's
+
+Week 13-14: Applications and data structures
+ Building and using libraries
+ Algorithms, correctness, efficiency, and design
+

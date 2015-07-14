@@ -1,0 +1,917 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice/5.1 (Linux)">
+	<META NAME="AUTHOR" CONTENT=" ">
+	<META NAME="CREATED" CONTENT="20000310;11035900">
+	<META NAME="CHANGEDBY" CONTENT=" ">
+	<META NAME="CHANGED" CONTENT="20000310;11035900">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin-left: 1.15in; margin-right: 1.15in; margin-top: 0.9in; margin-bottom: 0.9in }
+		P { margin-bottom: 0.08in }
+		H1 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 16pt }
+		H2 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 14pt; font-style: italic }
+		H3 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif }
+		H4 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 11pt; font-style: italic }
+		TD P { margin-bottom: 0.08in }
+		TH P { margin-bottom: 0.08in; font-style: italic }
+	-->
+	</STYLE>
+</HEAD>
+<BODY>
+<H1>CS 251 Program 3 <I>Bignum</I>: Really big integers</H1>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=128*>
+	<COL WIDTH=128*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P><FONT FACE="helvetica, sans-serif"><B>Due: Thu, Mar 30, 2000,
+				5:00PM</B></FONT></P>
+			</TD>
+			<TD WIDTH=50%>
+				<P ALIGN=RIGHT><FONT FACE="helvetica, sans-serif"><B>Spec
+				version: 0.9</B></FONT></P>
+			</TD>
+		</TR>
+	</THEAD>
+</TABLE>
+<H1>Goals: class Bignum</H1>
+<P ALIGN=JUSTIFY>Our goals in the third program are to gain
+experience developing and organizing classes using dynamic memory,
+and to become comfortable with the linked-list data structure by
+implementing many functions that perform linked-list operations.  We
+will do this by creating a class <FONT FACE="courier, monospace">Bignum</FONT>
+that represents an arbitrarily large integer (limited only by
+available memory), and performs many functions on such numbers,
+including creating and destroying them,, adding them and comparing
+them,  reading and writing them to and from iostreams, and so forth.</P>
+<P ALIGN=JUSTIFY>Our job is to implement class <FONT FACE="courier, monospace">Bignum</FONT>
+both correctly and efficiently enough sp that each <FONT FACE="courier, monospace">Bignum</FONT>
+requires at most <I>O(n)</I> space for an <I>n</I><SPAN STYLE="font-style: normal">
+digit</SPAN> number, and that each individual operation (except
+multiplication and division, if they are implemented) requires at
+most <I>O(n)</I> time for Bignums of at most <I>n </I>digits.</P>
+<H2>Testing class Bignum - The TBN program</H2>
+<P ALIGN=JUSTIFY>A fairly extensive test driver, <FONT FACE="courier, monospace">TestBignum.C</FONT><FONT FACE="times, serif">,
+will be made available at the web site, along with a <FONT FACE="courier, monospace">Makefile</FONT>
+designed to build the test driver at a number of different `levels'
+depending on how much of your class Bignum is implemented.  Those
+testing levels are discussed below; if you organize your
+implementation effort following them, you'll be able to get feedback
+and debugging information early and often.</FONT></P>
+<H2>Required and optional levels</H2>
+<P ALIGN=JUSTIFY><FONT FACE="times, serif">Your class Bignum must
+implement all the methods required to pass testing level 6 to be
+eligible for full credit.  Testing levels 7 (option `MULT':
+multiplication), 8 (option `NEG': negative numbers), and 9 (option
+`DIV': division and modulus) represent <I>optional, <B>extra credit</B></I><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal">
+testing levels that you may attempt if you wish.</SPAN></SPAN></FONT></P>
+<H2>Pacing the development</H2>
+<P ALIGN=LEFT>Getting all of class Bignum working correctly - even
+just considering the required testing levels - will take significant
+time!  Start early!  Shoot for moving up a testing level every few
+days at most.  Remember that pointer bugs can be hard to find!</P>
+<H1>About class Bignum</H1>
+<P>Our goal is to represent and manipulate arbitrary-sized integer
+values, using a class named `<FONT FACE="courier, monospace">Bignum</FONT>'.
+ <FONT FACE="courier, monospace">Bignum</FONT>s have the following
+properties:</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0in">Bignums have value semantics.</P>
+	<LI><P STYLE="margin-bottom: 0in">A Bignum is always greater than or
+	equal to zero (unless you do option NEG).</P>
+	<LI><P STYLE="margin-bottom: 0in">A Bignum has no maximum size limit
+	other than available memory.</P>
+	<LI><P STYLE="margin-bottom: 0in">A Bignum requires no more than
+	<I>O(n)</I> space to store an integer of <I>n</I> digits.</P>
+	<LI><P STYLE="margin-bottom: 0in">A Bignum requires no more than
+	<I>O(n)</I> time to perform any single operation on Bignums
+	involving at most <I>n</I> digits (except in option MULT and option
+	DIV).</P>
+</OL>
+<P STYLE="margin-bottom: 0in">There are many ways to represent
+arbitrary-sized integers, with different tradeoffs of space and time
+efficiency on different operations.  Our class <FONT FACE="courier, monospace">Bignum</FONT>
+will use a linked list of individual decimal digits.  To stay within
+the required time bounds on all operations, it helps to maintain the
+digits in <I>least significant digit first </I><SPAN STYLE="font-style: normal">order</SPAN><I>,</I><SPAN STYLE="font-style: normal">
+so that the `ones place' digit appears at the head of the list,
+followed by the `tens place' digit, then the `hundreds place' digit,
+and so on as far as necessary.  It helps also to maintain an
+additional data member holding the length of the list, so that the
+number of digits in the number is available in </SPAN><I>O(1) </I><SPAN STYLE="font-style: normal">time.</SPAN></P>
+<P STYLE="font-style: normal">To implement the needed arithmetic
+operations, we will frequently need to work our way down a list
+link-by-link, so we will need to become very comfortable iterating
+through linked lists.  For some operations we'll need to iterate
+through two linked lists at once.</P>
+<H2>Public methods in class Bignum</H2>
+<P>The required public members of class Bignum are presented in the
+following table.  For each member, the function signature is given
+(<B><I>Method</I></B>), the testing level at which that member is
+first needed (<B><I>Lvl</I></B>), and a brief description of what the
+function does (<B><I>Description</I></B>).</P>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=316>
+	<COL WIDTH=24>
+	<COL WIDTH=229>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=316>
+				<P>Method</P>
+			</TH>
+			<TH WIDTH=24>
+				<P>Lvl</P>
+			</TH>
+			<TH WIDTH=229>
+				<P>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum()</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="0" SDNUM="1033;">
+				<P ALIGN=CENTER><B>0</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Build Bignum equal to 0</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum(const
+				Bignum &amp; i)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">
+				<P ALIGN=CENTER><B>2</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Copy  Bignum i</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum(const int
+				n)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="0" SDNUM="1033;">
+				<P ALIGN=CENTER><B>0</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Build Bignum equal to n<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum(const char
+				* p)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>3</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Build Bignum read from string p</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>~Bignum()</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="0" SDNUM="1033;">
+				<P ALIGN=CENTER><B>0</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Destroy a Bignum</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator=(const Bignum &amp; i)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">
+				<P ALIGN=CENTER><B>2</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Assign i to Bignum</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator=(const int n)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="0" SDNUM="1033;">
+				<P ALIGN=CENTER><B>0</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Assign n to Bignum<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator=(const char * p)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="3" SDNUM="1033;">
+				<P ALIGN=CENTER><B>3</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Assign Bignum read from string p</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator+=(const Bignum &amp; i)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER><B>4</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Increase Bignum by i</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator-=(const Bignum &amp; i)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="5" SDNUM="1033;">
+				<P ALIGN=CENTER><B>5</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Decrease Bignum by i<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator+(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER><B>4</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Sum of Bignum and b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator-(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="5" SDNUM="1033;">
+				<P ALIGN=CENTER><B>5</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Difference of Bignum and b<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>bool
+				operator==(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER><B>4</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>True iff Bignum equals b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>bool
+				operator!=(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER><B>4</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>False iff Bignum equals b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>bool
+				operator&lt;(const Bignum &amp;b)  const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="6" SDNUM="1033;">
+				<P ALIGN=CENTER><B>6</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>True iff Bignum less than b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>bool
+				operator&lt;=(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="6" SDNUM="1033;">
+				<P ALIGN=CENTER><B>6</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>False iff Bignum greater than b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>bool
+				operator&gt;(const Bignum &amp;b)  const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="6" SDNUM="1033;">
+				<P ALIGN=CENTER><B>6</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>True iff Bignum greater than b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>bool
+				operator&gt;=(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="6" SDNUM="1033;">
+				<P ALIGN=CENTER><B>6</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>False iff Bignum less than b</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>friend ostream &amp;
+				operator&lt;&lt;(ostream &amp;,const Bignum &amp;)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="1" SDNUM="1033;">
+				<P ALIGN=CENTER><B>1</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Write a Bignum in standard format to ostream</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=316 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>friend istream &amp;
+				operator&gt;&gt;(istream &amp;, Bignum &amp;)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24 VALIGN=BOTTOM SDVAL="3" SDNUM="1033;">
+				<P ALIGN=CENTER><B>3</B></P>
+			</TD>
+			<TD WIDTH=229 VALIGN=TOP>
+				<P><I>Read a Bignum in standard format from istream</I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD COLSPAN=3 WIDTH=585 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2><B>* These
+				operations produce 0 whenever a negative result would be
+				expected, unless option NEG is implemented, in which case
+				negative results are produced as expected.</B></FONT></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal">All
+the `arithetic' Bignum methods are to perform operations exactly
+analogous to the corresponding computations using <FONT FACE="courier, monospace">int</FONT>s
+except that:</SPAN></SPAN></P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0in; font-style: normal; font-weight: medium">
+	A Bignum never `overflows' and gives an incorrect answer (so long as
+	there is memory available), 
+	</P>
+	<LI><P STYLE="margin-bottom: 0in; font-style: normal; font-weight: medium">
+	Any Bignum operations that would have a negative result instead have
+	a zero result (unless option NEG is implemented).</P>
+</OL>
+<H4>Standard format for Bignums (operator&lt;&lt; and operator&gt;&gt;)</H4>
+<P>To output a Bignum to a stream you need to output each digit in
+order starting from the <SPAN STYLE="font-style: normal">most</SPAN>
+significant digit (which means to need to output the <I>last</I><SPAN STYLE="font-style: normal">
+element of a Bignum linked list </SPAN><I>first</I><SPAN STYLE="font-style: normal">!)
+ Your <FONT FACE="courier, monospace">operator&lt;&lt;</FONT>
+function should output </SPAN><I>nothing</I><SPAN STYLE="font-style: normal">
+except those digits<SPAN STYLE="font-weight: medium">, in the proper
+order.  (If you do option NEG your function will output a leading '<FONT FACE="courier, monospace">-</FONT>'
+character iff the Bignum is negative.)</SPAN></SPAN></P>
+<P>To input a Bignum from a stream you should be able to handle any
+sequence of characters that fits this description:</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0in">Optional leading whitespace (e.g.,
+	spaces ' ', tabs '\t', newlines '\n'), followed by</P>
+	<LI><P STYLE="margin-bottom: 0in"> An optional '+' character (or '-'
+	character if option NEG is implemented), followed by</P>
+	<LI><P STYLE="margin-bottom: 0in">One or more decimal digit
+	characters ('0' through '9').</P>
+</OL>
+<P STYLE="margin-top: 0.08in; margin-bottom: 0.08in">The input
+representation of a Bignum ends when a non-decimal-digit character,
+or the end of the input, is encountered.  Such a non-decimal-digit,
+if present, is <I>not</I><SPAN STYLE="font-style: normal"> part of
+the Bignum representation, and is <I>not</I><SPAN STYLE="font-style: normal">
+removed from the stream by the Bignum reading process</SPAN>.</SPAN></P>
+<P ALIGN=LEFT>The following table gives some examples of correctly
+and incorrectly formatted Bignums.  For each example, the characters
+are given (<B><I>Example</I></B>), an indication whether that
+sequence can legally be read in to yield a Bignum (<B><I>Correct
+output?</I></B>), the sequence showing how that Bignum would be
+printed in standard format (<B><I>Prints as</I></B>). and description
+(<B><I>Notes</I></B>).  Note that in some cases, `Prints as'
+equivalents are given even though the example is incorrectly
+formatted input.  In those cases, the `Prints as' sequence indicates
+how your class Bignum may <I>optionally </I>interpret<SPAN STYLE="font-style: normal">
+the input, even though it is incorrect.  Your class Bignum is not
+<I>required</I> to read any of the examples marked as `No' under the
+`Correct input?'.</SPAN></P>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=130>
+	<COL WIDTH=55>
+	<COL WIDTH=127>
+	<COL WIDTH=249>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=130>
+				<P>Example</P>
+			</TH>
+			<TH WIDTH=55>
+				<P>Correct input?</P>
+			</TH>
+			<TH WIDTH=127>
+				<P>Prints as</P>
+			</TH>
+			<TH WIDTH=249>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">0</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER>Yes</P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace">0</FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>The number zero</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">  1</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER>Yes</P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace">1</FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>The number 1 with leading whitespace</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace"> +1</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER>Yes</P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace">1</FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>1 with whitespace and optional '+'</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">+ 1</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER>No</P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace">1</FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>Whitespace after '+' not allowed</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">++2</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER>No</P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace">2</FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>Multiple '+'s illegal</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">1234567890123</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER>Yes</P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace">1234567890123</FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>A number</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">twelve</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER><B>No</B></P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=CENTER><FONT FACE="times, serif"><I>not readable</I></FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>No sign or digits</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=130>
+				<P><FONT FACE="courier, monospace">+</FONT></P>
+			</TD>
+			<TD WIDTH=55>
+				<P ALIGN=CENTER><B>No</B></P>
+			</TD>
+			<TD WIDTH=127>
+				<P ALIGN=CENTER><FONT FACE="times, serif"><I>not readable</I></FONT></P>
+			</TD>
+			<TD WIDTH=249>
+				<P>At least one digit is required</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H2>Extra credit options</H2>
+<P>There are three possible extra credit <FONT FACE="times, serif">options:</FONT></P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="times, serif">Option
+	`MULT': multiplication</FONT></P>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="times, serif">Option
+	`NEG': negative numbers</FONT></P>
+	<LI><P STYLE="margin-bottom: 0in"><FONT FACE="times, serif">Option
+	`DIV': division and modulus</FONT></P>
+</OL>
+<P><FONT FACE="times, serif">If you choose to do any of these options
+you must do them in order - you cannot receive credit for doing NEG
+without MULT, or doing DIV without doing MULT and NEG.</FONT></P>
+<H4>Option MULT</H4>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=316>
+	<COL WIDTH=24>
+	<COL WIDTH=229>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=316>
+				<P>Additional methods for option MULT</P>
+			</TH>
+			<TH WIDTH=24>
+				<P>Lvl</P>
+			</TH>
+			<TH WIDTH=229>
+				<P>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator*=(const Bignum &amp;b)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>7</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Multiply Bignum by b in place</I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator*(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>7</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Product of Bignum and b</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P>No extra credit will be awarded for option MULT unless the
+additional methods complete in no more than <I>O(n<SUP>2</SUP>)</I><SPAN STYLE="font-style: normal">
+time for </SPAN><I>n</I><SPAN STYLE="font-style: normal">  the larger
+number of digits in the two Bignums involved.</SPAN></P>
+<H4>Option NEG</H4>
+<P STYLE="font-style: normal">One new method is required, and several
+existing methods change their behaviors:</P>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=316>
+	<COL WIDTH=24>
+	<COL WIDTH=229>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=316>
+				<P>Additional methods for option NEG</P>
+			</TH>
+			<TH WIDTH=24>
+				<P>Lvl</P>
+			</TH>
+			<TH WIDTH=229>
+				<P>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator-()</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>8</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Return negative of Bignum</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=316>
+	<COL WIDTH=24>
+	<COL WIDTH=229>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=316>
+				<P>Modified methods for option NEG</P>
+			</TH>
+			<TH WIDTH=24>
+				<P>Lvl</P>
+			</TH>
+			<TH WIDTH=229>
+				<P>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum(const int
+				n)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>8</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Build Bignum equal to n<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator=(const int n)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>8</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Assign n to Bignum<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator-=(const Bignum &amp; i)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>8</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Decrease Bignum by i<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=316>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator-(const Bignum &amp;b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=24>
+				<P ALIGN=CENTER><B>8</B></P>
+			</TD>
+			<TD WIDTH=229>
+				<P><I>Difference of Bignum and b<B>*</B></I></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD COLSPAN=3 WIDTH=585 VALIGN=TOP>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2><B>*These methods
+				now produce negative results in the expected cases</B></FONT></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P>In addition to those modified methods, <I>all the other operations
+must be reconsidered </I>since they may now receive one or more
+negative inputs (and the arithmetic operations may produce negative
+results.)</P>
+<P>Also, the standard format for reading and writing Bignum's must be
+extended in the obvious ways to handle negative numbers.  The rules
+for leading '-' are identical to that for leading '+' except that a
+leading '-' <I>must</I> be printed, while a leading '+' is optional
+on reading only.</P>
+<P>Probably the easiest way to implement option NEG is to maintain a
+separate data member flag indicating whether the number is positive
+or negative and store the absolute value of the number in the linked
+list.  Getting addition/subtraction going in all cases in option NEG
+is a bit tricky!</P>
+<H4>Option DIV</H4>
+<P>Option DIV introduces division and remainder operations.  No extra
+credit will be awarded for option DIV unless the additional methods
+complete in no more than <I>O(n<SUP>2</SUP>)</I><SPAN STYLE="font-style: normal">
+time for </SPAN><I>n</I><SPAN STYLE="font-style: normal"> being the
+larger number of digits in the two Bignums involved.</SPAN></P>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=337>
+	<COL WIDTH=25>
+	<COL WIDTH=207>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=337>
+				<P>Additional methods for option DIV</P>
+			</TH>
+			<TH WIDTH=25>
+				<P>Lvl</P>
+			</TH>
+			<TH WIDTH=207>
+				<P>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=337>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator/=(const Bignum &amp; b)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=25>
+				<P ALIGN=CENTER><B>9</B></P>
+			</TD>
+			<TD WIDTH=207>
+				<P><I>Divide Bignum by b in place</I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=337>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum &amp;
+				operator%=(const Bignum &amp; b)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=25>
+				<P ALIGN=CENTER><B>9</B></P>
+			</TD>
+			<TD WIDTH=207>
+				<P><I>b modulus of Bignum in place</I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=337>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator/(const Bignum &amp; b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=25>
+				<P ALIGN=CENTER><B>9</B></P>
+			</TD>
+			<TD WIDTH=207>
+				<P><I>Quotient of Bignum and b</I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=337>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=2>Bignum
+				operator%(const Bignum &amp; b) const</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=25>
+				<P ALIGN=CENTER><B>9</B></P>
+			</TD>
+			<TD WIDTH=207>
+				<P><I>Remainder of Bignum and b</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P>In operations involving division and remainder operations and
+negative numbers the following rule is to be implemented: the sign of
+the result is always the same sign as the divisor, and the result is
+smaller in absolute value.  Any attempt to divide by zero (or take a
+zero modulus) should be blocked with an assertion.</P>
+<H3>Resources</H3>
+<P>Overall, the following files will be involved:</P>
+<TABLE WIDTH=595 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=248>
+	<COL WIDTH=127>
+	<COL WIDTH=194>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=248>
+				<P>File</P>
+			</TH>
+			<TH WIDTH=127>
+				<P>Source</P>
+			</TH>
+			<TH WIDTH=194>
+				<P>Note</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=248>
+				<P><FONT FACE="courier, monospace">Makefile</FONT></P>
+			</TD>
+			<TD WIDTH=127>
+				<P>Supplied, use as-is</P>
+			</TD>
+			<TD WIDTH=194>
+				<P>This is a GNU Makefile allowing incremental testing</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=248>
+				<P><FONT FACE="courier, monospace">Main.C, Main.h</FONT></P>
+			</TD>
+			<TD WIDTH=127>
+				<P>Supplied, use as-is</P>
+			</TD>
+			<TD WIDTH=194>
+				<P>The standard main</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=248>
+				<P><FONT FACE="courier, monospace">TestBignum.C, TestBignum.h</FONT></P>
+			</TD>
+			<TD WIDTH=127>
+				<P>Supplied, use as-is</P>
+			</TD>
+			<TD WIDTH=194>
+				<P>The test driver</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=248>
+				<P><FONT FACE="courier, monospace">Bignum.h, Bignum.C</FONT></P>
+			</TD>
+			<TD WIDTH=127>
+				<P><I><B>You create</B></I></P>
+			</TD>
+			<TD WIDTH=194>
+				<P>The declaration and implementation of class Bignum</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P>Other files may be made available at the web site.</P>
+<H4>ALLOWABLE SOURCES</H4>
+<P>For this project, you are permitted to make use of any code
+examples presented during class lectures, and any code examples from
+<SPAN STYLE="font-style: normal">Oualline <I>Practical C++
+Programming</I>.  You are <B>NOT</B> permitted to use code from other
+sources!  Specifically, <I>you are <B>NOT</B> permitted to use any
+`toolkit' code of any kind, nor any code from the STL</I>.  Your
+linked list code in your Bignum class <B>MUST</B><SPAN STYLE="font-weight: medium">
+be your own code implemented `fresh from scratch'.</SPAN></SPAN></P>
+<H3>Revision History</H3>
+<P>Version 0.9 released 3/10/00.  Rough in spots, but more than
+enough to get going.</P>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>

@@ -1,0 +1,340 @@
+NOTES ON CS251 PROGRAM 3
+
+
+----------
+0. TABLE OF CONTENTS:
+
+  1. MAKEFILE TARGETS
+  2. TESTING LEVELS
+  3. THE IMPORTANCE OF CORRECTNESS INDEPENDENT OF TESTING
+  4. FINDING LEAKS
+  5. USING MAKE DISTRIB TO SAVE INTERIM VERSIONS OF YOUR PROJECT 
+  6. GETTING FILES OUT OF A SAVED INTERIM VERSION OF YOUR PROJECT 
+  7. NOTES ON CLASS Bignum DESIGN AND IMPLEMENTATION
+  8. REVISION HISTORY
+
+
+----------
+1. MAKEFILE TARGETS
+
+WARNING: The supplied Makefile requires the `GNU' version of the make
+program!  See
+http://www.cs.unm.edu/~ackley/cs251/projects/makefile-warnings.txt for
+more information about downloading and using Makefiles.
+
+You can use the supplied Makefile in a number of ways.  Here are the
+main targets available and what they do:
+
+  TARGET       EXAMPLE            FUNCTION
+
+	       make               Same as 'all'
+
+  all          make all           Same as 'test6'
+
+  TBN          make TBN           Just make the test program, named TBN.
+
+  clean        make clean         Remove .o's, core, and backup~ files
+
+  distclean    make distclean     Do 'make clean', and also remove the
+				  TBN program itself 
+
+  distrib      make distrib       Do 'make distclean', and then create a
+				  tar file in the directory ABOVE the
+				  current directory, containing all of
+				  the files in the current directory.
+				  See section 5 for more on how to use this. 
+
+  test0        make test0         Rebuild TestBignum.C for testing at
+				  level 0, then rebuild TBN, then run
+				  TBN to test class Bignum at level0.
+				  See section 2 for details of the test
+				  levels. 
+
+  test1        make test1         Same as test0 except tests at level 1
+  test2        make test2         Same as test0 except tests at level 2
+  test3        make test3         Same as test0 except tests at level 3
+  test4        make test4         Same as test0 except tests at level 4
+  test5        make test5         Same as test0 except tests at level 5
+  test6        make test6         Same as test0 except tests at level 6
+
+(optional extra credit test levels:)
+  test7        make test7         Same as test0 except tests at level 7
+  test8        make test8         Same as test0 except tests at level 8
+  test9        make test9         Same as test0 except tests at level 9
+
+Note that if you use a 'testing' target (i.e., any of 'all', 'test0'
+through 'test9', or no target specified) and you have a test failure:
+
+(1) You can use the emacs ^X` command to find the point(s) in
+    TestBignum.C where the tests failed (assuming you used emacs'
+    'M-x compile' to build/test TBN).
+
+(2) You can go ahead and run gdb on TBN as usual (assuming the failure
+    occurred during TESTING, rather than during BUILDING).  On a
+    runtime test failure, TBN was compiled as usual, so you can run
+    and debug it as usual -- you do NOT have to use ONLY the
+    Makefile-based test procedure.
+
+----------
+2. TESTING LEVELS
+
+TestBignum.C and the Makefile cooperate to allow testing your class
+Bignum long before it has been completed.  The code is set up so that
+if you test at a given level, say 1, then TestBignum.C will not even
+refer to member functions that are tested at higher levels, such as
+'Bignum & operator=(const Bignum & i)' which isn't tested until level
+2.  This allows you to test your code incrementally without even
+declaring 'higher' member functions in advance.
+
+Here are the test levels, and which member functions are first tested
+at each level:
+
+  LEVEL 0
+    Bignum();                       
+    Bignum(const int n);            
+    Bignum & operator=(const int n);
+    ~Bignum();                     
+
+  LEVEL 1
+    friend ostream & operator<<(ostream &,const Bignum &);
+
+  LEVEL 2
+    Bignum & operator=(const Bignum & i);
+    Bignum(const Bignum & i);            
+
+  LEVEL 3
+    Bignum & operator=(const char * p);  
+    Bignum(const char * p);              
+    friend istream & operator>>(istream &, Bignum &);
+
+  LEVEL 4
+    Bignum & operator+=(const Bignum & i);  
+    Bignum operator+(const Bignum &b) const;
+    bool operator!=(const Bignum &b) const; 
+    bool operator==(const Bignum &b) const; 
+
+  LEVEL 5
+    Bignum & operator-=(const Bignum & i);  
+    Bignum operator-(const Bignum &b) const;
+
+  LEVEL 6
+    bool operator<(const Bignum &b)  const; 
+    bool operator<=(const Bignum &b) const; 
+    bool operator>(const Bignum &b)  const; 
+    bool operator>=(const Bignum &b) const; 
+
+Level 6 concludes the required testing levels.  Levels 7-9 represent a
+sequence of increasing extra credit opportunities.
+
+  LEVEL 7 (multiplication)
+    Bignum & operator*=(const Bignum &b); 
+    Bignum operator*(const Bignum &b) const; 
+
+  LEVEL 8 (negative Bignums)
+    Bignum operator-();
+
+  LEVEL 9 (division)
+    Bignum & operator/=(const Bignum & b)
+    Bignum & operator%=(const Bignum & b)
+    Bignum operator/(const Bignum & b) const
+    Bignum operator%(const Bignum & b) const
+
+----------
+3. THE IMPORTANCE OF CORRECTNESS INDEPENDENT OF TESTING
+
+		       NOTE WELL THE FOLLOWING:
+
+Although TestBignum.C performs many tests and attempts to be quite a
+thorough test of class Bignum, completing testing level 6 absolutely
+does NOT GUARANTEE that a program (in this case, your class Bignum) is
+correct.
+
+		       NOTE WELL THE FOLLOWING:
+
+Just to drive home the point, note it is quite easy to make a
+deliberately buggy class Bignum that nonetheless passes testing level
+6, by inspecting the tests that TestBignum.C performs, and moving the
+bugs to places it fails to test.  For example, if your class Bignum
+was incorrectly designed and could only handle Bignums less than ten
+thousand digits long, TestBignum.C would (probably) NOT detect that
+error, but your program WOULD STILL BE GRADED DOWN -- because THE SPEC
+permits no limits on the size of Bignums other the total available
+memory.
+
+		       NOTE WELL THE FOLLOWING:
+
+TestBignum.C is there to HELP you make your class be correct ACCORDING
+TO SPEC.  If TestBignum.C DOES find a problem, you are guaranteed to
+have a bug (unless TestBignum.C has a bug), but if it DOESN'T find a
+problem you are NOT guaranteed to be correct--and your class Bignum
+will be graded heavily on correctness!  TestBignum.C is not a
+substitute for you UNDERSTANDING THE SPEC and implementing your class
+accordingly.
+
+----------
+4. FINDING LEAKS
+
+At all levels of testing, in addition to testing methods for correct
+behavior, TBN also tries its best to turn up leaks in your code.  It
+can be very difficult to find where your code is leaking, in part
+because TBN doesn't help you 'pin down' where the leak is coming from
+at all.  
+
+Your best bet for dealing with leaks is to catch them as soon as you
+create them, while you still remember what changes you've made, by
+testing very frequently.  If you are leaking at testing level above 0,
+you can drop back to lower and lower test levels until the leak goes
+away, and the point at which it disappears helps you narrow down to
+which code may be leaking.
+
+----------
+5. USING MAKE DISTRIB TO SAVE INTERIM VERSIONS OF YOUR PROJECT 
+
+It is often the case that you'll get to a point in your development
+where you like what you've got -- however modest or incomplete it is,
+in the big picture -- and you're afraid to screw it up by starting
+into your next task.  The ideal thing to do, when you have that
+feeling, is to 'save what you've got and bump the version number' --
+the goal being to take copies of your current files and hide them away
+somewhere so that if you hack yourself completely into a corner and
+want to bail out, you can go back to one of your previously saved
+versions without a lot of tears.
+
+'make distrib' can help you do this.  What it does is this:
+
+ (1) It does a 'make distclean', which cleans up the current directory
+     and also removes the TBN binary itself.  The goal is to end up
+     with the directory containing just the source files (including
+     the Makefile of course!)
+
+ (2) It creates a 'tar file' -- an archive of all the files in the
+     current directory -- and stores that tar file, in compressed
+     form, in the directory ABOVE the current directory.  The name of
+     the tar file is of the form 'TBN-9.9.tgz', where the '9.9' part
+     comes from the VERSION variable defined near the top of the
+     Makefile.
+
+'make distrib' stores the tar file in the directory above the current
+directory so that it won't get in the way of future working (and
+future 'make distrib'ing) in the current directory.  That means you
+MUST be working in a subdirectory, not your home directory, or else
+'make distrib' will fail.  For example, you might set your directories
+up like this:
+
+  $ cd ~                        { go to your home directory }
+  $ mkdir CS251                 { make a subdirectory named 'CS251'}
+  $ chmod go-rwx CS251          { protect it so nobody else has access}
+  $ cd CS251                    { make CS251 the current directory }
+  $ mkdir Program3              { make a subdirectory of that named 'Program3' }
+  $ cd Program3                 { make CS251/Program3 the current directory }
+  <<put files here and hack away>>
+
+With that setup, when you do 'make distrib' while in directory
+~/CS251/Program3/, the tar file will be stored one level up, in
+~/CS251/, out of the action.  
+
+Note that scheme puts you 'two levels deep' (first CS251, then
+Program3) with respect to your home directory.  If you work only 'one
+level deep', then 'make distrib' will put the tar file in your home
+directory.  If you choose to do that you should remember to protect
+each tar file as you create it.  (It's easier to work two levels deep..)
+
+So, when you get that 'I-need-to-hack-but-am-afraid-of-breaking-this'
+feeling, do these TWO steps to save your current version:
+
+(1) EDIT YOUR Makefile.  Find the 'VERSION=0.0' line in it (it's the
+    fourth line), and CHANGE that line to read, say, 'VERSION=0.1'.
+    Save your Makefile.
+(2) Run 'make distrib' in the current directory.
+
+To be safe, EACH TIME YOU RUN 'make distrib', you should increment
+your version number as in step (1).  If you DON'T increment the
+version, you will OVERWRITE the tar file created the previous time you
+did 'make distrib', and you WON'T be able to get back copies of those
+earlier files.  If you DO increment the version number each time,
+you'll build up a history of your versions -- TBN-0.1.tgz,
+TBN-0.2.tgz, and so forth -- so you're *covered* if you need to go
+back to any earlier version for any reason.  The tar files are
+compressed so that -- assuming you only have program 3 source files in
+your current directory -- you will be able to save many many versions
+without using up very much disk space.
+
+----------
+6. GETTING FILES OUT OF A SAVED INTERIM VERSION OF YOUR PROJECT 
+
+Hopefully you won't need this section, but saving project versions
+doesn't help much if you can't get back to the saved version, so
+here's what to do in that case.
+
+Suppose you decide you've hopelessly broken your Bignum.h and
+Bignum.C, and you want to go back to an earlier version, say version
+0.3, and try again.  Using the same directory structure mentioned in
+section 5, here's what you can do:
+
+  $ cd ~                         { go home }
+  $ cs CS251                     { go to your course directory }
+  $ ls TBN-0.3.tgz               { check to make sure your tar file is there }
+  $ mkdir tmp                    { create a temporary directory }
+  $ cp TBN-0.3.tgz tmp           { copy the tar file there }
+  $ cd tmp                       { go to the temporary directory }
+  $ tar xvzf TBN-0.3.tgz         { unpack the tar file }
+
+(You may have to do:
+
+  $ /usr/local/gnu/bin/tar xvzf TBN-0.3.tgz 
+
+ instead, if you haven't switched to the GNU tools.) 
+
+  $ cp Bignum.h Bignum.C ../Program3  { copy the files you want back to
+					your Program3 directory }
+  $ cd ..                        { go up one level (back to CS251/) }
+  $ rm tmp/*                     { delete the files in the tmp/ directory }
+  $ rmdir tmp                    { remove the tmp/ directory itself } 
+  $ cd Program3                  { go to your project directory }
+  <<hack away>>                  { you are now working from your
+				   version 0.3 Bignum.C and Bignum.h.. }
+
+----------
+7. NOTES ON CLASS Bignum DESIGN AND IMPLEMENTATION
+
+Some suggestions for getting into the project.
+
+(0) Start now.  Immediately.  Actually, start yesterday.  Here on
+    program 3, the 'I know should've started earlier' song is getting
+    very old.
+
+(1) In addition to the spec of course, download, print, save, read,
+    and reread the 'Stack via linked list' example covered in the
+    lectures.  Much of that material is applicable here.
+
+(2) Think about the whole program, but work on achieving the testing
+    levels in order.  Even if the order doesn't make a whole lot of
+    sense given your design, the advantage of being able to do
+    incremental testing is overwhelming.
+
+(3) Test constantly.  If you're working on level 1, do 'make test1'
+    frequently.
+
+(4) There is no substitute for understanding pointers and getting
+    comfortable linking down linked lists in all sorts of ways.  There
+    will be some further class discussion on this sort of issue, but
+    fundamentally, figuring this step out is what program 3 is all
+    about.  You'll want loops that link down a list, and loops that
+    link through two lists simultaneously.  
+ 
+(5) Make sure you create private member functions to capture common
+    behaviors and avoid repeated code.  In several places, the public
+    members of class Bignum have overlapping functionality (e.g., the
+    ctors and the ='s; the binary ops and the op=s), and you should
+    AVOID REPEATING CODE to implement them -- either implement one in
+    terms of the other or implement both in terms of one or more
+    private member functions.
+
+(6) If you try to figure something out and get stuck, ask a question.
+
+8. REVISION HISTORY
+
+Fri Mar 10 02:06:23 2000 Ackley.  Revised for S'00
+
+
+

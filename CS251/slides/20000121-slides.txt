@@ -1,0 +1,1296 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Introduction/overview
+
+TODAY:
+ - Administrivia
+ - Live demos: Emacs/g++/gdb
+ - Hello world OOPed
+ - The shape of programs / How source becomes executable
+
+
+HOMEWORK: 
+ Join the class email alias by sending an email message to:
+    majordomo@cs.unm.edu
+ containing the text:
+    subscribe cs251-all
+ in the body of the message 
+
+
+
+
+
+ADMINISTRIVIA
+
+ - TA situation update
+   
+   
+   
+   
+   
+   
+   
+ - Assume lab sections WILL meet next week
+
+ - Further updates will be posted to the class email list
+
+
+
+
+
+ - Reminder: NO AUDITS
+   Last day to change grading option is February 11, 2000
+
+
+
+
+OVERVIEW
+
+Week 1: Introduction (Chapter 1,2,3)
+ Course overview; C++ review
+ C++ review; emacs, g++, & gdb
+ Design and OOP
+
+Week 2-3: Memory, objects, and classes I (Chapter 3, 5-7, 13)
+ Objects and classes; data members, member functions
+ Where is an object? Memory: Global, stack, heap
+ Constructors and destructors, operator overloading
+
+Week 4: C++ Classes (Chapter 13,14)
+ Stacks
+ OOP style, boilerplate, checklists
+ Friend, const...
+
+Week 5-6: Pointers and the heap (Chapter 14)
+ Pointers; new and delete; the null pointer
+ Boxes and arrows
+ Constructors and destructors again
+ Pointers to pointers
+
+
+OVERVIEW
+
+Week 7-8: Dynamic arrays and linked lists (Chapter 20)
+ Linked list fundamentals
+ Linked list implementation of ADTs
+
+Week 9: Recursion (Chapter 9, 20)
+ Recursive functions
+ Recursion, iteration, induction
+
+Week 10-11: Memory, objects, and classes II
+ Object lifetime, ownership, and transfers
+ Programming by contract
+ Pointers and references, copying objects
+
+Week 11-12: Trees and class design
+ Binary Trees
+ Tree implementations and algorithms
+ Interfaces, .h's and .C's
+
+Week 13-14: Applications and data structures
+ Building and using libraries
+ Algorithms, correctness, efficiency, and design
+
+C++ - Writing Hello World
+
+ ( live demo )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+It's about using the tools effectively..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+It's about using the tools effectively..
+
+ Emacs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+It's about using the tools effectively..
+
+ Emacs
+  M-x compile
+	Compilation without leaving the editor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+It's about using the tools effectively..
+
+ Emacs
+  M-x compile
+	Compilation without leaving the editor
+  M-x shell
+	Testing without leaving the editor
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+It's about using the tools effectively..
+
+ Emacs
+  M-x compile
+	Compilation without leaving the editor
+  M-x shell
+	Testing without leaving the editor
+
+  NOTICE:
+   No mice were exploited in the production of this program
+
+
+
+
+
+
+
+
+
+
+C++ - Writing Hello World
+
+It's not about the code..
+
+It's about using the tools effectively..
+
+ Emacs
+  M-x compile
+	Compilation without leaving the editor
+  M-x shell
+	Testing without leaving the editor
+
+  NOTICE:
+   No mice were exploited in the production of this program
+
+    ( Xemacs )
+
+
+
+
+
+
+
+
+INTRODUCTION TO GDB
+		   
+ (live demo)
+	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION TO GDB
+		   
+ Upshots:
+	    
+ - add '-g' when compiling to include 'debugging symbols'
+				     
+ - 'gdb programname' to run gdb on programname
+       					      
+ - A few key gdb commands:
+   Command   Abbr  Meaning  	       	  Examples
+     run      r    Start or 	     	   (gdb) r
+     	       	      restart program 	    	  
+     break    b    Set a breakpoint	   (gdb) b main
+                          		   (gdb) b foo.C:13
+							   
+     print    p    Print a value           (gdb) p 12+3*4
+					   (gdb) p nums[3]
+					   (gdb) p nums	  
+     continue c    Continue from a     	    
+       	       	      breakpoint 	   (gdb) c
+     next     n	   Execute to next line
+		      of code then stop    (gdb) n
+     step     s    Execute a single step   
+		      then stop	       	   (gdb) s
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% 
+
+
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) 
+
+
+
+
+
+
+
+
+
+
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) b main
+Breakpoint 1 at 0x1000035c: file hw.C, line 3.
+(gdb) 
+
+
+
+
+
+
+
+
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) b main
+Breakpoint 1 at 0x1000035c: file hw.C, line 3.
+(gdb) r
+Starting program: /nfs/user/a/ackley/hw
+"/usr/lib/libcrypt.a": not in executable format: File format not recognized.
+(gdb) 
+
+
+
+
+
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) b main
+Breakpoint 1 at 0x1000035c: file hw.C, line 3.
+(gdb) r
++----------------------------------------------------------------+
+|/usr/lib/libcrypt.a": not in executable format: File format not |
++----------------------------------------------------------------+
+       	       	       	       ^                               	  
+       	       	       	        \                              	  
+			         --This is the BOGUS part!     	  
+       	       	       	           This error shouldn't happen!	  
+                                   (It's an IBM/AIX `feature'...)
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) b main
+Breakpoint 1 at 0x1000035c: file hw.C, line 3.
+(gdb) r
+Starting program: /nfs/user/a/ackley/hw
+"/usr/lib/libcrypt.a": not in executable format: File format not recognized.
+(gdb) 
+
+
+
+
+
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) b main
+Breakpoint 1 at 0x1000035c: file hw.C, line 3.
+(gdb) r
+Starting program: /nfs/user/a/ackley/hw
+"/usr/lib/libcrypt.a": not in executable format: File format not recognized.
+(gdb) c	      <---------The WORKAROUND for the bogus part
+Continuing.	  	is to just type 'c' to continue!
+
+
+
+
+
+INTRODUCTION TO GDB
+  Warning!  Warning!  CIRT AIX Bogosity ALERT!
+---hw.C---
+#include <iostream.h>
+int main() {
+  cout << "hello world" << endl;
+  return 0;	      
+}  
+--- 
+CIRT% g++ -g -Wall -pedantic hw.C -o hw
+CIRT% gdb hw
+GDB is free software and you are welcome to  blah blah blah etc..
+(gdb) b main
+Breakpoint 1 at 0x1000035c: file hw.C, line 3.
+(gdb) r
+Starting program: /nfs/user/a/ackley/hw
+"/usr/lib/libcrypt.a": not in executable format: File format not recognized.
+(gdb) c
+Continuing.
+
+Breakpoint 1, main () at hw.C:3		       <---Now you're back
+3         cout << " hello world " << endl;         in business!	
+(gdb)
+
+C++ - Hello World, OOPed
+
+---main.C---
+#include <iostream.h>
+
+int main() {
+  cout << "Hello world" << endl;
+  return 0;
+}
+---------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+
+---main.C---
+#include <iostream.h>
+	    
+int main() {
+  cout << "Hello world" << endl;
+  return 0; 
+}	    
+---------   
+	    
+---main.C---
+#include "main.h"
+
+int main() {
+  Hello h;
+  h.Speak();
+  return 0;
+}
+---------	 
+
+
+
+
+C++ - Hello World, OOPed
+---main.C---        
+#include "main.h"  
+	    	    
+int main() {	    
+  Hello h;  	    
+  h.Speak();	    
+  return 0; 	    
+}	    	    
+---------           
+	            
+
+
+
+	     	    
+
+
+
+
+
+		    
+
+
+
+C++ - Hello World, OOPed
+---main.C---        
+#include "main.h"  
+	    	    
+int main() {	    
+  Hello h;  	    
+  h.Speak();	    
+  return 0; 	    
+}	    	    
+---------           
+	            
+---main.h---
+#ifndef MAIN_H
+#define MAIN_H
+	     	    
+#include "Hello.h"
+
+#endif
+------------   	     
+
+		    
+
+
+
+C++ - Hello World, OOPed
+---Hello.h---       
+#ifndef HELLO_H	    
+#define HELLO_H	    
+	     	    
+#include <iostream.h>
+class Hello {	     
+public:	             
+  void Speak();      
+};           	    
+		    
+#endif		    
+---------           
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+---Hello.h---       
+#ifndef HELLO_H	    
+#define HELLO_H	    
+	     	    
+#include <iostream.h>
+class Hello {	     
+public:	             
+  void Speak();      
+};           	    
+		    
+#endif		    
+---------           
+		    
+---Hello.C---	    
+#include "Hello.h"  
+		    
+void Hello::Speak() 
+{		    
+  cout << "Hello world" << endl;
+}		    
+---------           		    
+
+
+C++ - Hello World, OOPed
+---Hello.h---          	       	   ---main.C---         
+#ifndef HELLO_H	    		   #include "main.h"    
+#define HELLO_H	    		                        
+	     	    		   int main() {         
+#include <iostream.h>		     Hello h;           
+class Hello {	     		     h.Speak();         
+public:	             		     return 0;          
+  void Speak();      		   }                    
+};           	    		   ---------            
+		    		                        
+#endif		    		   ---main.h---         
+---------           		   #ifndef MAIN_H       
+		    		   #define MAIN_H       
+---Hello.C---	    		                        
+#include "Hello.h"  		   #include "Hello.h"   
+		    		                        
+void Hello::Speak() 		   #endif               
+{		    		   ------------         
+  cout << "Hello world" << endl;
+}		    
+---------           		    
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+
+
+
+
+					      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+
+
+
+					      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+
+
+					      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+
+					      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+  - Each class declaration goes in its own .h file
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+  - Each class declaration goes in its own .h file
+  - Each class implementation goes in its own .C file
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+  - Each class declaration goes in its own .h file
+  - Each class implementation goes in its own .C file
+  - The class name has a leading capital letter
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+  - Each class declaration goes in its own .h file
+  - Each class implementation goes in its own .C file
+  - The class name has a leading capital letter
+  - The names of the .h and .C files are EXACTLY the same
+    as the name of the class declared and implemented in
+    those files.			       
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+  - Each class declaration goes in its own .h file
+  - Each class implementation goes in its own .C file
+  - The class name has a leading capital letter
+  - The names of the .h and .C files are EXACTLY the same
+    as the name of the class declared and implemented in
+    those files.			       	      
+  - Except for main.[Ch], each pair of files declares and 
+    implements one class.  main.C implements main() and
+    nothing else.
+
+
+
+
+C++ - Hello World, OOPed
+			
+Building it:
+
+  Before:
+
+      g++ -Wall -pedantic hw.C -o hello
+					      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+Building it:
+
+  Before:
+
+      g++ -Wall -pedantic hw.C -o hello
+					      
+
+  Now:
+
+      g++ -c -g -Wall -pedantic Hello.C
+      g++ -c -g -Wall -pedantic main.C
+      g++ Hello.o main.o -o hello     
+
+
+
+
+
+
+
+
+
+
+C++ - Hello World, OOPed
+			
+Building it:
+
+  Before:
+
+      g++ -Wall -pedantic hw.C -o hello
+					      
+
+  Now:
+
+      g++ -c -g -Wall -pedantic Hello.C
+      g++ -c -g -Wall -pedantic main.C
+      g++ Hello.o main.o -o hello     
+
+
+
+
+
+
+   This is all such a win ??
+
+
+
+C++ - Hello World, OOPed
+			
+Building it:
+
+  Before:
+
+      g++ -Wall -pedantic hw.C -o hello
+					      
+
+  Now:
+
+      g++ -c -g -Wall -pedantic Hello.C
+      g++ -c -g -Wall -pedantic main.C
+      g++ Hello.o main.o -o hello     
+
+
+
+
+
+
+   This is all such a win ??
+
+       For tiny programs.. no.  For REAL programs... ABSOLUTELY.
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+
+
+
+			  
+
+       	       	       	  
+
+
+
+
+
+       	       	       	       	   
+      
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+ '#' stuff is commands to the PREPROCESSOR
+
+
+			  
+
+       	       	       	  
+
+
+
+
+
+       	       	       	       	   
+      
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+ '#' stuff is commands to the PREPROCESSOR
+
+  ..What's a preprocessor?
+			  
+
+       	       	       	  
+
+
+
+
+
+       	       	       	       	   
+      
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+ '#' stuff is commands to the PREPROCESSOR
+
+  ..What's a preprocessor?
+			  
+      g++ hw.C -o hello
+       	       	       	  
+makes it LOOK like:
+
+      +-----+ hw.C  +--------+hello +----------------+
+      | You |------>|Compiler|----->|runnable program|
+      +-----+	    +--------+	    +----------------+
+       	       	       	       	   
+      
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+ '#' stuff is commands to the PREPROCESSOR
+
+  ..What's a preprocessor?
+			  
+      g++ hw.C -o hello
+       	       	       	  
+makes it LOOK like:
+
+      +-----+ hw.C  +--------+hello +----------------+
+      | You |------>|Compiler|----->|runnable program|
+      +-----+	    +--------+	    +----------------+
+       	       	       	       	   
+      
+but that's not even close to what REALLY happens..
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+       
+
+       
+
+
+
+
+		 
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+       
+
+       
++----+ the code  
+|You |---------->
+|    | you wrote 
++----+ '.C' file 
+		 
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+       	       	       	       
+       	       	       	       	
++----+ the code  +-------------+
+|You |---------->|Preprocessor |
+|    | you wrote |             |
++----+ '.C' file +-------------+     
+				               	       
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+       	       	       	  /--- #include'd files
+       	       	       	  |    ('.h' files)    
+       	       	       	  v    	       	       	
++----+ the code  +-------------+
+|You |---------->|Preprocessor |
+|    | you wrote |             |
++----+ '.C' file +-------------+     
+				               	       
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+       	       	       	  v                          	
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------
+|    | you wrote |             |    '#'commands handled
++----+ '.C' file +-------------+     
+				               	       
+
+
+
+
+
+
+
+
+
+

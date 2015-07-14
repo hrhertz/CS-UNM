@@ -1,0 +1,984 @@
+QUESTIONS
+
+LAST TIME:
+ - The rest of the rest of C++
+ - The big picture
+ - Class evaluations
+
+TODAY:
+ - Review
+
+NEXT TIME:
+ - Is no next time this is the last time
+
+HOMEWORK:  Review for final exam
+   Program 5 DUE Monday 5/08 5PM: 3 DAYS LEFT!
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - HERE ON OUT
+
+  WHEN 	       	       	  DISTANCE     WHAT
+MON   5/08 5PM              3d3h      Program 5 in
+MON   5/08 5PM              3d3h      Program 4 late days close
+THU   5/11 5PM              6d3h      Program 5 latest turnin
+FRI   5/12 12:30PM-2:30PM   6d22.5h   Final exam
+FRI   5/12 5PM              7d3h      Program 5 late days close
+
+
+
+  FINAL EXAM `CHEAT SHEET' RULES:
+
+  You may bring to the exam:
+
+    One sheet of paper no larger than legal size (8.5" x 14")
+    containing original notes handwritten by you only.
+
+    No photocopying or photoreduction.
+
+    No printed material; your own handwriting only.
+
+
+
+REVIEW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+
+Given a linked list class Foo with an embedded class _Node:
+class Foo { .. private: struct _Node { int data; _Node *next;
+				       bool Find(int item);
+       	                _Node * _head; };
+
+ (1) Write a Foo method `bool Find(int item)' that
+     returns true iff `item' is in the list.  Make use of
+     recursion.
+
+bool Foo::Find(int item) {
+  if (!_head) return false;
+  return _head->Find(item);
+}
+
+bool Foo::_Node::Find(int item) {
+  if (data == item) return true;
+  if (!next) return false;
+  return next->Find(item);
+}
+
+
+
+REVIEW
+
+Given a linked list class Foo with an embedded class _Node:
+class Foo { .. private: struct _Node { int data; _Node *next;};
+       	                _Node * _head; };
+
+ (1) Write a Foo method `bool Find(int item)' that
+     returns true iff `item' is in the list.  Make use of
+     recursion.
+
+ (2) Write a method `int Count(int item)' that returns the number
+     of times `item' is in the list.  Do not use any recursion.
+
+
+int Foo::Count(int item)
+{
+  int count=0;
+  for (_Node * p = _head; p; p = p->next)
+    if (p->data == item) ++count;
+  return count;
+}
+
+
+
+REVIEW
+
+Given a linked list class Foo with an embedded class _Node:
+class Foo { .. private: struct _Node { int data; _Node *next;};
+       	                _Node * _head; };
+
+ (1) Write a Foo method `bool Find(int item)' that
+     returns true iff `item' is in the list.  Make use of
+     recursion.
+
+ (2) Write a method `int Count(int item)' that returns the number
+     of times `item' is in the list.  Do not use any recursion.
+
+
+
+
+   And same kinds of questions with trees and dynamic arrays and
+   such, as well as linked lists
+
+
+
+
+
+
+REVIEW
+
+Pointers
+
+1)	Which of the following pairs are the same type?
+
+	int**	x;		int*		y;
+	char	c;		double**	z;
+	int	w[3];		int		a[4][5];
+	char	d[1];		char**		e;
+
+	a)	x, y
+	b)	d[0], c
+	c)	a[3], *x;
+	d)	e, &d;
+	e)	z, x
+	f)	&w, x
+	g)	a[0][0],char ch = 'd';   y[ch]
+
+
+
+
+
+
+REVIEW
+					      int i;
+2)	What is the meaning of * and &        int &foo = i;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+
+2)	What is the meaning of * and &
+
+
+
+
+
+3)	Why is the following incorrect?
+
+	int* ptr = NULL;
+
+	if ( ptr[0] == 0 && ptr )
+	{
+		cout << "FOO" << endl;
+	}
+
+
+
+
+
+
+
+
+REVIEW
+
+4)	Which of the following print the same thing?
+
+
+
+
+
+
+
+       	a) int x[5] = {1, 2, 3, 4, 5};
+       	   for(int i=0; i < 5; i++)
+	     cout << *(x+i) << endl;
+
+       	b) int x[5] = {1, 2, 3, 4, 5};
+	   for(int i=0; i < 5; i++)
+	     cout << i[x] << endl;
+
+       	c) int x[5] = {1, 2, 3, 4, 5};
+	   int* y = x-5;
+	   for(int i=5; i < 10; i++)
+	     cout << i[y] << endl;
+
+
+REVIEW
+
+5)	Explain how to do `insert into the middle
+	of a linked list', using a pointer
+	to a pointer.  Diagram it using the "arrows and
+	boxes"
+
+  +--------+   	->+----------+ 	  />+----------+
+  |   2	   |   /  |    8     | 	 /  |  	  12   |
+  |--------|  /	  |----------| 	/   |----------|
+  |	 ----/ 	  |    	   ----/    |	       |
+  +--------+   /->+----------+	    +----------+
+	       \
+       	       	-----\
+		      \
+       	    node** p  |	   node*n  +---------+
+      	    +-------+ |	 +-----+  >|	9    |
+      	    |  	  ---/	 |   ----/ |---------|
+       	    +-------+ 	 +-----+   |   	     |
+		      		   +---------+
+		   n->next = *p;
+		   *p = n;
+
+
+REVIEW
+
+5)	Explain how to do `insert into the middle
+	of a linked list', using a pointer
+	to a pointer.  Diagram it using the "arrows and
+	boxes"
+
+
+
+6)	Name the three places an object can be stored.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+7)	What is wrong with the following program?
+
+	int* func1() {
+	  int* n = new int[1];
+	  n[0] = 3;
+	  return n;
+	}
+	void func2(int* i) {
+	  cout << i << endl;
+	  delete [] i;
+	}
+	int main() {
+	  int* n = new int[1];
+	  n[0] = 5;
+
+	  func2(n);
+    	  cout << *n  << endl;
+
+	  n = func1();
+	  delete [] n;
+	  cout << n << endl;
+	  return 0;
+	}
+REVIEW
+Parse Trees
+1)	What is top down parsing?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Parse Trees
+1)	What is top down parsing?
+
+2)	You are given the following grammar:
+
+	T <- 'z' | 'x' | '1' + T
+
+       	Describe the set of all legal T's
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Parse Trees
+1)	What is top down parsing?
+
+2)	You are given the following grammar:
+
+	T <- 'z' | 'x' | '1' + T
+
+       	Describe the set of all legal T's
+
+3)	You are given the following grammar:
+
+	T <- '1' | '2' | '3' | '4' + U
+	U <- '4' | '5' | '6' + U
+
+        What is the start symbol?
+
+
+
+
+
+
+
+
+REVIEW
+Parse Trees
+1)	What is top down parsing?
+
+2)	You are given the following grammar:
+
+	T <- 'z' | 'x' | '1' + T
+
+       	Describe the set of all legal T's
+
+3)	You are given the following grammar:
+
+	T <- '1' | '2' | '3' | '4' + U
+	U <- '4' | '5' | '6' + U
+
+        What is the start symbol?
+
+	Which are legal strings:
+	a)	123
+	b)	1
+	c)	44
+	d)	454
+	e)	4664
+	f)	461
+REVIEW
+
+4)	You are given the following grammar:
+
+	V <- '1' | '2' | '3'
+	    | 'a' + V
+	    | 'b' + V
+	    | 'c' + V + V
+
+	Which are legal strings:
+	a)	cc11c22
+	b)	a12
+	c)	ca1b2
+	d)	c1b3
+
+
+
+
+
+
+
+
+
+
+REVIEW
+
+4)	You are given the following grammar:
+
+	V <- '1' | '2' | '3'
+	    | 'a' + V
+	    | 'b' + V
+	    | 'c' + V + V
+
+	Which are single legal strings:
+	a)	cc11c22
+	b)	a12
+	c)	ca1b2
+	d)	c1b3
+
+	Draw the trees for the legal strings.
+
+       	       c
+	/-----/ \--\   
+       c       	    c  
+      /	\ 	   / \ 
+     1 	 1	  2   2
+
+
+REVIEW
+Trees
+
+1)     	Explain why search in binary search trees can be O(log n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Trees
+
+1)     	Explain why search in binary search trees can be O(log n)
+
+2)	Define path, edge, node, leaf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Trees
+1)     	Explain why search in binary search trees can be O(log n)
+2)	Define path, edge, node, leaf
+3)  Write the .h file for a templated binary tree class with
+	the following properties:
+	a) Has an insert function
+	b) Has a search function that returns
+           true or false in O(log n)
+#ifndef BST_H
+#define BST_H
+template <class K>
+class BST {
+public:  void Insert(K);
+      	 bool Search(const K&i) {
+	    _Node * p = _head; 	
+	    while (p) {	      
+	      if (p->data == i) return true;
+       	      if (p->data<i) p = p->right;
+       	      else p = p->left; } return false }
+private: struct _Node { K data; _Node * left; _Node * right; };
+         _Node *_head;
+};    
+#endif
+REVIEW
+4)	What does the following program print?
+       	#include<iostream.h>
+       	struct t { void postorder();   	       	     n  
+		int data;			       	+--+
+		t* l; t* r;				| 3|
+	};						|--|
+	void t::postorder() {				| -->+---+
+		if (l) l->postorder();	       +---+	|--| |	1|
+       	       	if (r) r->postorder();	       | 5 |<----  | |---|
+		cout << data << endl;	       |---|	+--+ |nul|
+	}				       |nul|	     |---|
+	int main() {			       |---|	     |nul|
+		t* n = new t;		       |nul|	     +---+
+		n->data = 3;		       +---+
+		n->l = new t;
+		n->l->data = 1;
+		n->l->r = n->l->l = NULL;
+		n->r = new t;
+		n->r->data = 5;
+		n->r->r = n->r->l = NULL;
+		n->postorder();
+		return 0;   // leak city
+        }
+REVIEW
+
+5)  Whats the difference between preorder, inorder, and postorder
+	traversals?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+
+5)  Whats the difference between preorder, inorder, and postorder
+	traversals?
+
+6)	What is the big O of
+	a)	preorder traversal?
+	b)	inorder traversal?
+	c)	postorder traversal?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+
+5)  Whats the difference between preorder, inorder, and postorder
+	traversals?
+
+6)	What is the big O of
+	a)	preorder traversal?
+	b)	inorder traversal?
+	c)	postorder traversal?
+
+7)	Write the three traversal algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Templates
+
+1)	If you were to pass a class into the templated function
+	below, what methods would it need?
+
+	template<class T>
+	void test(T d1, T d2)
+	{
+		if ( (d1 < d2) || (d2 == d1) )
+			d2 = d1;
+		else
+			d2 = 5;
+
+	return d2;
+	}
+
+
+
+
+
+
+
+
+REVIEW
+Templates
+
+1)	If you were to pass a class into the templated function
+	below, what methods would it need?
+
+	template<class T>
+	void test(T d1, T d2)
+	{
+		if ( (d1 < d2) || (d2 == d1) )
+			d2 = d1;
+		else
+			d2 = 5;
+
+	return d2;
+	}
+
+2)	Write a templated Stack using linked lists.
+
+
+
+
+
+
+REVIEW
+Templates
+
+1)	If you were to pass a class into the templated function
+	below, what methods would it need?
+
+	template<class T>
+	void test(T d1, T d2)
+	{
+		if ( (d1 < d2) || (d2 == d1) )
+			d2 = d1;
+		else
+			d2 = 5;
+
+	return d2;
+	}
+
+2)	Write a templated Stack using linked lists.
+
+3)	Explain why templates are useful.
+
+
+
+
+REVIEW
+Templates
+
+1)	If you were to pass a class into the templated function
+	below, what methods would it need?
+
+	template<class T>
+	void test(T d1, T d2)
+	{
+		if ( (d1 < d2) || (d2 == d1) )
+			d2 = d1;
+		else
+			d2 = 5;
+
+	return d2;
+	}
+
+2)	Write a templated Stack using linked lists.
+
+3)	Explain why templates are useful.
+
+4)	Explain why we used the
+        #include "classname.template"
+	trick in the template program.
+REVIEW
+Big O
+
+What is the efficency of the following:
+
+1)
+	for(int i=n; i <=n; i++)
+		for(int j=n; j <=n; j++)
+			cout << i << j << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Big O
+
+What is the efficency of the following:
+
+1)
+	for(int i=n; i <=n; i++)
+		for(int j=n; j <=n; j++)
+			cout << i << j << endl;
+
+2)
+	void func(int n) {
+		cout << n << endl;
+	}
+
+	for(int i=0; i < n; i++)
+		func(i);
+
+
+
+
+
+
+
+REVIEW
+Big O
+
+What is the efficency of the following:
+
+1)
+	for(int i=n; i <=n; i++)
+		for(int j=n; j <=n; j++)
+			cout << i << j << endl;
+
+2)
+	void func(int n) {
+		cout << n << endl;
+	}
+
+	for(int i=0; i < n; i++)
+		func(i);
+
+3)
+	for(int i=0; i < n; i=i*2)
+		cout << i << endl;
+
+
+
+REVIEW
+
+4)
+	for(int i=0; i < n; i++);
+		for(int j=0; j < n; j++);
+			for(int k=0; k < n; k++);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+
+4)
+	for(int i=0; i < n; i++);
+		for(int j=0; j < n; j++);
+			for(int k=0; k < n; k++);
+
+5)
+ 	void func(int& m) {
+		m = m*2;
+	}
+
+	int i=0;
+	while(i < n)
+	{
+		cout << i;
+		func(i);
+	}
+
+
+
+
+
+
+REVIEW
+
+4)
+	for(int i=0; i < n; i++);
+		for(int j=0; j < n; j++);
+			for(int k=0; k < n; k++);
+
+5)
+	void func(int& m) {
+	       	m = m*2;
+	}
+
+	int i=0;
+	while(i < n)
+	{
+		cout << i;
+		func(i);
+	}
+
+6)
+	int i;
+	i = n*n*n;
+
+
+REVIEW
+7)
+	for(int i=0; i < n; i++)
+		for(int j=n; j < n*n; j++)
+			cout << i << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+7)
+	for(int i=0; i < n; i++)
+		for(int j=n; j < n*n; j++)
+			cout << i << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Misc
+1)	What is the meaning of const?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVIEW
+Misc
+1)	What is the meaning of const?
+2)	What does the following program print?
+class C
+{
+	public:
+		C() { cout << "ctor" << endl;
+		C(int a) { cout << "ctor " << a << endl;
+		~C() { cout << "dtor" << endl;
+}
+int main() {
+	C a;
+	C b(3);
+	{
+		C* c = new C();
+		C  d[2];
+	}
+	C* e = new C(3);
+	delete e;
+	return 0;
+}
+C f;
+
+REVIEW
+3)	Using GDB, how do you find the line where your program
+	segfaulted?
+
+	How do you set a breakpoint?
+
+        How do you run the program?
+
+        How do you make the program resume after it reaches
+       	 a breakpoint?
+
+
+
+
+
+
+
+
+
+
+
+
+
+

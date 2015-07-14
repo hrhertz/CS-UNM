@@ -1,0 +1,1828 @@
+QUESTIONS
+
+LAST TIME:
+ - Ctors, cont
+ - The life of an object
+ - Dtors
+
+TODAY:
+ - Administrivia
+ - The life of an object, II: Scope
+ - The life of an object, III: Object interactions		
+
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : 6 days 3 hours remaining
+         **UNDER** A WEEK!
+
+
+
+
+
+
+
+ADMINISTRIVIA - THE UNDECLARED
+   No recorded student declarations as from:
+
+Arzate,Tiffany C       	       	Macy,Robert John          
+Bach, Jonathan A		Peer,Jennifer Fraser      
+Baros, Anthony Eloy		Perez,Gregory A R         
+Benjamin, Matthew Jaco		Putze,Mark Jay            
+Chung, Doil    			Romero,Lawrence Aaron     
+Cordova, Patricia Ann		Self,Michael Hunter       
+Das, Ram Kinkar			Smith,Cal                 
+Dios, Zachary  			Sweeney,Jenelle C         
+Espinoza, Everett A		Uncapher,Mark D           
+Fuller,Michael McNair		Williams,Danny Benjam     
+Jones,Michael David		Zurzolo,Marie Domeniq     
+Long,Xiangcun             				
+     
+      -> Remaining on this list leaves you 
+      	 liable to be 'instructor-dropped'         
+      	 next week!                       
+      
+      -> Opening day handout (with declaration) available at:
+	     http://www.cs.unm.edu/~ackley/cs251
+
+      -> Fair Warning!
+PROGRAM 1 QUESTIONS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    			      
+
+
+
+      	  		     
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+
+
+
+
+
+
+
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+
+
+ 
+
+
+
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+
+ 
+
+
+
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+     Heap   space 
+ 
+
+
+
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+
+
+
+
+
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+
+
+  Where objects live affects when they are born:
+
+
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+
+
+  Where objects live affects when they are born:
+     Global objects are born before main() begins
+     Local objects are born when their definitions are encountered
+
+					       	
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+
+
+  Where objects live affects when they are born:
+     Global objects are born before main() begins
+     Local objects are born when their definitions are encountered
+
+					       	
+  Where objects live affects when they die:   
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+
+  There are three places that objects can live:
+     Global space (AKA 'permanent')    	       	      
+     Local  space (AKA 'on the stack' AKA 'temporary')
+
+
+  Where objects live affects when they are born:
+     Global objects are born before main() begins
+     Local objects are born when their definitions are encountered
+
+					       	
+  Where objects live affects when they die:   
+     Global objects die after main() returns (or exit())
+     Local objects die when leaving the block they're declared in
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+
+       	       	     	    	     
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  Foo g(2);
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}	      			       	       	  
+	      			     		  
+
+		       	       	 
+
+
+
+	  
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+
+       	       	     	    	     
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  Foo g(2);
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}	      			       	       	  
+	      			     		  
+
+		       	       	 
+
+
+
+hi+2bye-2
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+Foo f(1);
+       	       	     	    	     
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  Foo g(2);
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}	      			       	       	  
+	      			     		  
+
+		       	       	 
+
+
+
+	  
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+Foo f(1);
+       	       	     	    	     
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  Foo g(2);
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}	      			       	       	  
+	      			     		  
+
+		       	       	 
+
+
+
++1hi+2bye-2-1
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+Foo f(1);       // a global object   
+       	       	     	    	     
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  Foo g(2);   	// a local object 
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}	      			       	       	  
+	      			     		  
+Foo h(3);     	// another global object
+		       	       	 
+
+
+
+	  
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+Foo f(1);       // a global object   
+       	       	     	    	     
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  Foo g(2);   	// a local object 
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}	      			       	       	  
+	      			     		  
+Foo h(3);     	// another global object
+		       	       	 
+
+
+
++1+3hi+2bye-2-3-1
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  for (int i = 0; i<2; ++i) {
+    Foo g(i);   	// a local object 
+    cout << 'X';
+  }
+  cout << "bye";       	       	  
+  return 0;   		       	       	     	
+}  	      			       	       	  
+   	      			     		  
+Foo h(3);     	// global object
+   		       	       	 
+
+
+
+LIFE OF OBJECTS II: SCOPE
+What does this program print?
+
+#include <iostream.h>			   
+class Foo { public: Foo(int); ~Foo(); private: int _data;};
+Foo::Foo(int a) { _data = a; cout << '+' << _data; }
+Foo::~Foo() { cout << '-' << _data; }  	       	
+	      
+
+int main() {  	       	    	     
+  cout << "hi";	      		  
+  for (int i = 0; i<2; ++i) {
+    Foo g(i);       	// a local object 
+    cout << 'X';
+  }		    
+  cout << "bye";       	       	  
+  return 0;   	    	       	       	     	
+}  	      	    		       	       	  
+   	      	    		     		  
+Foo h(3);     	// global object
+   		       	       	 
+$ g++ -Wall -pedantic foo.C -o foo 
+$ ./foo                            
++3hi+0X-0+1X-1bye-3$
+LIFE OF OBJECTS II: SCOPE
+
+ Upshot: Object lifetimes
+
+  - Global objects are constructed before main() begins and
+    destructed after main() ends: The lifetime of global
+    objects is the entire run of the program.
+
+
+
+
+
+				      
+
+
+			     	   
+
+
+
+
+
+
+		       	       	 
+
+LIFE OF OBJECTS II: SCOPE
+
+ Upshot: Object lifetimes
+
+  - Global objects are constructed before main() begins and
+    destructed after main() ends: The lifetime of global
+    objects is the entire run of the program.
+
+  - Local objects are constructed when their definition is
+    encountered and destructed at the end of the nearest
+    enclosing {}-block: The lifetime of a local object is	
+    until exiting the enclosing block.
+				      
+
+
+			     	   
+
+
+
+
+
+
+		       	       	 
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+
+					      
+
+				       
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+ How do class methods find their data members?
+					      
+   
+				       
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+ How do objects deal with each other?
+
+      By calling methods on each other.
+				       
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+ How do objects deal with each other?
+
+      By calling methods on each other.
+				       
+ How do objects KNOW ABOUT each other, so that they
+               can call methods on each other?		   
+       
+      By the design of the program and the classes...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+ How do objects deal with each other?
+
+      By calling methods on each other.
+				       
+ How do objects KNOW ABOUT each other, so that they
+               can call methods on each other?		   
+       
+      By the design of the program and the classes...
+
+       Evil way: Global variables
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+ How do objects deal with each other?
+
+      By calling methods on each other.
+				       
+ How do objects KNOW ABOUT each other, so that they
+               can call methods on each other?		   
+       
+      By the design of the program and the classes...
+
+       Evil way: Global variables
+       Good way: Data members
+		 Method arguments
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+ How do objects deal with each other?
+
+      By calling methods on each other.
+				       
+ How do objects KNOW ABOUT each other, so that they
+               can call methods on each other?		   
+       
+      By the design of the program and the classes...
+
+       Evil way: Global variables
+       Good way: Data members
+		 Method arguments
+       Best way: Redesign so they don't 
+		  HAVE to know about each other..
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+
+
+				       
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+V 0 1      1         1         0         0
+
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+V 0 1      1         1         0         0
+	   1         0         0         0
+
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+V 0 1      1         1         0         0
+	   1         0         0         0
+       	   1         0         1         0
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+V 0 1      1         1         0         0
+	   1         0         0         0
+       	   1         0         1         0
+V 1 1      1         1         1         0
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+V 0 1      1         1         0         0
+	   1         0         0         0
+       	   1         0         1         0
+V 1 1      1         1         1         0
+           1         1         0         0
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+       When voter 'K' votes, it brags about it to 'K+1'
+       and then if voter 'K+1' voted the same way, voter 'K+1'
+       changes its vote.
+				       
+E.g.:
+     
+         Voter0    Voter1    Voter2    Voter3
+initial    0         0         0         0  
+V 1 1	   0         1         0         0
+V 0 1      1         1         0         0
+	   1         0         0         0
+       	   1         0         1         0
+V 1 1      1         1         1         0
+           1         1         0         0
+           1         1         0         1
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         
+  void SetVote(bool yn);        
+  bool GetVote();               
+private:                        
+  bool _myvote;                 
+};                              
+#endif                          
+---                             
+
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         
+  void SetVote(bool yn);  <----- This is where a vote is cast.
+  bool GetVote();                We want to extend SetVote to 
+private:                         get the new spec behavior.  
+  bool _myvote;                 
+};                              
+#endif                          
+---                             
+
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Booth.h---  	       	 ---Booth.C---	       
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	 bool Booth::_ReadVote() {                
+#include "Person.h"        char c;                                
+class Booth {          	   cin >> c;                              
+public:                	   if (!cin) _Error();                    
+  void Election();     	   if (c=='V') {                          
+private:                     int vnum, vote;                      
+  void _Error();       	     cin >> vnum >> vote;                 
+  bool _ReadVote();    	     if (vnum<0 || vnum>=_MAXV) _Error(); 
+  void _ReportVote();  	     if (vote!=0 && vote!=1) _Error();    
+  enum {_MAXV=100};    	     _voters[vnum].SetVote(vote==1);      
+  Person _voters[_MAXV];     return true;                         
+};     	       	   	    }                                     
+#endif 	       	       	    if (c=='C') { return false; }
+---    	       	       	    _Error();
+			    return false;  // not reached
+			  }    	       	       	       	       	 
+			 
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Booth.h---  	       	 ---Booth.C---	       
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	 bool Booth::_ReadVote() {                
+#include "Person.h"        char c;                                
+class Booth {          	   cin >> c;                              
+public:                	   if (!cin) _Error();                    
+  void Election();     	   if (c=='V') {                          
+private:                     int vnum, vote;                      
+  void _Error();       	     cin >> vnum >> vote;                 
+  bool _ReadVote();    	     if (vnum<0 || vnum>=_MAXV) _Error(); 
+  void _ReportVote();  	   +---------------------------------+    
++------------------------+ | _voters[vnum].SetVote(vote==1); |    
+| Person _voters[_MAXV]; | +---------------------------------+    
++------------------------+  }                                     
+#endif 	       	       	    if (c=='C') { return false; }
+---    	       	       	    _Error();
+			    return false;  // not reached
+			  }    	       	       	       	       	 
+			 
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         
+  void SetVote(bool yn);
+  bool GetVote();        
+private:                 
+  bool _myvote;                 
+};                              
+#endif                          
+---                             
+
+ Problem: 
+  - Person::SetVote doesn't know about any other Person's, in 
+    particular about voter 'K+1'.  
+   
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         
+  void SetVote(bool yn);
+  bool GetVote();        
+private:                 
+  bool _myvote;                 
+};                              
+#endif                          
+---                             
+
+ Problem: 
+  - Person::SetVote doesn't know about any other Person's, in 
+    particular about voter 'K+1'.  
+   
+  - A Person doesn't even know their own voter number..
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         
+  void SetVote(bool yn);
+  bool GetVote();        
+private:                 
+  bool _myvote;                 
+};                              
+#endif                          
+---                             
+
+ Problem: 
+  - Person::SetVote doesn't know about any other Person's, in 
+    particular about voter 'K+1'.  
+   
+  - A Person doesn't even know their own voter number..
+
+ Let's try the 'method arguments' solution..
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         		       
+  void SetVote(bool yn,int vnum);    
+  bool GetVote();              			       
+private:                       			       
+  bool _myvote;                 		       
+};                              		       
+#endif                          		       
+---                             		       
+		    	       			       
+Now SetVote is passed the Person's own voter number (vnum).
+		    	       			       
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         		       
+  void SetVote(bool yn,int vnum);    
+  bool GetVote();              			       
+private:                       			       
+  bool _myvote;                 		       
+};                              		       
+#endif                          		       
+---                             		       
+		    	       			       
+Now SetVote is passed the Person's own voter number (vnum).
+		    	       			       
+void Person::SetVote(bool yn,int vnum)
+{  
+  _myvote = yn;
+  ???  // wants to do something about voter 'vnum+1', but
+       //  the Booth object isn't around to ask		   	 
+}
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         		       
+  void SetVote(bool yn,int vnum);    
+  bool GetVote();              			       
+private:                       			       
+  bool _myvote;                 		       
+};                              		       
+#endif                          		       
+---                             		       
+		    	       			       
+Now SetVote is passed the Person's own voter number (vnum).
+		    	       			       
+void Person::SetVotebool yn,int vnum)
+{  
+  _myvote = yn;
+  ???  // wants to do something about voter 'vnum+1', but
+       //  the Booth object isn't around to ask		   	 
+}
+       	    ..let's add more arguments..
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         		       
+  void SetVote(bool yn,int vnum,class Booth & booth);
+  bool GetVote();              			       
+private:                       			       
+  bool _myvote;                 		       
+};                              		       
+#endif                          		       
+---                             		       
+		    	       			       
+Now SetVote is passed the Person's own voter number (vnum), 
+and a reference to a Booth.    			       
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+ 
+---Person.h---                  
+#ifndef PERSON_H                
+#define PERSON_H                
+class Person {                  
+public:                         		       
+  void SetVote(bool yn,int vnum,class Booth & booth);
+  bool GetVote();              			       
+private:                       			       
+  bool _myvote;                 		       
+};                              		       
+#endif                          		       
+---                             		       
+		    	       			       
+Now SetVote is passed the Person's own voter number (vnum), 
+and a reference to a Booth.    			       
+
+#include "Person.h"
+#include "Booth.h"
+void Person::SetVote(bool yn,int vnum,class Booth & booth) {
+  _myvote = yn;
+  booth.BragTo(_myvote,vnum+1);
+}     			       	 
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+			 
+
+
+
+			 
+			 
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+
+
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV 
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote);
+}				    
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote);
+}				    
+       	     ..wait ..we added extra arguments to Person::SetVote 
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote);
+}				    
+       	     ..wait ..we added extra arguments to Person::SetVote 
+       	       void SetVote(bool yn,int vnum,class Booth & booth);
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote,voternum,
+}				    
+       	     ..wait ..we added extra arguments to Person::SetVote 
+       	       void SetVote(bool yn,int vnum,class Booth & booth);
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote,voternum,????
+}				    
+       	     ..wait ..we added extra arguments to Person::SetVote 
+       	       void SetVote(bool yn,int vnum,class Booth & booth);
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote,voternum,????
+}				    
+       	     ..wait ..we added extra arguments to Person::SetVote 
+       	       void SetVote(bool yn,int vnum,class Booth & booth);
+ HOW THE HECK DO WE PASS A REFERENCE TO THE CURRENT OBJECT??
+LIFE OF OBJECTS III: OBJECT INTERACTIONS
+---Booth.h---  	       	 
+#ifndef BOOTH_H	       	 
+#define BOOTH_H	       	 
+#include "Person.h"      
+class Booth {          	 
+public:                	 
+  void Election();     	 
+  void BragTo(bool vote,int voternum);
+private:                 
+..
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+..			 
+void Booth::BragTo(bool vote,int voternum) {
+  if (voternum<_MAXV && _voters[voternum].GetVote() == vote)
+   _voters[voternum].SetVote(!vote,voternum,*this);
+}				    	   	   
+ HOW THE HECK DO WE PASS A REFERENCE TO THE CURRENT OBJECT??
+   With '*this'...
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+						   
+class Foo {		       
+public:	   		       
+  Foo(int);		       
+  void Run();		       
+private:     		       
+  void _Bonk();		       
+  int _thing;		       
+};	 		       
+ 	 		       	                          
+Foo::Foo(int attitude) 	       
+{			       
+  _thing = attitude;	       
+}			       
+void Foo::Run() {	       
+  cout << _thing << endl;      
+  _Bonk();		       
+}      	  		       
+void Foo::_Bonk() {	       
+  cout << "Bonk" << endl;      
+}			       
+       	       	       	  	                          
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+						   
+class Foo {		       
+public:	   		       
+  Foo(int);		       
+  void Run();		       
+private:     		       
+  void _Bonk();		       
+  int _thing;		       
+};	 		       
+ 	 		       	                          
+Foo::Foo(int attitude) 	       	Foo::Foo(int attitude)    
+{			       	{                         
+  _thing = attitude;	       	  (*this)._thing = attitude;      
+}				}                         	  
+void Foo::Run() {		void Foo::Run() {              	  
+  cout << _thing << endl;      	  cout << _thing << endl; 
+  _Bonk();			  _Bonk();                
+}      	  		 	}                         
+void Foo::_Bonk() {		void Foo::_Bonk() {       
+  cout << "Bonk" << endl;	  cout << "Bonk" << endl; 
+}			 	}                         
+       	       	       	  	                          
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+						   
+class Foo {		       
+public:	   		       
+  Foo(int);		       
+  void Run();		       
+private:     		       
+  void _Bonk();		       
+  int _thing;		       
+};	 		       
+ 	 		       	                          
+Foo::Foo(int attitude)	       	Foo::Foo(int attitude)    
+{			       	{                         
+  _thing = attitude;	       	  (*this)._thing = attitude;      
+}				}                         	  
+void Foo::Run() {		void Foo::Run() {              	  
+  cout << _thing << endl;      	  cout << (*this)._thing << endl; 
+  _Bonk();			  _Bonk();                
+}      	  		 	}                         
+void Foo::_Bonk() {		void Foo::_Bonk() {       
+  cout << "Bonk" << endl;	  cout << "Bonk" << endl; 
+}			 	}                         
+       	       	       	  	                          
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+						   
+class Foo {		       
+public:	   		       
+  Foo(int);		       
+  void Run();		       
+private:     		       
+  void _Bonk();		       
+  int _thing;		       
+};	 		       
+ 	 		       	                          
+Foo::Foo(int attitude)	       	Foo::Foo(int attitude)    
+{			       	{                         
+  _thing = attitude;	       	  (*this)._thing = attitude;      
+}				}                         	  
+void Foo::Run() {		void Foo::Run() {              	  
+  cout << _thing << endl;	  cout << (*this)._thing << endl; 
+  _Bonk();			  (*this)._Bonk();                
+}      	  		 	}                         
+void Foo::_Bonk() {		void Foo::_Bonk() {       
+  cout << "Bonk" << endl;	  cout << "Bonk" << endl; 
+}			 	}                         
+       	       	       	  	                          
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+       	       	       				   
+class Foo {	       	 Inside any normal member function,
+public:	   		 '*this' means 'The current object 
+  Foo(int);		 itself'.      	       	       	  
+  void Run();  	       	       
+private:     		 
+  void _Bonk();		       
+  int _thing;		       
+};	       	       	       
+ 	    		       	                          
+Foo::Foo(int attitude)	       	Foo::Foo(int attitude)    
+{	    		       	{                         
+  _thing = attitude;	       	  (*this)._thing = attitude;      
+}	    			}                         	  
+void Foo::Run() {		void Foo::Run() {              	  
+  cout << _thing << endl;	  cout << (*this)._thing << endl; 
+  _Bonk();  			  (*this)._Bonk();                
+}      	    		 	}                         
+void Foo::_Bonk() {		void Foo::_Bonk() {       
+  cout << "Bonk" << endl;	  cout << "Bonk" << endl; 
+}      	      		 	}                         
+       	       	       	  	                          
+	      
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+---Foo.h---		     ---Bar.h---                       
+#ifndef FOO_H  	       	     #ifndef BAR_H                     
+#define FOO_H		     #define BAR_H                     	  
+class Foo {    	       	     #include "Foo.h"                  	  
+public:	   		     class Bar {                       	  
+  int GetData();	     public:                           	  
+  int Munge(class Bar &);      void Run();                  	  
+private	   		       int Count();            	  
+  int _data;		                               	  
+}; 	    		     private:                  	  
+#endif	   		       Foo _foos[10];          	  
+---			     };                        	  
+   			     ---                       
+---Foo.C---		                                       	  
+#include "Foo.h"	     ---Bar.C---                       	  
+#include "Bar.h"	     #include "Bar.h"                  	  
+int Foo::GetData() {	     int Bar::Count() { return 10; }   	  
+  return _data;		     void Bar::Run() {          
+}      	       	       	       int num = 0;                    
+int Foo::Munge(Bar &b) {       for (int i = 0;i<10; ++i)       	  
+  return _data*b.Count();         num += _foos[i].Munge(*this);
+}  			       cout << num << endl;
+---			     } 	       	       	   
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- (*this)
+---Foo.h---		     ---Bar.h---                       
+#ifndef FOO_H  	       	     #ifndef BAR_H                     
+#define FOO_H  	       	    +-----------------+                	  
+class Foo {    	       	    |#include "Foo.h" |                	  
+public:	   		    +-----------------+                	  
+  int+-------------------+   public:                           	  
+  int|Munge(class Bar &);|     void Run();                  	  
+priva+-------------------+     int Count();            	  
+  int _data;		                               	  
+}; 	    		     private:                  	  
+#endif	   		       Foo _foos[10];          	  
+---			     };                        	  
+       	       	       	     ---                       
+---Foo.C---		                                       	  
++---------------+	     ---Bar.C---                       	  
+|include "Bar.h"|	     #include "Bar.h"                  	  
++---------------+) {	     int Bar::Count() { return 10; }   	  
+  return _data;		     void Bar::Run() {          
+}      	       	       	       int num = 0;                    
+int Foo::Munge(Bar &b) {       for (int +-----------------------+ 
+  return _data*b.Count();         num +=|_foos[i].Munge(*this);	|
+}  			       cout << n+-----------------------+
+---			     } 	       	       	   
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- Upshots
+
+
+
+
+
+
+
+
+		     		      
+
+
+
+
+
+
+
+
+
+		    
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- Upshots
+
+ - To get business done objects sometimes need to know
+   about each other, so they can call methods on each other
+
+
+
+
+
+		     		      
+
+
+
+
+
+
+
+
+
+		    
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- Upshots
+
+ - To get business done objects sometimes need to know
+   about each other, so they can call methods on each other
+
+ - One way for an object to know about another is for the former
+   to have the latter AS A DATA MEMBER 
+       	  #include "Bar.h"	      
+	  class Foo { ... private: Bar _abar; };
+		     		      
+
+
+
+
+
+
+
+
+
+		    
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- Upshots
+
+ - To get business done objects sometimes need to know
+   about each other, so they can call methods on each other
+
+ - One way for an object to know about another is for the former
+   to have the latter AS A DATA MEMBER 
+       	  #include "Bar.h"	      
+	  class Foo { ... private: Bar _abar; };
+		     		      
+ - Another way for an object to know about another object is for
+   the former to get PASSED A REFERENCE to the latter
+	  class Foo { public: void Func(class Bar &); }
+
+
+
+
+
+
+		    
+
+
+
+
+LIFE OF OBJECTS III: OBJECT INTERACTIONS -- Upshots
+
+ - To get business done objects sometimes need to know
+   about each other, so they can call methods on each other
+
+ - One way for an object to know about another is for the former
+   to have the latter AS A DATA MEMBER 
+       	  #include "Bar.h"	      
+	  class Foo { ... private: Bar _abar; };
+		     		      
+ - Another way for an object to know about another object is for
+   the former to get PASSED A REFERENCE to the latter
+	  class Foo { public: void Func(class Bar &); }
+
+ - Inside a normal method, '(*this)' refers to the current object.
+   You CAN, but don't HAVE TO, use '(*this).' to access
+   members of the current object.  When you want to pass a 
+   reference to the current object as a method argument, you
+   MUST use '*this'.					    
+		    
+
+
+
+
+
+
+
+

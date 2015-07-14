@@ -1,0 +1,171 @@
+/****************REQUIRED COMMENT SECTION***************************
+* CS 251 Spring 2000, Program 4
+* 
+* Ken Segura
+* Userid: ksegura@unm.edu
+* 
+********************************************************************
+* 
+* Dequer.template
+*
+*******************************************************************/
+
+
+template <class T> 
+Dequer<T>::Dequer()
+{
+
+}
+
+template <class T> 
+Dequer<T>::~Dequer()
+{
+ 
+}
+
+template <class T>
+void Dequer<T>::Run()
+{
+  while (_Command_Proc());
+}
+
+template <class T>
+bool Dequer<T>::_Command_Proc()
+{
+  char c;
+  cin >> c;
+  if (!cin) _Error(); else {
+    if (c=='Q') { cout << "QUIT" << endl; return false; }
+  switch (c) {
+  case 'A':  _CmdAuthor();    break;
+  case 'D':  _CmdDelay();     break;
+  case 'S':  _CmdSize();      break;
+  case 'I':  _CmdInsert();    break;
+  case 'R':  _CmdRemove();    break;
+  case 'L':  _CmdLoad();      break;
+  case 'U':  _CmdUnload();    break;
+  case 'C':  _CmdCirculate(); break;
+  case 'd':  _CmdDebug();     break;
+  default:                    break;
+  } }
+  return true;
+
+}
+
+template <class T>
+void Dequer<T>::_CmdAuthor()
+{
+  cout << "AUTHOR \"Ken Segura\"" << endl; 
+}
+
+template <class T>
+void Dequer<T>::_CmdDelay()
+{
+  int Tmp_Int ;
+  cin >> Tmp_Int; if (!cin) _Error();
+
+  if (!cin) _Error(); else
+    cout << "DELAY " << Tmp_Int << endl;
+}
+
+template <class T>
+void Dequer<T>::_CmdSize()
+{
+  int _Size;
+  cin >> _Size; if (!cin) _Error();
+  _Deque.Size(_Size);
+  cout << "SIZE " << _Size << endl;
+}
+
+template <class T>
+void Dequer<T>::_CmdInsert()
+{
+  char _lr;
+  T ch;
+  cin >> _lr; if (!cin) _Error();
+
+  cin >> ch;  if (!cin) _Error();
+
+  if (_Deque.IsFull() == true) { _Fail('I'); return; }
+  if (_lr=='L') { _Deque.InsertL(ch); } else if (_lr=='R') { _Deque.InsertR(ch); }
+  else { _Error(); }
+  cout << "INSERT " << _lr << ch << endl; 
+}
+
+template <class T>
+void Dequer<T>::_CmdRemove()
+{
+  char _lr;
+  T ch;
+  cin >> _lr; if (!cin) _Error();
+  if (_Deque.IsEmpty() == true) { _Fail('R'); return; }
+  if (_lr=='L') { _lr = 'L' ; ch = _Deque.RemoveL(); } 
+  else if (_lr=='R') { _lr = 'R'; ch = _Deque.RemoveR(); }
+  else { _Error(); }
+
+  cout << "REMOVE " << _lr << ch << endl;
+
+}
+
+template <class T> 
+void Dequer<T>::_CmdLoad()
+{
+  int i;
+  T ch;     	       	       	    
+
+  cin >> i; if (!cin) _Error(); 
+
+  for(int loop = 0; loop<i; loop++) {
+    if (_Deque.IsFull() == false) { 
+      cin >> ch;
+      if (!cin) _Error(); 
+      _Deque.InsertR(ch); }
+      else { _Fail('C');
+      }
+    }
+}
+
+template <class T>
+void Dequer<T>::_CmdUnload()
+{
+  cout << "UNLOAD ";
+  while (!_Deque.IsEmpty()) {
+    cout << _Deque.RemoveL(); }
+  cout << endl;
+}
+
+template <class T>
+void Dequer<T>::_CmdDebug()
+{ _Deque.Debug(); }
+
+template <class T>
+void Dequer<T>::_CmdCirculate()
+{
+  char lr;
+  T ch;
+  cin >> lr; if (!cin) _Error();
+  if (_Deque.IsEmpty() == true) { _Fail('C'); return; }
+  if (_Deque.IsFull() == true) { _Fail('C'); return; }
+  if (lr == 'R') { ch = _Deque.RemoveR(); _Deque.InsertL(ch); } else
+    if (lr == 'L') { ch = _Deque.RemoveL(); _Deque.InsertR(ch); } else
+      _Error();
+  cout << "CIRCULATE " << lr << ch << endl; 
+}
+
+template <class T>
+void Dequer<T>::_Error()
+{
+  ///////////
+  // Error Detected, Bail out!
+  cout << "QUIT" << endl;
+  exit(1);
+}
+
+template <class T>
+void Dequer<T>::_Fail(char er)
+{
+  //////////
+  // Command Failed
+  cout << "FAIL " << er << endl;
+}
+

@@ -1,0 +1,316 @@
+#!/usr/bin/wish
+# NOTE: '/usr/local/bin/wish' is where 'wish' lives on the CIRT AIX systems.
+# If you are trying to use this script elsewhere, you will probably at least
+# need to change the first line to reflect where your 'wish' is located.
+
+#   (C) 2000 David H. Ackley
+#   This code may be used without fee by students registered in the
+#   Spring 2000 version of CS251 at the University of New Mexico, while
+#   they are so registered, provided that (1) This notice is included
+#   in its entirety, and (2) If the contents of this file is modified
+#   in any way, a comment will be added directly below this notice
+#   stating that this is a modified copy and providing the name(s) of
+#   those who performed the modifications.  Any other use requires
+#   written permission by the copyright holder.
+
+# cmddequer
+# Ackley for CS251
+# Fri Mar  3 23:30:01 2000 Cripple harder than I thought for CIRT's uhm 'vintage software'
+# Sun Feb 20 16:26:13 2000 Convert from showdequer 0.1
+
+set D(version) 0.2
+
+# Parameters
+set D(w) .dequer
+set D(author) ""
+
+set D(xoffset) 0
+set D(xside) 20
+set D(yoffset) 18
+set D(yside) 20
+
+set D(slidesteps) 3
+set D(slidedelay) 1
+
+set D(rollsteps) 8
+set D(rolldelay) 10
+
+set D(windowsize) "300 200"
+set D(dequeheight) 100
+set D(dequeleft) 100
+set D(dequeright) 200
+set D(dequethick) 16
+
+set D(launchspread) 50
+set D(landoverlap) 25
+
+set D(dequeoutline) ""
+set D(dequefill) RoyalBlue
+
+set D(maxfont) 40
+set D(minfont) 2
+
+set D(unloadbufx) 250
+set D(unloadbufy) 150
+
+proc Main {} {
+    Init
+}
+
+proc Init {} {
+    global D
+    set w $D(w)
+    catch { destroy $w }
+    frame $w
+    pack $w
+    set f "$w.f1"
+    frame $f
+    pack $f
+    button $f.quit \
+	    -text "Quit" \
+	    -command "Puts Q;after 1000 exit"
+    pack $f.quit -side left
+    button $f.author \
+	    -text "Author" \
+	    -command "Puts A"
+    pack $f.author -side left
+    button $f.unload \
+	    -text "Unload" \
+	    -command "Puts U"
+    pack $f.unload -side left
+    label $f.sizelabel \
+	    -text Size:
+    pack $f.sizelabel \
+	    -side left
+    entry $f.size \
+	    -width 4
+    $f.size insert end 20
+    bind $f.size <Return> "DoSize $f.size"
+    DoSize $f.size
+    pack $f.size
+
+    set f "$w.f2"
+    frame $f
+    pack $f
+    button $f.circl \
+	    -text "<" \
+	    -command "Puts CL"
+    pack $f.circl \
+	    -side left
+    button $f.circr \
+	    -text ">" \
+	    -command "Puts CR"
+    pack $f.circr \
+	    -side left
+    label $f.loadlabel \
+	    -text Load:
+    pack $f.loadlabel \
+	    -side left
+    entry $f.load 
+    bind $f.load <Return> "DoLoad $f.load"
+    pack $f.load
+}
+
+proc DoLoad {w} {
+    set t [$w get]
+    regsub -all "\n" $t {} t
+    Puts L$t
+}
+
+proc DoSize {w} {
+    set t [$w get]
+    regsub -all {[^0-9]} $t {} t
+    if {$t==""} { set t 0 }
+    $w delete 0 end
+    $w insert end $t
+    Puts S$t
+}
+
+proc Parse {input} {
+    if {[regexp {^AUTHOR \"([^\"]+)\"$} \
+	    $input all name]} {
+	Author $name
+	return
+    }
+    if {[regexp {^SIZE ([0-9]+)$} \
+	    $input all sz]} {
+	Size $sz
+	return
+    }
+    if {[regexp {^INSERT ([LR])(.)$} \
+	    $input all lr ch]} {
+	Insert $lr $ch 
+	return
+    }
+    if {[regexp {^REMOVE ([LR])(.)$} \
+	    $input all lr ch]} {
+	Remove $lr $ch
+	return
+    }
+    if {[regexp {^UNLOAD (.*)$} \
+	    $input all chs]} {
+	Unload $chs
+	return
+    }
+    if {[regexp {^DELAY ([0-9]+)$} \
+	    $input all ms]} {
+	Delay $ms
+	return
+    }
+    if {[regexp {^QUIT$} \
+	    $input all]} {
+	exit
+    }
+    Fail "Unrecognized command or bad argument format: <$input>"
+}
+
+proc Xs {x} {
+    global D
+    return [expr $x*$D(xside)+$D(xoffset)]
+}    
+
+proc Ys {y} {
+    global D
+    return [expr $y*$D(yside)+$D(yoffset)]
+}
+
+proc Xc {x} {
+    global D
+    return [expr [Xs $x]+$D(xside)/2.0]
+}
+
+proc Yc {x} {
+    global D
+    return [expr [Ys $x]+$D(yside)/2.0]
+}
+
+proc Author {name} {
+    global D
+    $D(w) delete author
+    $D(w) create text 0 0 \
+	    -text "Author: $name" \
+	    -tag author \
+	    -anchor nw
+}
+
+proc Size {sz} {
+    global D
+    if {$sz<=0} { Fail "Illegal size: $sz" }
+    # Just save it for now -- need it?
+    set D(cmd,size) $sz
+    $D(w) delete size
+    $D(w) create text \
+	    [expr ($D(dequeleft)+$D(dequeright))/2.0] \
+	    [expr $D(dequeheight)] \
+	    -text $sz \
+	    -anchor center \
+	    -tag size
+}
+
+proc Insert {lr ch} {
+    global D
+    if {$D(lastremove)==$ch && $D(lastside)!=$lr} {
+	RollLastTo $lr
+    }
+    InsertRemove $lr $ch I
+    set D(lastremove) ""
+}
+proc Remove {lr ch} {
+    global D
+    InsertRemove $lr $ch R
+    set D(lastremove) $ch
+    set D(lastside) $lr
+}
+
+proc RollLastTo {lr} {
+    global D
+    set xinc [expr ($D(dequeright)+$D(launchspread)-($D(dequeleft)-$D(launchspread)))/$D(rollsteps)]
+
+    if {$lr=="L"} {
+	set xd [expr $D(dequeleft)+$D(landoverlap)]
+	set xinc [expr -1*$xinc]
+    } else {
+	set xd [expr $D(dequeright)-$D(landoverlap)]
+    }
+    set yd $D(dequeheight)
+    set yinc 10
+    set halfroll [expr $D(rollsteps)/2]
+    for {set i 0} {$i<$halfroll} {incr i} {
+	$D(w) move letter $xinc -10
+	update
+	after $D(rolldelay)
+   }
+    for {set i 0} {$i<$halfroll} {incr i} {
+	$D(w) move letter $xinc 10
+	update
+	after $D(rolldelay)
+    }
+}
+
+proc InsertRemove {lr ch ir} {
+    global D
+    if {$lr=="L"} {
+	set xs [expr $D(dequeleft)-$D(launchspread)]
+	set xd [expr $D(dequeleft)+$D(landoverlap)]
+    } else {
+	set xs [expr $D(dequeright)+$D(launchspread)]
+	set xd [expr $D(dequeright)-$D(landoverlap)]
+    }
+    set ys [expr $D(dequeheight)]
+    set yd $ys
+
+    set xi [expr ($xd-$xs)/($D(slidesteps)+1)]
+    set yi [expr ($yd-$ys)/($D(slidesteps)+1)]
+
+    set fi [expr ($D(maxfont)-$D(minfont))/($D(slidesteps)+1)]
+    if {$ir=="I"} {
+	set istart 0
+	set ifinish [expr $D(slidesteps)+1]
+	set iincr 1
+    } else {
+	set istart $D(slidesteps)
+	set ifinish [expr 0-1]
+	set iincr -1
+    }
+    for {set i $istart} {$i!=$ifinish} {incr i $iincr} {
+	$D(w) delete letter
+	$D(w) create text \
+		[expr $i*$xi+$xs] \
+		[expr $i*$yi+$ys] \
+		-text $ch \
+		-tag letter
+	$D(w) raise deque
+	$D(w) raise size
+	update
+	after $D(slidedelay)
+    }
+}
+
+proc Unload {chs} {
+    global D
+    $D(w) delete unbuff
+    $D(w) create text $D(unloadbufx) $D(unloadbufy) \
+	    -text "" \
+	    -anchor ne \
+	    -tag unbuff 
+    for {set i 0} {$i<[string length $chs]} {incr i} {
+	set ch [string index $chs $i]
+	Remove L $ch
+	$D(w) itemconfig unbuff -text "[lindex [$D(w) itemconfig unbuff -text] 4]$ch"
+    }
+    $D(w) delete letter
+    set D(lastremove) ""
+}
+
+proc Delay {num} {
+    if {$num<0} { Fail "Illegal time to Delay: $num" }
+    if {$num>0} { after $num }
+}
+
+proc Puts {str} {
+    puts $str
+    flush stdout
+}   
+
+Main
+

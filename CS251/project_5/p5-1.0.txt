@@ -1,0 +1,982 @@
+		     TPL: The Tiny Prefix Language
+			CS 251 S'00 Program 5
+
+    		                   Due: MON 5/08/2000 - 5:00:00PM MDT
+		       Latest accepted: THU 5/11/2000 - 5:00:00PM MDT
+                           		       Document version: 1.0
+
+
+((s0)) Table of Contents
+ (s1)  TPL Program Overview
+ (s2)  Parser Operation
+ (s3)  TPL Grammar
+ (s4)  TPL Parse Trees
+ (s5)  (reserved for expansion)
+ (s6)  (reserved for expansion)
+ (s7)  TPLI Description                            (TPLI only)
+ (s8)  TPLI Examples                               (TPLI only) 
+ (s9)  Resources and Requirements                  (TPL and TPLI)
+ (s10)  Document Revision History                  (TPL and TPLI)
+
+((s1)) TPL Program Overview
+
+((s1.1)) Introduction
+
+((s1.1.1)) The goal of program 5 is to get a tiny bit of experience
+dealing with trees and a tiny bit of experience dealing with parsing.
+To that end, the task is to write a top-down parser for a small
+language called 'TPL' that's expressly designed to be easy for
+top-down parsing, and then to write a simple recursive print routine
+to print out the resulting parse trees.  The test driver program
+simply reads TPL expressions and writes out the corresponding parse
+trees.
+
+((s1.1.2)) As a step-up option for up to 13% extra credit, one may
+choose instead to implement a slightly more complicated language
+called TPLI, and also to implement an interpreter for TPLI
+expressions.  The TPLI grammar and associated semantics are covered in
+(s7).  The test driver program for TPLI reads TPLI expressions, writes
+out the corresponding parse trees, and then interprets the
+expressions.
+
+((s2)) Parser Operation
+
+((s2.1)) The name of the program is 'TPL'.
+
+((s2.2)) When started, the program enters a loop successively reading
+TPL expressions and printing the corresponding parse trees.  The loop
+will continue indefinitely, until an illegal expression is read.
+
+((s2.3)) The program prints out no greeting message or identifying
+information on startup, no 'prompts' of any kind, and no error
+messages.
+
+((s2.4)) If the program reads input that is not legal TPL, it exits
+silently (without printing an error message).
+
+((s3)) TPL Grammar
+
+((s3.1)) The TPL grammar can be expressed as a single rule -- albeit
+a rule with a lot of alternatives.
+
+((s3.2)) TPL and TPLI Grammar Presentation Rules
+
+((s3.2.1)) Throughout this document, the following conventions are
+used to describe syntax:
+
+  ((s3.2.1.1)) UPPERCASE names represent non-terminals,
+  ((s3.2.1.2)) '+'  represents concatenation,
+  ((s3.2.1.3)) '<-' indicates a legal rewriting of a non-terminal.
+  ((s3.2.1.4)) A character in double quotes represents that character
+               literally, as a terminal node.
+  ((s3.2.1.5)) '|' is used to separate alternatives in the right-hand
+               side of a rule.
+
+((s3.3)) TPL grammar rule
+
+E <-   "0" | "1" | "2" | "3" | "4" | "5"
+       | "6" | "7" | "8" | "9"
+       | "n"
+       | "w" + E
+       | "?" + E
+       | "v" + E
+       | "d" + E + E
+       | "." + E + E
+
+((s3.3.1)) The start symbol for the grammar is E.
+
+((s3.3.2)) Alphabetic case is significant in terminal nodes of TPL;
+"w" and "W" are distinct (and only the former may appear in a TPL
+'E').
+
+((s3.3.3)) Arbitrary whitespace may appear in the input between TPL
+terminal symbols.  All whitespace is ignored in TPL (though not quite
+always in TPLI), and the presence or absence of whitespace does not
+affect the resulting parse trees or the legality of an input.
+
+((s3.4)) Notes about the TPL grammar
+
+((s3.4.1)) The legal inputs described by TPL grammar, in words, can be
+characterized as: An E is either a single digit, or the letter 'n', or
+'w' or '?' or 'v' followed by an E, or 'd' or '.' followed by two E's.
+
+((s3.4.2)) Some examples of inputs that are single, legal E's are:
+((s3.4.2.1))	8                    ((s3.4.2.2))	n
+((s3.4.2.3))   	w3                   ((s3.4.2.4))	?   8
+((s3.4.2.5))	v2                   ((s3.4.2.6))	d93
+((s3.4.2.7))	.n4                  ((s3.4.2.8))	wn
+((s3.4.2.9))	vv3                  ((s3.4.2.10))      v
+v
+
+3
+((s3.4.2.11))	d4d3w2               ((s3.4.2.12))	.w1 .wnw9
+
+((s3.4.3)) Some examples of inputs that are not single, legal E's,
+(with explanations), are:
+((s3.4.3.1))	q		('q' is not a legal terminal node)
+((s3.4.3.2))	93              (but that IS two E's in a row)
+((s3.4.3.3))	W3              ('W' is not a legal terminal node)
+((s3.4.3.4))    .0              (incomplete -- need two E's after '.')
+((s3.4.3.4.1)) Note that the '.0' case is somewhat different than the
+others ((s3.4.3.1) - (s3.4.3.3)).  The other cases are definitely not
+single, legal E's, based on the input presented.  On the other hand,
+although '.0' is not (yet) a complete E, if there is more input
+available, '.0' might be the BEGINNING of a complete, single, legal E.
+Only if end-of-file occurs after reading the '0' can we be certain
+that '.0' is an error.
+
+((s4)) TPL Parse Trees
+
+((s4.1)) TPL is named 'TPL' to stand for 'Tiny Prefix Language'.  'Tiny',
+because it has only one non-terminal symbol, and 'Prefix', because
+each alternative on the right hand side of the 'E' rule begins with a
+different terminal symbol (either one of the digits, or one of the
+characters 'nw?vd.') that acts as a unique prefix, and thus makes
+parsing very easy.
+
+((s4.2)) Since every 'E' has a unique prefix, and those prefixes are
+always a single character, it is natural simply to store the prefix
+directly in the parse tree node rather than as a child.
+
+((s4.2.1)) In other words, for the legal TPL input 'w9', rather than
+viewing it as:
+
+    E                                    E(w)              w
+   / \   ,  it is easier to view it as    |   , or just    |
+  w   E                                  E(9)              9
+      |
+      9
+
+where we first migrated the prefix characters into their parent nodes,
+and then for simplicity in writing the parse tree -- since EVERYTHING
+is an 'E' -- we just suppress printing out the 'E' all the time.
+
+((s4.2.2)) Using that compact representation, here are parse trees for
+some legal TPL inputs:
+
+             Input      Tree                         Input       Tree
+
+((s4.2.2.1))	8         8          ((s4.2.2.2))	n          n
+
+
+((s4.2.2.3))   	w3        w          ((s4.2.2.4))	?   3      ?
+			  |					   |
+			  3					   3
+
+((s4.2.2.5))   	v2        v          ((s4.2.2.6))	d93        d
+			  |					  / \
+			  2					 9   3
+
+((s4.2.2.7))   	.n4       .          ((s4.2.2.8))	wn         w
+			 / \ 					   |
+			n   4					   n
+
+((s4.2.2.9))   	vv3       v          ((s4.2.2.10))      v  v  3    v
+       	       	       	  |					   |
+			  v					   v
+			  | 					   |
+			  3					   3
+
+((s4.2.2.11))  	d.14d3w2  d          ((s4.2.2.12))     	.w8 .w7n   .
+			 / \				       	  / \
+			.   d				       	 w   .
+       	       	       / \  | \					 |  / \
+		      1	  4 3  w				 8 w   n
+			       |				   |
+			       2				   7
+
+
+((s4.3)) Using the compact representation -- i.e., with the prefix
+stored in the node -- every node in a TPL parse tree has either zero,
+one, or two child nodes.  The nodes with zero children is 'n' and the
+ten digits '0'-'9'.  The nodes with one child are 'w', '?', and 'v'.
+The nodes with two children are 'd', and '.'.
+
+((s4.3.1)) Since more than two children are never needed, we can use a
+binary tree representation for the nodes, with a 'left' child and a
+'right' child, and adopt the convention that the one-child nodes will
+use the left child pointer and have a NULL pointer in the right child,
+and the zero-child noes will have NULL pointers in both left and right
+children.
+
+((s4.3.2)) Following the one-child-is-left convention is required for
+your trees to print out correctly.
+
+((s4.3)) Printing TPL parse trees
+
+((s4.3.1)) To print TPL parse trees we will use the simple 'sideways'
+printer as presented in class.  Do not spend time working on some more
+beautiful tree printer -- if your code does not print 'sideways' trees
+exactly as described here, down to the EXACT SPACING AND NEWLINES, it
+will be marked wrong.
+
+((s4.3.2)) Sample print parse tree output:
+
+((s4.3.2.1)) Input: 4  Output:
+4
+
+((s4.3.2.2)) Input: w3 Output:
+w
+  3
+
+((s4.3.2.3)) Input: .n4 Output:
+  4
+.
+  n
+
+((s4.3.2.4)) Input: ?v3 Output:
+?
+  v
+    3
+
+((s4.3.2.5)) Input: d.14d3w2 Output:
+    w
+      2
+  d
+    3
+d
+    4
+  .
+    1
+
+((s4.3.2.6)) Input: .w8 .w7n Output:
+    n
+  .
+    w
+      7
+.
+  w
+    8
+
+((s4.3.3)) Additional requirements for printing TPL parse trees
+
+((s4.3.3.1)) Start at the left margin.
+((s4.3.3.2)) Indent 2 spaces per level.
+((s4.3.3.3)) Fill the indentation with spaces.
+((s4.3.3.4)) Use 'reverse inorder' tree traversal (first right child,
+then node, then left child) so that the tree looks sensible when you
+tip your head ninety degrees to the left.
+
+
+
+			 DON'T FORGET TO READ
+			     (s9), BELOW,
+	       WHETHER YOU PLAN TO DO TPLI OR JUST TPL!
+
+
+
+((s5)) (reserved for expansion) (this space intentionally left blank)
+
+((s6)) (reserved for expansion) (this space intentionally left blank)
+
+((s7)) TPLI Description
+
+((s7.1)) The TPLI program is an extension of the TPL program, adding
+many more grammar alternatives, and defining a semantics for the
+grammar so that it may be interpreted.
+
+((s7.1.1)) The name of the program is 'TPLI'.
+
+((s7.1.2)) When started, the program enters a loop successively
+reading a TPLI expression, printing the corresponding parse tree, and
+then interpreting that parse tree.  The loop will continue
+indefinitely, until an illegal expression is read.
+
+((s7.1.3)) The program prints out no greeting message or identifying
+information on startup, and no 'prompts' of any kind, and no debugging
+messages or error messages of any kind.
+
+((s7.1.4)) If the program reads input that is not legal TPLI, it exits
+silently (without printing an error message).
+
+((s7.2)) TPLI Grammar
+
+((s7.2.1)) The TPLI grammar has one big rule.
+
+((s7.3)) TPLI Grammar Presentation Rules
+
+((s7.3.1)) See section (s3.2.1) for details on the format used here to
+represent the grammar.  In addition to the guidelines ((s3.2.1.1) -
+(s3.2.1.5)) given there, one additional guideline appears applies
+here:
+
+  ((s7.3.1.1)) Text in curly brackets ({}) representa a meta-comment that
+               describes a legal rewriting informally.
+
+((s7.4)) TPLI grammar rule
+
+E <-   "0" | "1" | "2" | "3" | "4" | "5"
+       | "6" | "7" | "8" | "9"
+       | "n"
+       | "w" + E
+       | "?" + E
+       | "v" + E
+       | "d" + E + E
+       | "." + E + E
+       | "%" + E + E
+       | "/" + E + E
+       | "*" + E + E
+       | "-" + E + E
+       | "+" + E + E
+       | "=" + E + E
+       | "|" + E + E
+       | "&" + E + E
+       | "'" + {any single character whatsoever}
+
+((s7.4.1)) The start symbol for the grammar is E.
+
+((s7.4.2)) Arbitrary whitespace may appear in the input between TPLI
+terminal symbols.  All whitespace is ignored in TPLI--except following
+a "'" input, see (s7.5.2.16)--and except for that case, the presence
+or absence of whitespace does not affect the resulting parse trees or
+the legality of an input.  Note that 'whitespace' includes newlines.
+
+((s7.5)) TPLI Semantics
+
+((s7.5.1)) The process of interpreting a TPLI parse tree 'E' is
+denoted by 'Eval(E)'.  The result of a call on 'Eval(E)' is always an
+integer.  In addition to the returned integer, side effects may also
+occur, depending on the specific nodes in the tree.
+
+((s7.5.1.1)) The complete definition of the Eval function is given by
+the entirety of (s7.5).  In particular, (s7.5.2) characterizes the
+behavior of all the grammar rules individually, and (s7.5.3) describes
+the behavior of the variables in the TPLI 'virtual machine'.  Outside
+of the formal definition of (s7.5), (s8) gives a number of specific
+TPLI examples ranging in complexity from trivial to moderately
+complicated.
+
+((s7.5.2)) Definition of 'Eval(E)' for all nodes 'E'
+
+((s7.5.2.0)) This section provides recursive definitions of 'Eval(E)'
+for all nodes 'E'.
+
+((s7.5.2.0.1)) For each type of node, the corresponding grammar
+RULE is first listed, and then a brief name or phrase that can be used
+INFORMALLY to refer to the rule.
+
+((s7.5.2.0.2)) Then comes a description of how to compute the VALUE of
+the node, and then a description of any SIDE EFFECTS that may occur.
+
+((s7.5.2.0.3)) Finally, there may be some NOTES giving further
+information.
+
+((s7.5.2.1))
+RULE:	      E <- "0"
+INFORMALLY:   `a digit'
+VALUE:	      0
+SIDE EFFECTS: None
+
+ ((s7.5.2.1.1)) Likewise for E <- "1" .. E <- "9".  In each case,
+  evaluating the expression yields the corresponding integer values
+  1..9, with no side effects.
+
+((s7.5.2.2))
+RULE:	       E <- "n"
+INFORMALLY:    `newline'
+VALUE:	       0
+SIDE EFFECTS:  'endl' is printed to the output stream
+
+NOTE:	       In effect, an "n" node is much like a "'" node
+	       (s7.5.2.16) when the "'" is followed by a newline.  The
+	       only difference is that "n" uses 'endl', which flushes
+	       the output stream as well as outputting a newline.  For
+	       most purposes, however, an "n" node and a
+	       "'"-node-followed-by-newline are indistinguishable.
+
+((s7.5.2.3))
+RULE:	       E <- "w"+E1
+INFORMALLY:    `write expression'
+VALUE:	       Eval(E1)
+SIDE EFFECTS:  The result of Eval(E1) is written to the output stream
+               as an integer.
+
+((s7.5.2.4))
+RULE:	       E <- "?"+E1
+INFORMALLY:    `random number'
+VALUE:	       a random number from 0 to (Eval(E1)-1), if possible
+SIDE EFFECTS:  
+NOTES:	       If Eval(E1) is less than 2, the value is 0.  Successive
+               '?' operations within a program run will not, in general,
+	       return the same value.  '?' operations in different
+	       runs of the program will not, in general, return the
+	       same values. 
+               
+((s7.5.2.5))
+RULE:	       E <- "v"+E1
+INFORMALLY:    `read variable'
+VALUE:	       The value of the variable whose index is abs(Eval(E1))%10.
+SIDE EFFECTS:  None
+NOTES:	       See (s7.5.3) for more about variables and loops.
+
+((s7.5.2.6))
+RULE:	       E <- "d"+E1+E2
+INFORMALLY:    `do loop'
+VALUE:	       The result of the last call on Eval(E2).  If Eval(E2)
+	       is not called even once, the value is 0
+SIDE EFFECTS:  The do loop node is implemented as follows:
+	       (1) The 'current level of do loop nesting' is
+	       	   accessed.  If it is greater than or equal to 10,
+		   the value of the 'd' node is 0 and all the rest
+		   of these 'do loop' steps are skipped.  Otherwise,
+		   the variable whose index corresponds to the current
+		   nesting level becomes the 'selected variable'.
+               (2) Eval(E1) is computed and the result is remembered
+	       	   internally as the 'stop count'.
+	       (3) The 'current level of do loop nesting' is
+	           incremented.
+	       (4) The selected variable is set to 0.  An internal
+	           integer named 'last call' is also set to zero.
+	       (5) If the value of the selected variable is greater
+	       	   than or equal to the stop count, goto step (9).
+	       (6) Eval(E2) is computed and the result is stored
+	           internally in the 'last call' value.
+	       (7) The selected variable is incremented.
+	       (8) Go to step (5).
+	       (9) The 'current level of do loop nesting' is
+	           decremented.
+	       (10) The value of 'last call' is returned as the
+	            overall result.
+
+NOTES:	       See (s7.5.3) for more about variables and loops.
+
+((s7.5.2.7))
+RULE:	       E <- "."+E1+E2
+INFORMALLY:    `sequence'
+VALUE:	       The value of Eval(E2)
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed first.  Then Eval(E2) is computed
+	       and the result is returned.
+
+((s7.5.2.8))
+RULE:	       E <- "%"+E1+E2
+INFORMALLY:    `modulus'
+VALUE:	       The value of Eval(E1)%Eval(E2)
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed first.  Then Eval(E2) is computed.
+	       Then the first value modulo the second value is
+	       returned.  If the second value is zero the result is
+	       undefined.
+
+((s7.5.2.9))
+RULE:	       E <- "/"+E1+E2
+INFORMALLY:    `division'
+VALUE:	       The value of Eval(E1)/Eval(E2)
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed first.  Then Eval(E2) is computed.
+	       Then the first value divided by the second value is
+	       returned.  If the second value is zero the result is
+	       undefined.  Standard integer division is used.
+
+((s7.5.2.10))
+RULE:	       E <- "*"+E1+E2
+INFORMALLY:    `multiplication'
+VALUE:	       The value of Eval(E1)*Eval(E2)
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed first.  Then Eval(E2) is computed.
+	       Then the first value multiplied by the second value is
+	       returned.
+
+((s7.5.2.11))
+RULE:	       E <- "-"+E1+E2
+INFORMALLY:    `subtraction'
+VALUE:	       The value of Eval(E1)-Eval(E2)
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed first.  Then Eval(E2) is computed.
+	       Then the first value minus the second value is
+	       returned.
+
+((s7.5.2.12))
+RULE:	       E <- "+"+E1+E2
+INFORMALLY:    `addition'
+VALUE:	       The value of Eval(E1)+Eval(E2)
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed first.  Then Eval(E2) is computed.
+	       Then the first value plus the second value is
+	       returned.
+
+((s7.5.2.13))
+RULE:	       E <- "="+E1+E2
+INFORMALLY:    `set variable'
+VALUE:	       The value of Eval(E2)
+SIDE EFFECTS:  Eval(E1) is computed, and the variable whose index is
+               abs(Eval(E1))%10 is 'selected'.  Then Eval(E2) is
+	       computed, and the result is stored in the selected
+	       variable.  That value is also returned.
+NOTES:	       See (s7.5.3) for more about variables and loops.
+
+((s7.5.2.14))
+RULE:	       E <- "|"+E1+E2
+INFORMALLY:    `or'
+VALUE:	       The value of Eval(E1) unless it is zero, in which case
+               the value of Eval(E2).
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed.  If the result is non-zero, the
+	       result is returned and Eval(E2) is not computed.
+	       Otherwise Eval(E2) is computed and that result is
+	       returned.
+
+((s7.5.2.15))
+RULE:	       E <- "&"+E1+E2
+INFORMALLY:    `and'
+VALUE:	       The value of Eval(E2) if Eval(E1) is non-zero,
+	       otherwise zero.
+SIDE EFFECTS:  None
+NOTES:	       Eval(E1) is computed.  If the result is zero, then
+	       zero is returned and Eval(E2) is not computed.
+	       Otherwise Eval(E2) is computed and that result is
+	       returned.
+
+((s7.5.2.16))
+RULE:	       E <- "'"+{any single character whatsoever}
+INFORMALLY:    `print char'
+VALUE:	       0
+SIDE EFFECTS:  The character given by {any single character whatever}
+	       is printed to the output stream.
+NOTES:	       This is the only case in TPLI where whitespace IS
+	       significant.  Any character whatsoever may appear in a
+	       "'" node, including a whitespace character, and
+	       including a null byte, and no matter what, that byte
+	       must be stored so that it can be printed literally when
+	       the "'" node is interpreted.
+
+((s7.5.3)) The semantics of TPLI variables
+
+((s7.5.3.1)) The TPLI program maintains a set of ten int-valued
+variables.  The variables are initialized to zero just once before any
+parsing and interpretation occurs, and thereafter are modified solely
+by interpreting '=' nodes (s7.5.2.13) and 'f' nodes (s7.5.2.6) in
+parse trees.  Specifically, the variables are NOT reset to zero in
+between the interpretation of one parse tree and the next.
+
+((s7.5.3.2)) In TPLI expressions, the ten variables are referred to by
+an 'index number', which ranges from 0 to 9.  Variable index numbers
+are used explicitly in 'v' nodes (s7.5.2.5) and '=' nodes (s7.5.2.13),
+where the value of Eval(E1) is used to obtain an index number.  Since
+Eval(E1) might be any int, but the index numbers are just 0..9, the
+computation 'abs(Eval(E1))%10' (the absolute value of the result of
+evaluating E1, modulo 10) is used as the index number.
+
+((s7.5.3.3)) In addition to being explicitly read by 'v' nodes
+(s7.5.2.5) and written by '=' nodes (s7.5.2.13), the ten variables are
+used as 'loop index variables' by 'd' nodes (s7.5.2.6).
+
+((s7.5.3.3.1)) To determine what variable is used when interpreting an
+'d' node (s7.5.2.6), a concept of 'current do loop level' is defined.
+The first, outermost 'd' node encountered in a TPLI expression is
+defined to be at level 0, and so it uses the variable with index 0 as
+its loop variable.
+
+((s7.5.3.3.2)) The 'current do loop level' is incremented before the
+first computing of Eval(E2) (step (3) in (s7.5.2.6)), and is
+decremented after the last computing of Eval(E2) (step (9) in
+(s7.5.2.6)).  Consequently, if another 'd' node occurs within the E2
+expression of another 'd' node, that 'inner' 'd' node will use the
+variable with index 1 as its loop variable, and so on.
+
+((s7.5.3.3.3)) Note that the 'current do loop level' is incremented
+only while computing Eval(E2).  It remains where it started while
+computing Eval(E1).
+
+((s7.5.3.3.4)) Note also that the 'current do loop level' is modified
+only while processing 'd' nodes.  Other nodes may be nested to any
+depth without affecting the 'current do loop level'.  On the other
+hand, each 'd' node that is nested inside another 'd' node's E2
+expression DOES affect the 'current do loop level', even if many
+other nodes intervene between the outer 'd' node and the inner 'd'
+node.
+
+((s7.5.3.3.5)) Note finally that the loop variables used by 'd' nodes
+(s7.5.2.6) really are the exact same variables that are read and
+written by 'v' nodes (s7.5.2.5) and '=' nodes (s7.5.2.13)
+respectively.  It is therefore possible, for example, to CHANGE a do
+loop index variable while the loop is running.
+
+((s7.5.3.3.5.1)) It is possible to create an infinite loop, for
+example, using an expression such as:
+
+d2.=00'X
+
+which outputs an endless series of X's.
+
+((s7.5.3.3.5.2)) It parses into:
+
+    'X
+  .
+      0
+    =
+      0
+d
+  2
+
+or, turned upright:
+
+              d
+    	     / \
+ 	    2  	.
+	       / \
+	      =	  'X
+	     / \
+	    0 	0
+
+((s7.5.3.3.5.3)) That tree gets interpreted as follows:
+
+((s7.5.3.3.5.3.1)) It is 'do loop'.  It is the outermost 'do loop'
+so it will use variable 0 as its loop index.  First it evaluates its
+left child and obtains 2 as the stop count.  Then it increments the
+'current do loop level' and evaluates its right child.
+
+((s7.5.3.3.5.3.2)) Its right child is a sequence node, which evaluates
+its children from left to right.  The left child is a variable
+assignment which sets variable 0 (the 'do loop' nodes loop variable!)
+to 0.  The right child is a 'print char' node that prints an 'X', and
+returns 0.  That 0 becomes the sequence node's value as well.
+
+((s7.5.3.3.5.3.3)) That concludes the first evaluation of the 'do
+loop' right child.  The 'do loop' increments variable 0 (to 1),
+checks that 1 is less than 2 (the 'stop count') and proceeds to
+evaluate the right child again.
+
+((s7.5.3.3.5.3.4)) Each time the right child is evaluated, the 'do
+loop' index in variable 0 is reset to 0 (and another 'X' is printed)
+so the loop index never becomes 2 and so the do loop never
+terminates.
+
+((s8)) TPLI Examples
+
+((s8.1)) Here are several examples of TPLI inputs and outputs.  In
+each case, the output is surrounded by <>'s, to make it absolutely
+clear where the output begins and ends.  THE <>'s DO NOT APPEAR IN THE
+OUTPUT OF THE ACTUAL PROGRAM!  IF YOUR PROGRAM OUTPUTS <>'s AROUND 
+OUTPUTS IT WILL BE MARKED WRONG!
+
+((s8.1.1)) THE <>'s IN THE FOLLOWING EXAMPLES DO NOT APPEAR IN THE
+OUTPUT OF THE ACTUAL PROGRAM!  IF YOUR PROGRAM OUTPUTS <>'s AROUND
+OUTPUTS IT WILL BE MARKED WRONG!
+
+((s8.1.2)) In the actual TPLI program operation, in response to an
+input, first the parse tree is printed out, and then the parse tree is
+interpreted.  THESE EXAMPLES SHOW ONLY THE RESULTS OF INTERPRETATION,
+NOT THE PARSE TREE PRINT OUTS!  
+
+((s8.2.1))
+INPUT: 3
+OUTPUT: 
+<>
+
+NOTES: The input "3" generates a legal parse tree, which when
+evaluated yields the value 3.  However, since there was no instruction
+to print that value (or anything else) nothing is printed as a result
+of interpretation.
+
+((s8.2.2))
+INPUT: w3
+OUTPUT: 
+<3>
+
+((s8.2.3))
+INPUT: w45
+OUTPUT: 
+<4>
+
+NOTES: The input "w4" is a complete expression which is parsed and
+interpreted and generates the output '4'.  Then the input "5" is
+parsed and evaluated, but there is no instruction to print it so no
+further output is generated.
+
+((s8.2.4))
+INPUT: w-/821
+OUTPUT: 
+<3>
+
+NOTES: The input expression parses to
+
+          w
+         /
+	-
+       / \
+     "/"  1
+     / \
+    8  	2
+
+which says to print the value of 8/2-1.  (The "/" node is in quotes
+just to make it stand out against the /'s used for parse tree links;
+the quotes do NOT appear in the 'sideways' parse tree print outs).
+
+((s8.2.5))
+INPUT: d9wv0
+OUTPUT: 
+<012345678>
+
+NOTES: Here we are using a 'v' node to access a 'do loop' index
+variable.
+
+((s8.2.6))
+INPUT: .w8n
+OUTPUT: 
+<8
+>
+
+((s8.2.7))
+INPUT: d9 & %v02 wv0
+OUTPUT: 
+<1357>
+
+NOTES: The '&' node evaluates its right child ('wv0') only if the left
+child ('%v02') is non-zero.  The left child is non-zero when the loop
+variable ('v0') mod 2 ('%..2') is non-zero -- so we print out just the
+odd numbers.
+
+((s8.2.8))
+INPUT: .'H.'e.'l.'l.'o.' .'w.'o.'r.'l.'d.'!n
+OUTPUT: 
+<Hello world!
+>
+
+NOTES: We can chain long sequences together using '.' operators.  Note
+there's no '.' between the '! and final 'n'ewline.
+
+((s8.2.9))
+INPUT: =89wv8
+OUTPUT: 
+<9>
+
+NOTES: This example is like (s8.2.3) in that the input contains two
+TPL expressions, not just one --- so two separate parse trees will be
+printed out (one for '=89' and the other for 'wv8'), and the '=89'
+tree will be printed out and interpreted before the 'wv8' parse tree
+is even read.  This example illustrates how the TPLI variables are not
+reset between parse trees --- the first tree sets variable 8 to value
+9, and the second tree prints the value of variable 8, retrieving the
+9 previously stored.
+
+((s8.2.10))
+INPUT: d+29.wv0.'*.wv0.' .'= .' .w*v0v0n
+OUTPUT: 
+<0*0 = 0
+1*1 = 1
+2*2 = 4
+3*3 = 9
+4*4 = 16
+5*5 = 25
+6*6 = 36
+7*7 = 49
+8*8 = 64
+9*9 = 81
+10*10 = 100
+>
+
+NOTES: If you get to the point where you can read off this input and
+say 'yes, I see how that works', you'll know you're achieving true
+TPLI mastery.
+
+((s8.2.11))
+INPUT: d9.dv0wv1n
+OUTPUT: 
+<
+
+0
+01
+012
+0123
+01234
+012345
+0123456
+01234567
+>
+
+NOTES: Here we are using the index variable of the outer loop to set
+the stop count of an inner loop.
+
+((s8.2.12))
+INPUT: .=0?3.|-v02.'Y.'e's.|-v01.'N'o.|v0.'M.'a.'y.'b'en
+POSSIBLE OUTPUT: <Yes
+>
+POSSIBLE OUTPUT: <No
+>
+POSSIBLE OUTPUT: <Maybe
+>
+NOTES: A `Magic 8-ball program' to answer all of life's questions,
+using the power of '?'.
+
+((s8.2.13))
+INPUT:
+ .=90
+ d*39
+   .dv9' 
+   .'*.n
+   =9+v9-?62
+POSSIBLE OUTPUT: <*
+   *
+   *
+    *
+     *
+   *
+   *
+   *
+  *
+*
+*
+*
+*
+  *
+     *
+        *
+           *
+             *
+             *
+              *
+                 *
+                *
+                *
+                *
+              *
+              *
+            *
+>
+
+((s8.2.14))
+INPUT: 
+ .d*99'/.n.
+ d4.d2'/.
+ d+5*98' .
+ d2'/n.d2'/.
+ d+2*94' .
+ 'T.'P.'L.'I.
+ d+8*93' .d2'/.
+ n.d4.d2'/.d+5*98' .
+ d2'/n.d*99'/n
+OUTPUT:
+</////////////////////////////////////////////////////////////////////////////////
+//                                                                             //
+//                                                                             //
+//                                                                             //
+//                                                                             //
+//                                      TPLI                                   //
+//                                                                             //
+//                                                                             //
+//                                                                             //
+//                                                                             //
+/////////////////////////////////////////////////////////////////////////////////
+>
+
+NOTES: Remember that whitespace (including newlines) is ignored in
+TPLI input, except after a "'" input.
+
+((s8.2.15))
+INPUT: d2d2d2d2d2d2d2d2d2d2d2's
+OUTPUT:
+<>
+
+NOTES: This demonstrates a boundary case for 'do loop's.  You might
+expect it to output 2*2*2*2*2*2*2*2*2*2*2=2048 "s"'s, but in fact it
+outputs nothing, due to step (1) in (s7.5.2.6), which states that if
+the 'current level of do loop nesting' reaches 10, then the current
+'d' node returns 0 without evaluating either of its children.  So in
+this case, the "'s" is never evaluated, so nothing is printed.  (The
+input 'd2d2d2d2d2d2d2d2d2d2's', which does not hit the nesting limit,
+outputs 1024 "s"'s just as one would expect).
+
+((s8.2.16))
+INPUT: .d*39.d-*39v0' .d*2v0w&%++v0v1v2*298n.d-*391' .d2'#n
+OUTPUT:
+<                           
+                          88
+                         8888
+                        888888
+                       88888888
+                      8888888888
+                     888888888888
+                    88888888888088
+                   8888888888088888
+                  888888888088888888
+                 88888888088888888888
+                8888888088888888888888
+               888888088888888888888888
+              88888088888888888888888088
+             8888088888888888888888088888
+            888088888888888888888088888888
+           88088888888888888888088888888888
+          8088888888888888888088888888888888
+         088888888888888888088888888888888888
+        88888888888888888088888888888888888088
+       8888888888888888088888888888888888088888
+      888888888888888088888888888888888088888888
+     88888888888888088888888888888888088888888888
+    8888888888888088888888888888888088888888888888
+   888888888888088888888888888888088888888888888888
+  88888888888088888888888888888088888888888888888088
+ 8888888888088888888888888888088888888888888888088888
+                          ##
+>
+
+((s8.2.17))
+INPUT: .n.=89.=7-01.d*29.=8+v8v7.|v8=71.dv8' .=6*2-9v8.dv6.=9?v1.&v9'_|v9'-n.d-91' n
+POSSIBLE OUTPUT:
+<
+        --
+       --_-
+      ---__-
+     --_-___-
+    --_-_-____
+   -----_______
+  ---___-_-_____
+ ---_-_______-___
+--_-_-__--________
+ --___-__________
+  ---__-_______-
+   --__________
+    ---_______
+     ---__-__
+      --____
+       ---_
+        --
+         
+        
+>
+
+((s9)) Resources and Requirements
+
+((s9.1)) The following files on the project web site are to be used
+as-is:
+
+	Main.C  -- the main program
+	Main.h  -- the main program header
+	Makefile -- the Makefile.
+
+((s9.2)) The following files on the project web site are to use or
+modify if desired:
+
+	Parser.h -- a declaration of a minimal Parser class.  You
+		    WILL need to modify this if you do TPLI.
+
+((s9.3)) Your job is to produce five files:
+
+    Node.h, Node.C - declaration and implementation of class Node,
+		     that represents a TPL (or TPLI) parse tree node.
+		     class Node should provide methods to parse from
+		     an istream& and print a parse tree to a ostream&.
+		     (E.g., a 'static Node * Parse(istream& in)'
+		     method to read a TPL (or TPLI) expression off of
+		     'in' and return a pointer to the root of the
+		     corresponding parse tree, or a NULL pointer if a
+		     syntax error is detected; and a 'void
+		     Print(ostream&)' method.
+
+    Parser.h, Parser.C - declaration and implementation of class
+			 Parser for running the test driver.  For TPL,
+			 the Parser class is very nearly empty,
+			 needing no data members at all.
+
+    README - a standard CS251 readme file.
+
+((s9.4)) If it appears helpful, you may extract and modify any code
+presented in the class lecture notes.  You may not use any code
+written or extracted by anybody except yourself or Professor Ackley.
+
+((s10)) Document revision history
+
+((s10.1)) Document version 1.0, released Mon Apr 24 23:02:32 2000,
+in pretty good shape; possibly a few typoes here and there.
+
+

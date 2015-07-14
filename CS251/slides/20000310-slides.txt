@@ -1,0 +1,1739 @@
+QUESTIONS
+
+LAST TIME:
+ - Expressions, types, and pointers
+ - Dave's dequer
+	       
+	       
+TODAY:	       
+ - Bignum sample
+ - Linked lists, recursion, etc
+
+	       	      
+	       
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365)	   
+	       			      	   
+ Program 3 out now
+
+
+
+
+
+
+
+
+ADMINISTRIVIA
+
+
+ - Program 3 due  5PM THU Mar 30, 2000
+
+
+ - Ackley in only sporadic email contact Mar 11-Mar 19.
+   Email turnaround times will rise.		       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PROGRAM 3  Bignum
+
+
+
+ Our goals in the third program are to gain experience developing
+ and organizing classes using dynamic memory, and to become
+ comfortable with the linked-list data structure by implementing
+ many functions that perform linked-list operations.  We will do
+ this by creating a class Bignum that represents an arbitrarily
+ large integer (limited only by available memory), and performs
+ many functions on such numbers, including creating and destroying
+ them, adding them and comparing them, reading and writing them
+ to and from iostreams, and so forth.
+
+
+
+
+
+
+
+
+
+
+
+PROGRAM 3  Bignum
+		 
+#include "Bignum.h"
+#include <iostream.h>
+int main() {	     
+
+  int bogus = 1;
+  for (int i = 0; i<100; ++i ) bogus += bogus;
+  cout << "2 to the 100th power = " << bogus << endl;
+		
+  Bignum cool = 1;
+  for (int i = 0; i<100; ++i ) cool += cool;
+  cout << "2 to the 100th power = " << cool << endl;
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+PROGRAM 3  Bignum
+		 
+#include "Bignum.h"
+#include <iostream.h>
+int main() {	     
+
+  int bogus = 1;
+  for (int i = 0; i<100; ++i ) bogus += bogus;
+  cout << "2 to the 100th power = " << bogus << endl;
+		
+  Bignum cool = 1;
+  for (int i = 0; i<100; ++i ) cool += cool;
+  cout << "2 to the 100th power = " << cool << endl;
+
+  return 0;
+}
+
+% ./foo
+2 to the 100th power = 0
+2 to the 100th power = 1267650600228229401496703205376
+% 
+
+
+
+PROGRAM 3  Bignum
+		 
+  LEVEL 0	 
+    Bignum();                       
+    Bignum(const int n);            
+    Bignum & operator=(const int n);
+    ~Bignum();                     
+		 
+  LEVEL 1	 
+    friend ostream & operator<<(ostream &,const Bignum &);
+		 
+  LEVEL 2	 
+    Bignum & operator=(const Bignum & i);
+    Bignum(const Bignum & i);            
+		 
+  LEVEL 3	 
+    Bignum & operator=(const char * p);  
+    Bignum(const char * p);              
+    friend istream & operator>>(istream &, Bignum &);
+
+
+
+
+
+PROGRAM 3  Bignum
+		 
+  LEVEL 4
+    Bignum & operator+=(const Bignum & i);  
+    Bignum operator+(const Bignum &b) const;
+    bool operator!=(const Bignum &b) const; 
+    bool operator==(const Bignum &b) const; 
+
+  LEVEL 5
+    Bignum & operator-=(const Bignum & i);  
+    Bignum operator-(const Bignum &b) const;
+
+  LEVEL 6
+    bool operator<(const Bignum &b)  const; 
+    bool operator<=(const Bignum &b) const; 
+    bool operator>(const Bignum &b)  const; 
+    bool operator>=(const Bignum &b) const; 
+
+Level 6 concludes the required testing levels.  Levels 7-9
+represent a sequence of increasing extra credit opportunities.
+
+
+
+
+PROGRAM 3  Bignum
+
+  LEVEL 7 (multiplication)
+    Bignum & operator*=(const Bignum &b); 
+    Bignum operator*(const Bignum &b) const; 
+
+  LEVEL 8 (negative Bignums)
+    Bignum operator-();
+
+  LEVEL 9 (division)
+    Bignum & operator/=(const Bignum & b)
+    Bignum & operator%=(const Bignum & b)
+    Bignum operator/(const Bignum & b) const
+    Bignum operator%(const Bignum & b) const
+
+
+
+
+
+
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 12;
+  return 0;			   
+}
+foo.C:4: warning: assignment to `char *' from `int' lacks a cast
+
+How about this?
+
+#include <iostream.h>
+int main() {
+  char * pc;	
+  pc = 0;
+  return 0;			   
+}
+
+CLEAN!  Why?
+  Normally, assigning an int to a pointer is suspect.  A special
+  exception is made for 0, because 'null pointers' are so basic.
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+int main() {
+  char * pc;	
+  pc = NULL;
+  return 0; 			   
+}	    
+
+
+
+
+
+
+
+
+
+	       
+
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+int main() {
+  char * pc;	
+  pc = NULL;
+  return 0; 			   
+}	    
+foo.C:3: `NULL' undeclared (first use this function)
+
+
+
+
+
+
+
+
+	       
+
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+int main() {
+  char * pc;	
+  pc = NULL;
+  return 0; 			   
+}	    
+foo.C:3: `NULL' undeclared (first use this function)
+
+How about this?
+#include <iostream.h>
+int main() {   
+  char * pc;    	
+  pc = NULL;   
+  return 0;    			   
+}	       
+	       
+
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+int main() {
+  char * pc;	
+  pc = NULL;
+  return 0; 			   
+}	    
+foo.C:3: `NULL' undeclared (first use this function)
+
+How about this?
+#include <iostream.h>
+int main() {   
+  char * pc;    	
+  pc = NULL;   
+  return 0;    			   
+}	       
+	       
+Clean!  iostream.h (or some .h IT includes) defines NULL for us.
+
+
+
+
+SIDEBAR: The NULL pointer
+
+Does this compile cleanly?
+
+int main() {
+  char * pc;	
+  pc = NULL;
+  return 0; 			   
+}	    
+foo.C:3: `NULL' undeclared (first use this function)
+
+How about this?
+#include <iostream.h>
+int main() {   
+  char * pc;    	
+  pc = NULL;   
+  return 0;    			   
+}	       
+	       
+Clean!  iostream.h (or some .h IT includes) defines NULL for us.
+(Actually, it's <stddef.h> that defines NULL)			
+
+
+
+SIDEBAR: The NULL pointer
+
+Upshots:
+ - Assigning zero to a pointer is legit, but it's the ONLY
+   int for which that's true				  
+
+ - NULL is conventionally defined to mean a zero pointer
+
+ - Using NULL helps distinguish the zeros-that-are-numbers
+   from the zeros-that-are-null-pointers.  Since pointers
+   are so dangerous and confusing, that's a good thing.
+
+int main() {   
+  char * pc;    	
+  pc = 0;        <-- a zero that's a null pointer, easily confused
+  return 0;    	 <-- a zero that's a number    	 
+}	       
+
+#include <iostream.h>
+int main() {   
+  char * pc;      	
+  pc = NULL;     <-- a null pointer, obviously different
+  return 0;    	 <-- a zero (that's a number)          	 
+}	       
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+				   
+ListElt * _head   	       	             (e.g.)           
+ +-------+			    _head = new ListElt;
+ |    ---\ 			    (*_head)._data = 87;      
+ +-------+\  			    (*_head)._next = 0;       
+       	   \   		     	             (or)             
+ 	    >+-------+		    _head = new ListElt; 
+  	     |     87|		    _head->_data = 87;        
+       	     |-------| 	       	    _head->_next = 0;         
+       	     |   NULL| 	       	    	   (or better)	      
+       	     +-------+ 	ListElt::ListElt(int item,ListElt * ptr) {
+		     	   _data = item;      	       	       
+		     	   _next = ptr;	 
+		     	}      	       
+		     	..	       
+		     	_head = new ListElt(87,NULL);
+			
+USING DYNAMIC OBJECTS: Linked list
+
+Q: What do we use for a container if we don't know
+   how many objects we'll need to contain in advance?
+
+A: Lots and lots of possibilities depending on specifics.
+   One big class of strategies: Linked lists.
+				   
+ListElt * _head        	       	             (e.g.)           
+ +-------+			    _head = new ListElt;
+ |    ---\ 			    (*_head)._data = 87;      
+ +-------+\  			    (*_head)._next = NULL;    
+       	   \   		     	             (or)             
+ 	    >+-------+		    _head = new ListElt;  
+  	     |     87|		    _head->_data = 87;        
+       	     |-------| 	       	    _head->_next = NULL;      
+       	     |   NULL| 	       	    	   (or better)	      
+       	     +-------+ 	ListElt::ListElt(int item,ListElt * ptr) {
+			   _data = item;      	       	       
+			   _next = ptr;	 		
+			}      	       			
+			..	       			
+			_head = new ListElt(87,NULL);  	
+			
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head        	
+ +-------+		
+ |    ---\ 		
+ +-------+\  		
+       	   \   		
+ 	    >+-------+	
+       	     |     87|	
+       	     |-------| 	
+       	     |   NULL| 	
+       	     +-------+ 	
+			
+
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+			
+
+			
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head        	
+ +-------+		
+ |    ---\ 		
+ +-------+\  		
+       	   \   		
+ 	    >+-------+	
+       	     |     87|	
+       	     |-------| 	
+       	     |   NULL| 	
+       	     +-------+ 	
+			
+
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..			
+_head = new ListElt(23,_head);    // magic!
+			
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+     	       	       	    
+ |    ---\     	     		      
+ +-------+\	      		      
+       	   \ 	       		      
+ 	    >+-------+ 	     +-------+
+       	     |     87| 	     |   ?   | 	     Step 1: new ListElt
+       	     |-------| 	     |-------|	       Room for a ListElt
+	     |   NULL| 	     |   ?   |	       is found.       	 
+	     +-------+       +-------+
+	 			      
+	 			      
+       	       	    		      
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..     	vvvvvvvvvvv
+_head = new ListElt(23,_head);    // magic!  
+	^^^^^^^^^^^
+USING DYNAMIC OBJECTS: Linked list
+       	       	       	       	       	       	       	   
+ListElt * _head	       	       	       	  		   
+ +-------+     	       	       	    	  		   
+ |    ---\                   	    	  		   
+ +-------+\    	       	       	      	  		   
+       	   \ 	  	     	      	   		   
+ 	    >+-------+	     +-------+ 	       		   
+       	     |     87| 	     |     23| 	     Step 2: The ctor runs
+       	     |-------| 	     |-------| 	       2a: _data = item   
+	     |   NULL| 	     |   ?   |         (item equals 23)
+       	     +-------+	     +-------+
+
+
+       	       	    
+ListElt::ListElt(int item,ListElt * ptr) {
+>>>_data = item;<<<                       
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+     	       	       	    
+ |    ---\
+ +-------+\  
+       	   \   	       
+ 	   ->+-------+       +-------+                            
+       	  /  |     87| 	     |     23|       Step 2: The ctor runs
+	  |  |-------|	     |-------|         2b: _next = ptr    
+	  |  |   NULL| 	  /-------   | 	       (ptr points at 
+	  \  +-------+	 /   +-------+		whatever _head
+	   \	  	/  			points at)    
+	    \----------/ 
+       	       	    
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+>>>_next = ptr;<<<                        
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+     	       	       	    
+ |    -----------------\     	    
+ +-------+	       	\      	      
+       	       	       	 \     	       
+ 	   ->+-------+	  \->+-------+                           
+       	  /  |     87| 	     |     23|       Step 3: The = happens
+	  |  |-------|	     |-------|         _head = new...
+	  |  |   NULL| 	  /-------   | 	       (new returns the
+	  \  +-------+	 /   +-------+	       	pointer to the 
+	   \		/  			newly constructed
+	    \----------/ 			object)	       	 
+       	       	    
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+     vvv   
+_head = new ListElt(23,_head);    // magic!  
+     ^^^   
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+     	       	       	    
+ |    -----------------\     	    
+ +-------+	       	\      	      
+       	       	       	 \     	       
+       	   ->+-------+ 	  \->+-------+                           
+       	  /  |     87| 	     |     23| 
+	  |  |-------|	     |-------| 
+	  |  |   NULL| 	  /-------   |
+	  \  +-------+	 /   +-------+
+	   \		/  
+	    \----------/ 
+       	       	    
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+     	       	       	    
+ |    -----------------\     	    
+ +-------+	       	\      	      
+       	       	       	 \     	       
+       	   ->+-------+ 	  \->+-------+                           
+       	  /  |     87| 	     |     23|   
+	  |  |-------|	     |-------|   
+	  |  |   NULL| 	  /-------   |
+	  \  +-------+	 /   +-------+
+	   \		/  
+	    \----------/ 
+       	       	    
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+_head = new ListElt(42,_head);
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+
+ |    -----------------\ 
+ +-------+     	  	\ 
+       	       	       	 \     	      
+       	   ->+-------+ 	  \->+-------+       +-------+
+  	  /  |     87|	     |     23|	     |   ?   |
+       	  |  |-------| 	     |-------|	     |-------|
+	  |  |   NULL|	  /-------   |	     |   ?   |
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 
+            \----------/
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+_head = new ListElt(42,_head);
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head	       	       	       	 
+ +-------+		  		 
+ |    -----------------\ 		 
+ +-------+	  	\  		 
+       	       	       	 \                    
+       	   ->+-------+ 	  \->+-------+       +-------+
+  	  /  |     87|	     |     23| 	     |     42|
+       	  |  |-------| 	     |-------|	     |-------|
+	  |  |   NULL|	  /-------   |	     |   ?   |
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 
+            \----------/
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+_head = new ListElt(42,_head);
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head	       
+ +-------+	       
+ |    -----------------\       	       	
+ +-------+	       	\  /---------- 	  
+       	       	       	 \/    	      \	      
+       	   ->+-------+ 	  \->+-------+ \     +-------+
+  	  /  |     87|	     |     23|	\    |     42|
+       	  |  |-------| 	     |-------|	 \   |-------|
+	  |  |   NULL|	  /-------   |	  \------    |
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 
+            \----------/
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+_head = new ListElt(42,_head);
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head
+ +-------+
+ |    ---------------------------------\ 
+ +-------+	  	   /---------- 	\ 
+       	       	       	  /    	      \	 \    
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+
+  	  /  |     87|	     |     23|	\    |     42|
+       	  |  |-------| 	     |-------|	 \   |-------|
+	  |  |   NULL|	  /-------   |	  \------    |
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 
+            \----------/
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+ListElt * _head;                          
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+_head = new ListElt(42,_head);
+USING DYNAMIC OBJECTS: Linked list
+
+ListElt * _head     <<<What about this guy?  Where's he live?
+ +-------+
+ |    ---------------------------------\ 
+ +-------+	  	   /---------- 	\ 
+       	       	       	  /    	      \	 \    
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+
+  	  /  |     87|	     |     23|	\    |     42|
+       	  |  |-------| 	     |-------|	 \   |-------|
+	  |  |   NULL|	  /-------   |	  \------    |
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 
+            \----------/
+
+ListElt::ListElt(int item,ListElt * ptr) {
+   _data = item;                          
+   _next = ptr;                           
+}                                         
+..                                        
+_head = new ListElt(87,NULL);             			
+..
+_head = new ListElt(23,_head);    // magic!  
+_head = new ListElt(42,_head);
+USING DYNAMIC OBJECTS: Linked list
+
+class ListElt {
+public:
+  ListElt(int,ListElt*);
+  ~ListElt();
+private:
+  int _data;
+  ListElt * _next;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+class ListElt {
+public:
+  ListElt(int,ListElt*);
+  ~ListElt();
+private:
+  int _data;
+  ListElt * _next;
+};
+
+class Stack {
+public:
+  Stack();
+  ~Stack();
+  void Insert(int);
+  int Remove();
+private:
+  ListElt * _head;
+};
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+class ListElt {
+public:
+  ListElt(int,ListElt*);
+  ~ListElt();
+private:
+  int _data;
+  ListElt * _next;
+};
+
+class Stack {
+public:
+  Stack();
+  ~Stack();
+  void Insert(int);
+  int Remove();
+private:
+  ListElt * _head;
+};
+..
+void Stack::Insert(int item) { _head = new ListElt(item,_head); }
+..
+
+USING DYNAMIC OBJECTS: Linked list
+
+class ListElt {               hmm.  ListElt is really just
+public:			      a helper, now, for class Stack.
+  ListElt(int,ListElt*);      Why have it hanging out up here
+  ~ListElt();		      where everybody can see it?    
+private:
+  int _data;
+  ListElt * _next;
+};
+
+class Stack {
+public:
+  Stack();
+  ~Stack();
+  void Insert(int);
+  int Remove();
+private:
+  ListElt * _head;
+};
+..
+void Stack::Insert(int item) { _head = new ListElt(item,_head); }
+..
+
+USING DYNAMIC OBJECTS: Linked list
+
+class Stack {
+public:
+  Stack();
+  ~Stack();
+  void Insert(int);
+  int Remove();
+private:
+  class _Elt {                The entire class is now private!
+  public:     	   	      Nobody but Stack member functions
+    _Elt(int,_Elt *);	      even knows _Elt's exist! 	       
+    ~_Elt();					      
+    int data; 	      
+    _Elt * next; 	      
+  };		      
+  		      
+  _Elt * _head;
+};
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+class Stack {
+public:
+  Stack();
+  ~Stack();
+  void Insert(int);
+  int Remove();
+private:       	      
+  class _Elt {                The entire class is now private!
+  public:     	   	      Nobody but Stack member functions
+    _Elt(int,_Elt *);  	      even knows _Elt's exist! 	       
+    ~_Elt();		       			      
+    int data;		      These 'public' data members (ono!)
+    _Elt * next; 	      are only visible to Stack.  (But 	
+  };			      maybe we should make them private
+			      anyway.) 	       	       	       
+  _Elt * _head;
+};
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+
+class Stack {
+public:
+  Stack();
+  ~Stack();
+  void Insert(int);
+  int Remove();
+private:       	      
+  class _Elt {        
+  public:              	     
+    _Elt(int i, _Elt * p) { data = i; next = p; }
+    ~_Elt() { }	       	       	      		      
+    int data;	      	       defining _Elt functions inline
+    _Elt * next; 	       (in the class declaration in
+  };		      	       Stack.h) is natural enough...  
+       	       	       	       	   	     		      
+  _Elt * _head;	      	       
+};		      	       	       	       	       	     
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+//Stack.h      	       //Stack.C
+class Stack {	       #include "Stack.h"
+public:	       	       #include <stddef.h>  /* for NULL */    
+  Stack();	       			  
+  ~Stack();    	       Stack::_Elt::_Elt(int i,_Elt * p) {
+  void Insert(int);      data = i;                              
+  int Remove();	         next = p;                              
+private:       	       }                                         
+  class _Elt {                                                   
+  public:     	       	    ..defining nested class routines in
+    _Elt(int,_Elt *);         the .C is a little trickier..      
+    ~_Elt();   	       	 
+    int data;	                                                 
+    _Elt * next; 	       
+  };	 	       
+	 	       
+  _Elt * _head;	         
+};	 	       
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+//Stack.h      	       //Stack.C
+class Stack {	       #include "Stack.h"
+public:	       	       #include <stddef.h>  /* for NULL */    
+  Stack();     	       	 
+  ~Stack();	       Stack::_Elt::_Elt(int i,_Elt * p) {
+  void Insert(int);      data = i;                              
+  int Remove();	         next = p;                              
+private:       	       }                                         
+  class _Elt {                                                   
+  public:      	       Stack::_Elt::~_Elt() { }                  
+    _Elt(int,_Elt *);                                            
+    ~_Elt();	       
+    int data;	                                                 
+    _Elt * next; 	       
+  };	 	       
+	 	       
+  _Elt * _head;	         
+};	 	       
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+//Stack.h      	       //Stack.C
+class Stack {	       #include "Stack.h"
+public:	       	       #include <stddef.h>  /* for NULL */    
+  Stack();	       
+  ~Stack();	       Stack::_Elt::_Elt(int i,_Elt * p) {
+  void Insert(int);      data = i;                              
+  int Remove();	         next = p;                              
+private:       	       }                                         
+  class _Elt {                                                   
+  public:     	       Stack::_Elt::~_Elt() { }                  
+    _Elt(int,_Elt *);                                            
+    ~_Elt();   	       Stack::Stack() { _head = NULL; }          
+    int data;	                                                 
+    _Elt * next; 	       
+  };	 	       
+	 	       
+  _Elt * _head;	         
+};	 	       
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+//Stack.h      	       //Stack.C
+class Stack {	       #include "Stack.h"
+public:	       	       #include <stddef.h>  /* for NULL */    
+  Stack();	       
+  ~Stack();    	       Stack::_Elt::_Elt(int i,_Elt * p) {
+  void Insert(int);      data = i;                              
+  int Remove();	         next = p;                              
+private:       	       }                                         
+  class _Elt {                                                   
+  public:     	       Stack::_Elt::~_Elt() { }                  
+    _Elt(int,_Elt *);                                            
+    ~_Elt();	       Stack::Stack() { _head = NULL; }          
+    int data;	                                                 
+    _Elt * next;       Stack::Insert(int i) {
+  };	 	         _head = new _Elt(i,_head);
+	 	       }       	       	       	   
+  _Elt * _head;	         
+};	 	       
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+//Stack.h      	       //Stack.C
+class Stack {	       #include "Stack.h"
+public:	       	       #include <stddef.h>  /* for NULL */    
+  Stack();	       
+  ~Stack();	       Stack::_Elt::_Elt(int i,_Elt * p) {
+  void Insert(int);      data = i;                              
+  int Remove();	         next = p;                              
+private:       	       }                                         
+  class _Elt {                                                   
+  public:     	       Stack::_Elt::~_Elt() { }                  
+    _Elt(int,_Elt *);                                            
+    ~_Elt();	       Stack::Stack() { _head = NULL; }          
+    int data;	                                                 
+    _Elt * next;       Stack::Insert(int i) {
+  };	 	         _head = new _Elt(i,_head);
+	 	       }       	       	       	   
+  _Elt * _head;	         
+};	 	       int Stack::Remove() {
+       	       	       	   ??? 	       	    
+		       }      
+       	       	       Stack::~Stack() {
+			   ??? 	       	
+		       }      
+USING DYNAMIC OBJECTS: Linked list
+
+_Elt * _head 
+ +-------+
+ |    ---------------------------------\ 
+ +-------+	  	   /---------- 	\ 
+       	       	       	  /    	      \	 \    
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+
+  	  /  |     87|	     |     23|	\    |     42|
+       	  |  |-------| 	     |-------|	 \   |-------|
+	  |  |   NULL|	  /-------   |	  \------    |
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 
+            \----------/
+
+int Stack::Remove() {
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list 	   
+       	       	       	       	       	   
+_Elt * _head 				   
+ +-------+				   
+ |    ---------------------------------\   
+ +-------+	  	   /---------- 	\  
+       	       	       	  /    	      \	 \
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+	
+  	  /  |     87|	     |     23|	\    |     42|	
+       	  |  |-------| 	     |-------|	 \   |-------|	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+						 _Elt * temp
+_Elt * _head 					 +---------+
+ +-------+     	       	       	       	     /-------- 	   | 
+ |    ---------------------------------\    /	 +---------+ 
+ +-------+	  	   /---------- 	\  /   	      
+       	       	       	  /    	      \	 \/   	       
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+ 
+  	  /  |     87|	     |     23|	\    |     42| 
+       	  |  |-------| 	     |-------|	 \   |-------|	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+						 _Elt * temp
+_Elt * _head 					 +---------+
+ +-------+				     /-------- 	   | 
+ |    ---------------------------------\    /	 +---------+ 
+ +-------+	  	   /---------- 	\  /   	      
+       	       	       	  /    	      \	 \/   	      
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+
+  	  /  |     87|	     |     23|	\    |     42|
+       	  |  |-------| 	     |-------| 	 \   |-------|	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+       	       	       	       	       	       	 _Elt * temp
+_Elt * _head 					 +---------+
+ +-------+				     /-------- 	   | 
+ |    -----------------\                    /	 +---------+ 
+ +-------+	  	\  /---------- 	   /   	       
+       	       	       	 \/    	      \	  /   	       
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+ 
+  	  /  |     87|	     |     23|	\    |     42| 
+       	  |  |-------| 	     |-------|	 \   |-------| 	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+ 	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+						 _Elt * temp
+_Elt * _head 					 +---------+
+ +-------+				     /-------- 	   | 
+ |    -----------------\                    /	 +---------+ 
+ +-------+	  	\  /---------- 	   /   	       	
+       	       	       	 \/    	      \	  /   	    	
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+ 	
+  	  /  |     87|	     |     23|	\    |     42|	
+       	  |  |-------| 	     |-------|	 \   |-------|	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+ 	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+       	       	     				 _Elt * temp
+_Elt * _head 	     				 +---------+
+ +-------+	     			     /-------- 	   | 
+ |    -----------------\                    /	 +---------+ 
+ +-------+	      	\  /---------- 	   /   	    	int value
+       	       	       	 \/    	      \	  /    	       	+--------+
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+	|      42|
+  	  /  |     87|	     |     23|	\    |     42|	+--------+
+       	  |  |-------| 	     |-------|	 \   |-------|	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+						 _Elt * temp
+_Elt * _head 					 +---------+
+ +-------+				     /-------- 	   | 
+ |    -----------------\                    /	 +---------+ 
+ +-------+	  	\  /---------- 	   /   	    	int value
+       	       	       	 \/    	      \	  /   	    	+--------+
+       	   ->+-------+ 	  \->+-------+ \  \->+-------+ 	|      42|
+  	  /  |     87|	     |     23|	\    |     42|	+--------+
+       	  |  |-------| 	     |-------|	 \   |-------|	  
+       	  |  |   NULL| 	  /-------   | 	  \------    | 	  
+       	  \  +-------+	 /   +-------+ 	     +-------+
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+						 _Elt * temp
+_Elt * _head 					 +---------+
+ +-------+				     /-------- 	   | 
+ |    -----------------\                    /	 +---------+ 
+ +-------+	  	\              	   /   	    	int value
+       	       	       	 \     	       	  /    	       	+--------+
+       	   ->+-------+ 	  \->+-------+    \->+ - - - +	|      42|
+  	  /  |     87|	     |     23|	         ?    	+--------+
+       	  |  |-------| 	     |-------|	     |-------|	  
+       	  |  |   NULL| 	  /-------   | 	         ?     	  
+       	  \  +-------+	 /   +-------+ 	     + - - - +
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list
+						 _Elt * temp
+_Elt * _head   	       	       	      		 +---------+
+ +-------+				     /-------- 	   | 
+ |    -----------------\                    /	 +---------+ 
+ +-------+	  	\              	   /   	    	int value
+       	       	       	 \     	       	  /    	       	+--------+
+       	   ->+-------+ 	  \->+-------+    \->+ - - - +	|      42|
+  	  /  |     87|	     |     23|	         ?    	+--------+
+       	  |  |-------| 	     |-------|	     |-------|	  
+       	  |  |   NULL| 	  /-------   | 	         ?     	  
+       	  \  +-------+	 /   +-------+ 	     + - - - +
+     	   \	      	/ 			    
+            \----------/			    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+			      
+ |    -----------------\              
+ +-------+	  	\             
+       	       	       	 \     	      
+       	   ->+-------+ 	  \->+-------+
+  	  /  |     87|	     |     23|
+       	  |  |-------| 	     |-------|
+       	  |  |   NULL| 	  /-------   |
+       	  \  +-------+	 /   +-------+
+     	   \	      	/ 	      		    
+            \----------/	      		    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+			      
+ |    -----------------\              
+ +-------+	  	\             
+       	       	       	 \     	      
+       	   ->+-------+ 	  \->+-------+
+  	  /  |     87|	     |     23|
+       	  |  |-------| 	     |-------|
+       	  |  |   NULL| 	  /-------   |
+       	  \  +-------+	 /   +-------+
+     	   \	      	/ 	      		    
+            \----------/	      		    
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head   	       	  	      
+ +-------+		  
+ |    ---\     	      	  
+ +-------+\    	       	  
+       	   \   	       	  
+       	    >+-------+ 	  		    
+  	     |     87| 	  
+       	     |-------| 	  
+       	     |   NULL| 	  
+       	     +-------+ 	  
+       	  
+
+						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+			 _Elt * temp
+ |    ---\     	      		 +---------+
+ +-------+\  ------------------------	   |
+       	   \/  	       	    	 +---------+
+       	    >+-------+ 	    		    
+  	     |     87| 	    
+       	     |-------| 	    
+       	     |   NULL| 	    
+       	     +-------+ 	    
+       	  		     
+			     
+			     			    
+int Stack::Remove() {  	       	       	       	    
+>>>_Elt * temp = _head; <<<
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+			 _Elt * temp
+ |   NULL|     	      		 +---------+
+ +-------+  -------------------------	   |
+       	   /   	       	  	 +---------+
+       	   \>+-------+ 	  	     	    
+       	     |     87| 	
+       	     |-------| 	
+       	     |   NULL| 	
+       	     +-------+ 	
+       	  		  
+			  
+			  			    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;	  
+>>>_head = _head->next;<<<
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+			 _Elt * temp
+ |   NULL|     	       	       	 +---------+
+ +-------+  -------------------------	   |
+       	   /   	       		 +---------+
+       	   \>+-------+ 			    
+  	     |     87| 		 int value  
+       	     |-------| 		 +---------+
+       	     |   NULL| 		 |     	 87|
+       	     +-------+ 	       	 +---------+
+       	  		     
+			     
+			     			    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;	     
+   _head = _head->next;	     
+>>>int value = temp->data;<<<
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+			 _Elt * temp
+ |   NULL|     	      		 +---------+
+ +-------+  -------------------------	   |
+       	   /   	       		 +---------+
+       	   \>+ - - - + 			    
+       	         ?     		 int value  
+       	     |-------| 		 +---------+
+       	         ?     		 |	 87|
+       	     + - - - + 		 +---------+
+       	  	  
+		  
+		  				    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+>>>delete temp;<<<     	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 			      
+ +-------+
+ |   NULL|
+ +-------+
+       	  
+       	  
+    	  
+       	  
+       	  
+       	  
+       	  
+    
+    						    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}<<<
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 		  _Elt * temp 
+ +-------+     	       	  +---------+
+ |   NULL|		  |     NULL|
+ +-------+		  +---------+
+       	  		       	   
+       	  
+    	  
+       	  
+       	  
+       	  
+       	  
+    
+    						    
+int Stack::Remove() {  	       	       	       	    
+>>>_Elt * temp = _head;<<<
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 		  _Elt * temp 
+ +-------+     	       	  +---------+
+ |   NULL|		  |     NULL|
+ +-------+		  +---------+
+       	  		       	   
+       	  
+    	  		  
+       	  		  
+       	  		  
+       	  		  
+       	  		  
+    			  
+    			  			    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;	  
+>>>_head = _head->next;<<<      SEGFAULT
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 		  _Elt * temp 
+ +-------+     	       	  +---------+
+ |   NULL|		  |     NULL|
+ +-------+		  +---------+
+       	  		       	   
+       	  
+    	  		  
+       	  		  
+       	  		  
+       	  		  
+       	  		  
+    			  
+    			  			    
+int Stack::Remove() {  	       	       	       	    
+   _Elt * temp = _head;	  
+>>>_head = _head->next;<<<      SEGFAULT
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?       ...not quite..
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 		  _Elt * temp 
+ +-------+     	       	  +---------+
+ |   NULL|		  |     NULL|
+ +-------+		  +---------+
+       	  		       	   
+       	  
+    	  
+       	  
+       	  
+#include <assert.h>
+...    	  	   
+    
+int Stack::Remove() {  	       	       	       	    
+   assert(_head);       // stack must not be empty
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?
+USING DYNAMIC OBJECTS: Linked list 	      
+				      
+_Elt * _head 		  _Elt * temp 
+ +-------+     	       	  +---------+
+ |   NULL|		  |     NULL|
+ +-------+		  +---------+
+       	  		       	   
+       	  
+    	  
+       	  
+       	  
+#include <assert.h>
+...    	  	   
+    
+int Stack::Remove() {  	       	       	       	    
+   assert(_head);       // stack must not be empty
+   _Elt * temp = _head;
+   _head = _head->next;
+   int value = temp->data;
+   delete temp;	       	  
+   return value;
+}
+
+      ...Is Stack::Remove correct?        ..yes..
+USING DYNAMIC OBJECTS: Linked list 	      
+
+Stack::~Stack() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list 	      
+
+Stack::~Stack() {
+  while (_head) Remove();         // Flush til empty...
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list 	      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Forward() { cout << _c; if (_next) _next->Forward(); }
+  void Backward() { if (_next) _next->Backward(); cout << _c; }
+private:          
+  char _c;     	  
+  Foo * _next;	  
+};     	       	  
+int main() {   	       	  
+  Foo * hd = NULL; 	  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);
+  hd = new Foo('C',hd);
+  hd->Forward();   cout << endl;
+  hd->Backward();  cout << endl;     	       	
+  delete hd;   	       	                    
+  return 0;
+}
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Forward() { cout << _c; if (_next) _next->Forward(); }
+  void Backward() { if (_next) _next->Backward(); cout << _c; }
+private:          
+  char _c;     	  
+  Foo * _next;	  
+};     	       	  
+int main() {   	       	  
+  Foo * hd = NULL; 	  
+  hd = new Foo('A',hd);	                    
+  hd = new Foo('B',hd);
+  hd = new Foo('C',hd);
+  hd->Forward();   cout << endl;
+  hd->Backward();  cout << endl;     	       	
+  delete hd;   	       	                    
+  return 0;
+}
+CBA
+ABC
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Backward(ostream & o) {
+    if (_next) _next->Backward(o); o << _c; 
+  }
+private:          
+  char _c;     	  
+  Foo * _next;	  
+};     	       	  
+int main() {   	       	  
+  Foo * hd = NULL; 	  
+  hd = new Foo('A',hd);hd = new Foo('B',hd);hd = new Foo('C',hd);
+  hd->Backward(cout); 
+  cout << endl;
+  delete hd;   	       	                    
+  return 0;
+}
+ABC
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion 	      
+#include <iostream.h>
+class Foo {	     
+public: 
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Backward(ostream & o) {
+    if (_next) _next->Backward(o); o << _c;    }
+  friend ostream & operator<<(ostream&o,const Foo & f) {
+    f.Backward(o);   					
+    return o;   
+  }		     
+private:             
+  char _c;     	     
+  Foo * _next;	     
+};     	       	     
+int main() {   	       	  
+  Foo * hd = NULL;   	  
+  hd = new Foo('A',hd);hd = new Foo('B',hd);hd = new Foo('C',hd);
+  cout << *hd << endl
+  delete hd;   	       	                    
+  return 0;
+}
+ABC
+
+
+
+
+
+
+
+
+
+
+

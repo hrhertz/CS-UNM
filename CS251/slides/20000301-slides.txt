@@ -1,0 +1,840 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia: Option for late days on Program 1 expiring..
+ - Dynamic arrays
+ - Value semantics
+
+TODAY:
+ - Administrivia
+ - Interlude: How big is your Deque interface?
+ - Quiz postmortem
+ - Pointers
+
+HOMEWORK: PC++P Ch 15
+ Program 2 due in 4 days 23.5 hours: MON MAR 6 1:30 PM
+
+
+
+   MAGIC SMOKE n.  A substance trapped inside IC packages that
+    enables them to function (also called `blue smoke'). Its
+   existence is demonstrated by what happens when a chip burns
+     up --- the magic smoke gets let out, so it doesn't work
+	  any more. See smoke test, let the smoke out.
+
+ADMINISTRIVIA - Program 2
+   
+ - Program 2 due in 4 days 23.5 hours: MON MAR 6 1:30 PM
+    
+ - NO CREDIT for any Program 2's turned-in
+   AFTER Mon Mar 6 1:30 PM, REGARDLESS of 
+  `free late day' use.
+	  
+ - (Program 2 extra credit +3% deadline THU MAR 2 5PM)
+       	 +--------+
+ - On the|CIRT AIX|machines:    ~ackley/public/TurnInDequer
+	 +--------+
+   is now runnable.
+   It DOES NOT RUN ON THE CIRT LINUX MACHINES!  :(
+
+ - Turn in: Dequer.h, Dequer.C, Deque.h, Deque.C, and README
+
+
+
+
+   	     	 				       
+
+
+   
+ADMINISTRIVIA - Program 1
+   
+ - PROGRAM 1 free late day requests must be on your student
+   resource page before 5PM FRIDAY MAR 3, 2000!  SECOND WARNING!
+   
+ - On-paper Program 1 grades DO NOT include free late days.
+
+ - Program 1 scores before time penalties average around 80.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - Program 1
+   
+ - PROGRAM 1 free late day requests must be on your student
+   resource page before 5PM FRIDAY MAR 3, 2000!  SECOND WARNING!
+   
+ - On-paper Program 1 grades DO NOT include free late days.
+
+ - Program 1 scores before time penalties average around 80.
+
+ - Program 1 scoring basis: Function + style & design.
+    Program functioning:         Grade range:          
+     Correct                       87-100           N:   100    
+     Small bug                     77-92            Max: 100   \  
+     Major bugs but all there      67-82            Avg:  80.71 | 
+     Missing major components      57-72            Min:  26.4 / \
+     Minimal                       30-55                         /
+					     Before time penalties
+					   
+							       
+       	       	       	       	       	       	       	       
+
+
+
+
+ADMINISTRIVIA - Program 1
+   
+ - PROGRAM 1 free late day requests must be on your student
+   resource page before 5PM FRIDAY MAR 3, 2000!  SECOND WARNING!
+   
+ - On-paper Program 1 grades DO NOT include free late days.
+
+ - Program 1 scores before time penalties average around 80.
+
+ - Program 1 scoring basis: Function + style & design.
+    Program functioning:         Grade range:
+     Correct                       87-100           N:   100    
+     Small bug                     77-92            Max: 100   \  
+     Major bugs but all there      67-82            Avg:  80.71 | 
+     Missing major components      57-72            Min:  26.4 / \
+     Minimal                       30-55                         /
+					     Before time penalties
+ - Procedure for seeking grade changes on programs:
+(1) Meet with the TA that graded your program FIRST.  Discuss
+    your concerns.  The TA may make an adjustment if it is
+    appropriate.  DO NOT CONTACT THE PROFESSOR BEFORE DOING THIS!
+
+
+
+ADMINISTRIVIA - Program 1
+   
+ - PROGRAM 1 free late day requests must be on your student
+   resource page before 5PM FRIDAY MAR 3, 2000!  SECOND WARNING!
+   
+ - On-paper Program 1 grades DO NOT include free late days.
+
+ - Program 1 scores before time penalties average around 80.
+
+ - Program 1 scoring basis: Function + style & design.
+    Program functioning:         Grade range:
+     Correct                       87-100           N:   100    
+     Small bug                     77-92            Max: 100   \  
+     Major bugs but all there      67-82            Avg:  80.71 | 
+     Missing major components      57-72            Min:  26.4 / \
+     Minimal                       30-55                         /
+					     Before time penalties
+ - Procedure for seeking grade changes on programs:
+(1) Meet with the TA that graded your program FIRST.  Discuss
+    your concerns.  The TA may make an adjustment if it is
+    appropriate.  DO NOT CONTACT THE PROFESSOR BEFORE DOING THIS!
+(2) If, AFTER (1), if you STILL feel an error has occurred, you 
+    can request me to regrade your program from scratch.  If I do
+    so, your grade may increase, DECREASE, or remain unchanged.
+ADMINISTRIVIA - In-class quiz 1
+ 
+ N:	 114
+
+ Max:  	 100					  
+ Average: 83.48
+ Min:     40
+
+
+Overall: Not too bad!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - In-class quiz 1
+
+Score                CS251 S'00 In-Class Quiz 1
+ 100 ++-----*+-**----+-------*--------+-------+-------+*-----++
+     +  * * ** **   *+ * *   *    *   +       + **   ***      +
+     | ** * ** **   *  * *  **   **   *       **  * *   *  *  |
+  90 ++** **** ***  *  * ** **** **  **  *  **    **    *  **+*
+     | ** ********  *  **** **** *** **  * *       *     * ** *
+     | ************ ** **** *********  * **        *     *** **
+  80 ++************ ** **** *********  * **                * **
+     | **** *********** ***** *******  * **                   *
+     | **** ** ** ****   **** ** ****  * **                   *
+  70 ++**** ** ** ****   ****  * ****   ***                  ++
+     | * **    ** ***    * **  *  * *   ***                   |
+     | * **         *      **  *    *   ***                   |
+  60 ++   *         *      **       *   **                   ++
+     |    *         *      **           **                    |
+     |    *                **            *                    |
+  50 ++   *                 *            *                   ++
+     |                      *            *                    |
+     +       +       +      *+        +       +       +       +
+  40 ++------+-------+------*+--------+-------+-------+------++
+    15      20      25      30       35      40      45      50
+                      Time used (minutes) 
+INTERLUDE: HOW BIG IS YOUR INTERFACE?
+ - Small class interfaces are safer and more maintainable than
+   large ones.		 
+	      		 
+ - (But) It's also desirable to provide a `natural' interface,
+   even if not strictly minimal.
+
+ - Design is about tradeoffs.  
+
+class Deque {
+public:
+  Deque(); 
+  Deque(const Deque &);
+  Deque & operator=(const Deque &);
+  ~Deque();
+..  <--------- What else is good in here?
+private:
+..
+};
+       	       	       	       	
+Insert (left and right)		bool IsFull()  	       	   
+Remove (left and right)		bool IsEmpty()
+Resize (int size)               
+Empty()
+POINTERS TO DYNAMIC ARRAYS - DEEP AND SHALLOW COPYING
+   
+ - Value semantics for objects is important (in many classes)
+   because programmers using the class will expect it.
+   
+ - For value semantics, copies of objects must not (in effect)
+   share any data.  					      
+   		  
+ - Compiler-generated copy ctor and op= just copy pointer
+   data members; they do NOT copy what the pointers are	 
+   pointing at.  				       
+
+ - Copying the pointer:  SHALLOW COPYING
+
+ - Copying what the pointer points at:  DEEP COPYING
+
+ - Value semantics (generally) requires deep copying.
+
+
+
+
+
+
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE 3
+class Foo {    
+public:	       
+  Foo(int size);      
+  Foo(const Foo &);    	       	
+  Foo & operator=(const Foo &);	
+  ~Foo();                       
+  int Get(int index);
+private:       
+  int _size;
+  int * _nums;
+};
+       	
+
+       int Func(Foo f) { return f.Get(3); }
+					   
+class Bar {				   
+ ..
+private:
+  Foo _foo;  				     
+};     	       	       	       	 Bar a, b;
+	                         a = b;
+				       
+
+QUIZ POSTMORTEM
+
+1: (25 points) What does this program print?  Use the grid next
+ to the program for your answer; start in the black-outlined box;
+ put at most one character in each box.  Be EXACT.
+						  
+    #include <iostream.h>		  +-------------------+
+    class Bar {        	       	       	  | | | | | | | | | | |
+    public: 				  |-------------------|
+      Bar() { cout << "Cx"; }  	       	  | | | | | | | | | | |
+      Bar(int j) { cout << 'C' << j; }	  |-------------------|
+      ~Bar() { cout << 'D'; }		  | | | | | | | | | | |
+    };					  |-------------------|
+    int main() {			  | | | | | | | | | | |
+      cout << 'a';			  +-------------------+
+      if (1) { Bar foo[2];cout << 'b'; }     
+      cout << 'c' << endl;
+      return 0;
+    }
+    Bar goo(2);
+
+
+
+
+QUIZ POSTMORTEM
+
+1: (25 points) What does this program print?  Use the grid next
+ to the program for your answer; start in the black-outlined box;
+ put at most one character in each box.  Be EXACT.
+						  
+    #include <iostream.h>		  +-------------------+
+    class Bar { 			  |C|2|a|C|x|C|x|b|D|D|c|
+    public: 				  |-------------------|
+      Bar() { cout << "Cx"; }  	       	  |D| | | | | | | | | |
+      Bar(int j) { cout << 'C' << j; }	  |-------------------|
+      ~Bar() { cout << 'D'; }		  | | | | | | | | | | |
+    };					  |-------------------|
+    int main() {			  | | | | | | | | | | |
+      cout << 'a';			  +-------------------+
+      if (1) { Bar foo[2];cout << 'b'; }     
+      cout << 'c' << endl;
+      return 0;
+    }
+    Bar goo(2);
+
+
+
+
+QUIZ POSTMORTEM
+       	       	       	       	       	  
+2: (25 points) What does this program print?  Use the grid next
+ to the program for your answer; start in the black-outlined box;
+ put at most one character in each box.  Be EXACT.
+					  	  
+    #include <iostream.h>		   +-------------------+ 
+    int main() {			   | | | | | | | | | | |
+      for (int i = 0; i<8; ++i) { 	   |-------------------|
+	switch (i) {			   | | | | | | | | | | |
+	case 7: cout << "DONE"; break;	   |-------------------|
+	case 4: cout << "A"; break;	   | | | | | | | | | | |
+	case 5: cout << "B"; //FALL THROUGH|-------------------|
+	case 2: cout << "C"; //FALL THROUGH| | | | | | | | | | |
+	case 3: cout << endl; break;	   +-------------------+
+	case 0: cout << "D"; break;
+	case 1: cout << "E"; break;
+	default: return 0;
+	}
+      } 
+      return 0;
+    }   
+
+
+QUIZ POSTMORTEM
+       	       	       	       	       	  
+2: (25 points) What does this program print?  Use the grid next
+ to the program for your answer; start in the black-outlined box;
+ put at most one character in each box.  Be EXACT.
+					  	  
+    #include <iostream.h>      	       	   +-------------------+ 
+    int main() {			   |D|E|C| | | | | | | |
+      for (int i = 0; i<8; ++i) { 	   |-------------------|
+	switch (i) {			   | | | | | | | | | | |
+	case 7: cout << "DONE"; break;	   |-------------------|
+	case 4: cout << "A"; break;	   |A|B|C| | | | | | | |
+	case 5: cout << "B"; //FALL THROUGH|-------------------|
+	case 2: cout << "C"; //FALL THROUGH| | | | | | | | | | |
+       	case 3: cout << endl; break;	   +-------------------+
+	case 0: cout << "D"; break;
+       	case 1: cout << "E"; break;
+      	default: return 0;
+	}
+      } 
+      return 0;
+    }   
+
+
+QUIZ POSTMORTEM
+       	       	       	       	       	  
+2: (25 points) What does this program print?  Use the grid next
+ to the program for your answer; start in the black-outlined box;
+ put at most one character in each box.  Be EXACT.
+					  	  
+    #include <iostream.h>      	       	   +-------------------+ 
+    int main() {			   |D|E|C| | | | | | | |
+      for (int i = 0; i<8; ++i) { 	   |-------------------|
+	switch (i) {			   | | | | | | | | | | |
+	case 7: cout << "DONE"; break;	   |-------------------|
+	case 4: cout << "A"; break;	   |A|B|C| | | | | | | |
+	case 5: cout << "B"; //FALL THROUGH|-------------------|
+	case 2: cout << "C"; //FALL THROUGH| | | | | | | | | | |
+       	case 3: cout << endl; break;	   +-------------------+
+       	case 0: int fooey; cin >> fooey; cout << "D"; break; 
+       	case 1: cout << "E"; cout << fooey;
+      	default: return 0;
+	}
+      } 
+      return 0;
+    }   
+
+
+QUIZ POST-MORTEM		   
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3a: Circle the answer:    (A)     (B)     (C)     (D)
+for (int i = n-1; i<n; ++i)
+  for (int j = n-1; j<n; ++j)
+    for (int k = n-1; k<n; ++k)
+      cout << "*";
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3a: Circle the answer:    (A)     (B)     (C)     (D)
+for (int i = n-1; i<n; ++i)  <---Only one loop regardless of n!  
+  for (int j = n-1; j<n; ++j) <---Only one loop regardless of n!
+    for (int k = n-1; k<n; ++k)<---Only one loop regardless of n!
+      cout << "*";     	<--constant
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+       	    
+3a: Circle the answer: >>>>A<<<<  (B)     (C)     (D)
+for (int i = n-1; i<n; ++i)
+  for (int j = n-1; j<n; ++j)
+    for (int k = n-1; k<n; ++k)
+      cout << "*";
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+ 
+3b: Circle the answer:    (A)     (B)     (C)     (D)
+void fn(int max) {				
+  for (int i = 0; i < max; ++i)     		
+    cout << "!";
+}      	       	
+int main() {  	
+  for (int i = 0; i < n; ++i) fn(n);		      
+  return 0;    
+}	       
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3b: Circle the answer:    (A)     (B)     (C)     (D)
+void fn(int max) {				
+  for (int i = 0; i < max; ++i)     		
+    cout << "!";\-------/      	    		
+}      	       	       \-(3)max is always n, so n steps here
+int main() {   	       	       	       	  	\-----\	    
+  for (int i = 0; i < n; ++i) fn(n);	  	      |	    
+  return 0;    \-----------/	   \   	  	      |	    
+}      	       	    /  	       	 (2)each time do this |	    
+    (1)goes around this loop n times   	       	      |	    
+     			     \----------\      	 /----/
+       	       	       	       	   (4)so n times n overall
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3b: Circle the answer:    (A)     (B)  >>>>C<<<<  (D)
+void fn(int max) {
+  for (int i = 0; i < max; ++i)     
+    cout << "!";\-------/      	    
+}      	       	       \-(3)max is always n, so n steps here
+int main() {  		    	    		\-----\	    
+  for (int i = 0; i < n; ++i) fn(n);		      |	    
+  return 0;    \-----------/   	   \   	   	      |	    
+}      	       	    /  	       	 (2)each time do this |	    
+    (1)goes around this loop n times   	       	      |	    
+			     \----------\      	 /----/
+       	       	       	       	   (4)so n times n overall:O(n^2)
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3c: Circle the answer:    (A)     (B)     (C)     (D)
+ int i = n;    	
+ int j = i*n;			     	     
+ for (int k = 0; k<j; ++k)	     	     
+   cout << k*n;			     	     
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3c: Circle the answer:    (A)     (B)     (C)     (D)
+ int i = n;    	<----------constant time (and value of i is n)
+ int j = i*n;			     	     
+ for (int k = 0; k<j; ++k)	     	     
+   cout << k*n;			     	     
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3c: Circle the answer:    (A)     (B)     (C)     (D)
+ int i = n;    	<----------constant time (and value of i is n)
+ int j = i*n;  	<----------constant time (and value of j is n*n)
+ for (int k = 0; k<j; ++k) 
+   cout << k*n;
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3c: Circle the answer:    (A)     (B)     (C)     (D)
+ int i = n;    	<----------constant time (and value of i is n)
+ int j = i*n;  	<----------constant time (and value of j is n*n)
+ for (int k = 0; k<j; ++k) <-loops from 0..n*n -- n-squared times
+   cout << k*n;
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3c: Circle the answer:    (A)     (B)     (C)     (D)
+ int i = n;    	<----------constant time (and value of i is n)
+ int j = i*n;  	<----------constant time (and value of j is n*n)
+ for (int k = 0; k<j; ++k) <-loops from 0..n*n -- n-squared times
+   cout << k*n;	<-----constant time  	     			 
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+       	       	       	       	       	
+3c: Circle the answer:    (A)     (B)  >>>>C<<<<  (D)
+ int i = n;    	<----------constant time (and value of i is n)
+ int j = i*n;  	<----------constant time (and value of j is n*n)
+ for (int k = 0; k<j; ++k) <-loops from 0..n*n -- n-squared times
+   cout << k*n;	<-----constant time  	     			 
+			  2	       2
+	     O(1)+O(1)+O(n )*O(1) = O(n	)
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3d: Circle the answer:    (A)     (B)     (C)     (D)
+for (int i = 0; i < n; ++i)
+  for (int j = 0; j < 10; ++j)
+     if (i<j) cout << "Y";
+     else cout << "N";
+
+
+
+
+
+
+
+QUIZ POST-MORTEM
+3.                                    2
+  (A) O(1)       (B) O(n)      (C) O(n )      (D)  something else
+			      				     
+Issues:
+ - How does the running time grow as n grows?
+   - if time remains the same for n = m+1 vs. n = m: O(1)
+   - if time grows by O(1) for n = m+1 vs. n = m: O(n)
+   - if time grows by O(n) for n = m+1 vs. n = m: O(n^2)
+  (- if time grows by O(n^2) for n = m+1 vs. n = m: O(n^3) ... )
+
+
+3d: Circle the answer:    (A)  >>>>B<<<<  (C)     (D)
+for (int i = 0; i < n; ++i) <----(1) n times here
+  for (int j = 0; j < 10; ++j) <----(2) 10 times 
+     if (i<j) cout << "Y"; <-\ 	       	       	       	  
+     else cout << "N"; <--------(3) constant
+	       	       	       	  	    	 
+       	     	  so overall n*10*constant  
+			     n*constant	    
+			   O(n)       
+
+
+
+QUIZ POSTMORTEM
+4. (25 points) Consider these six files, each named as given in
+   the comments, then answer 4a-4d, below:
+//Main.h       	  //Foo.h                    //Bar.h
+#include "Foo.h"  class Foo { public: Foo(); #include "Foo.h"
+		  void F(class Bar&);        class Bar { public:
+		  };                         private: Foo _f; };
+//Main.C          //Foo.C                    //Bar.C	    
+#include "Main.h" #include <iostream.h>      #include "Bar.h"
+int main() {      #include "Foo.h"           #include <iostream.h>
+  Foo f;          #include "Bar.h"           Bar::Bar() {     
+  return 0;       Foo::Foo(){cout<<"foo";}     cout<<"nuba"<<endl;
+}                 void Foo:F(Bar&b) { }      }                 	  
+					     
+4a: Draw the #include file dependency DAG of those six
+ files. (The Main.C -> Main.h dependency has already been drawn
+ to get you started.)
+
+4b: If Foo.C is changed, list the files that must be recompiled:
+
+4c: If Foo.h is changed, list the files that must be recompiled:
+
+4d: If Bar.h is changed, list the files that must be recompiled:
+
+QUIZ POSTMORTEM
+4. (25 points) Consider these six files, each named as given in
+   the comments, then answer 4a-4d, below:
+//Main.h       	  //Foo.h                    //Bar.h
+#include "Foo.h"  class Foo { public: Foo(); #include "Foo.h"
+		  void F(class Bar&);        class Bar { public:
+		  };                         private: Foo _f; };
+//Main.C          //Foo.C                    //Bar.C	    
+#include "Main.h" #include <iostream.h>      #include "Bar.h"
+int main() {      #include "Foo.h"           #include <iostream.h>
+  Foo f;          #include "Bar.h"           Bar::Bar() {     
+  return 0;       Foo::Foo(){cout<<"foo";}     cout<<"nuba"<<endl;
+}                 void Foo:F(Bar&b) { }      }                 	  
+					     
+4a: Draw the #include file dependency DAG of those six
+ files. (The Main.C -> Main.h dependency has already been drawn
+ to get you started.)
+
+4b: If Foo.C is changed, list the files that must be recompiled:
+ Foo.C
+4c: If Foo.h is changed, list the files that must be recompiled:
+ Foo.C, Bar.C, Main.C
+4d: If Bar.h is changed, list the files that must be recompiled:
+ Foo.C, Bar.C	    

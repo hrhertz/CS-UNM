@@ -1,0 +1,1466 @@
+QUESTIONS
+LAST TIME:
+ - Live demos: Emacs/g++/gdb
+ - Hello world OOPed
+ - The shape of programs / How source becomes executable
+
+TODAY:
+ - Administrivia
+ - Emacs tips
+ - How source becomes executable / #include file trees
+
+HOMEWORK: PC++P Ch 4-7, esp. 7
+     Also: Program 1 will be announced to cs251-all 
+	   Tuesday night-Wednesday morning     	       	       
+
+ THRASH vi.  To move wildly or violently, without accomplishing
+anything useful. Paging or swapping systems that are overloaded
+   waste most of their time moving data into and out of core
+ (rather than performing useful computation) and are therefore
+said to thrash. Someone who keeps changing his mind (esp. about
+    what to work on next) is said to be thrashing. A person
+ frantically trying to execute too many tasks at once (and not
+spending enough time on any single task) may also be described
+	       as thrashing. Compare multitask.
+ADMINISTRIVIA
+	     
+Lab sections:
+     CS251.2 Wiley       CE103       M11    	      
+     CS251.3 Waymire     ME218       T11    	      
+     CS251.4 Waymire     TAPY219     W3     	      
+     CS251.5 Chen        TAPY201     Th12:30   	      
+     CS251.6 Halchenko   DSH327      M3     	      
+	     
+Office hours:
+   Chen      FEC302B    weichen@cs.unm.edu  M5-6;F 12-1;TTh3:30-5 
+   Halchenko FEC302B    yoh@cs.unm.edu      M12-1,4-5;T9-11;F10-12
+   Waymire   FEC302B    rwaymire@cs.unm.edu T12-1,2-4;W 10-1      
+   Wiley     FEC302B    kwiley@cs.unm.edu   M10-11; M-F 1-2       
+	   					       	
+ - Reminder: Subscribe to the class email list or risk missing
+       	     announcements for which you will be responsible! 
+    HOW: Send email to majordomo@cs.unm.edu  containing the text
+                 subscribe cs251-all             
+
+ - Reminder: NO AUDITS
+   Last day to change grading option is February 11, 2000
+       	                                EIGHTEEN DAYS REMAINING
+
+EMACS TIP OF THE DAY
+
+.emacs 
+ - Initialization file, loaded during emacs startup
+ - Lives in ~/.emacs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EMACS TIP OF THE DAY
+
+.emacs 
+ - Initialization file, loaded during emacs startup
+ - Lives in ~/.emacs
+ - You may already have one (and not even know it)
+ - ls
+ - ls -a
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EMACS TIP OF THE DAY
+
+.emacs 
+ - Initialization file, loaded during emacs startup
+ - Lives in ~/.emacs
+ - You may already have one (and not even know it)
+ - ls
+ - ls -a
+
+A starter .emacs you may want to pick up:
+ http://www.cs.unm.edu/~ackley/cs251/.emacs
+
+
+
+
+
+
+
+
+
+
+
+
+
+EMACS TIP OF THE DAY
+
+.emacs 
+ - Initialization file, loaded during emacs startup
+ - Lives in ~/.emacs
+ - You may already have one (and not even know it)
+ - ls
+ - ls -a
+
+A starter .emacs you may want to pick up:
+ http://www.cs.unm.edu/~ackley/cs251/.emacs
+which will (among other minor things, trust me:)
+
+  (1) Remove the menu bar from the top (read the .emacs file
+      to see what to do if you want to keep it). 
+  (2) Display the current time in the 'mode line'.
+  (3) Suppress the startup/copyright message.
+  (4) Customize emacs email handling a little.
+  (5) Add some handy shortcut keys:
+	^C^R - search and replace string
+	^C^L - move current line to top of screen
+	^X-c - start a compilation command  (M-x compile)
+	^X-* - start or switch to a shell window (M-x shell)
+	^X-r - read email (need a little experience)
+C++ - Hello World, OOPed
+---Hello.h---          	       	   ---main.C---         
+#ifndef HELLO_H	    		   #include "main.h"    
+#define HELLO_H	    		                        
+	     	    		   int main() {         
+#include <iostream.h>		     Hello h;           
+class Hello {	     		     h.Speak();         
+public:	             		     return 0;          
+  void Speak();      		   }                    
+};           	    		   ---------            
+		    		                        
+#endif		    		   ---main.h---         
+---------           		   #ifndef MAIN_H       
+		    		   #define MAIN_H       
+---Hello.C---	    		                        
+#include "Hello.h"  		   #include "Hello.h"   
+		    		                        
+void Hello::Speak() 		   #endif               
+{		    		   ------------         
+  cout << "Hello world" << endl;
+}		    
+---------           		    
+
+
+C++ - Hello World, OOPed
+			
+ So now we have 	
+  - main.C: A tiny little file that starts everything going
+  - main.h: A header file that supplies whatever main.C needs
+  - Hello.h: A header file that declares class Hello
+  - Hello.C: The implementation of class Hello
+					      
+ Some points to note:   		      
+  - For each .C file there is a corresponding .h file and
+    vice-versa.
+  - Each class declaration goes in its own .h file
+  - Each class implementation goes in its own .C file
+  - The class name has a leading capital letter
+  - The names of the .h and .C files are EXACTLY the same
+    as the name of the class declared and implemented in
+    those files.			       	      
+  - Except for main.[Ch], each pair of files declares and 
+    implements one class.  main.C implements main() and
+    nothing else.
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+
+ '#' stuff is commands to the PREPROCESSOR
+
+  ..What's a preprocessor?
+			  
+      g++ hw.C -o hello
+       	       	       	  
+makes it LOOK like:
+
+      +-----+ hw.C  +--------+hello +----------------+
+      | You |------>|Compiler|----->|runnable program|
+      +-----+	    +--------+	    +----------------+
+       	       	       	       	   
+      
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+       	       	       	  v                          	
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------
+|    | you wrote |             |    '#'commands handled
++----+ '.C' file +-------------+     
+				               	       
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files  
+       	       	       	  |    ('.h' files)      
+			  v                      
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+ 				               	       	|
+                         +------------------+	       	/
+                         |C++ compiler 	    |<---------/ 
+                         |     		    |	       	
+                         +------------------+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+			  v                     
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+				               	       	|
+             your code   +------------------+	       	/
+            <------------|C++ compiler 	    |<---------/ 
+             translated  |     		    |	       	
+            into assembly+------------------+
+       	          code     
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+       	       	       	  v                     
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+				               	       	|
+ +---------+ your code   +------------------+	       	/
+ |Assembler|<------------|C++ compiler 	    |<---------/ 
+ |	   | translated  |     		    |	       	
+ +---------+into assembly+------------------+
+   |   	          code         	 
+   |	  	       	         
+   \  your code translated into  
+    \--------------------------->
+      machine code ('.o' file)   
+				 
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+       	       	       	  |    ('.h' files)       
+			  v                       
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+				               	       	|
+ +---------+ your code   +------------------+	       	/
+ |Assembler|<------------|C++ compiler 	    |<---------/ 
+ |	   | translated  |     		    |  	       	
+ +---------+into assembly+------------------+  
+   |   	          code      		     
+   |	  	       	         +----------+
+   \  your code translated into  |linker    |
+    \--------------------------->|          |
+      machine code ('.o' file)   +----------+
+					     
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+       	       	       	  v                     
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+				               	       	|
+ +---------+ your code   +------------------+	       	/
+ |Assembler|<------------|C++ compiler 	    |<---------/ 
+ |     	   | translated  |     	       	    |	       	
+ +---------+into assembly+------------------+
+   |   	          code      		      	 other .o files &
+   |	  	       	         +----------+<---libraries etc 
+   \  your code translated into  |linker    |
+    \--------------------------->|          |
+      machine code ('.o' file)   +----------+
+					     
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+       	       	       	  v                      
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+				               	       	|
+ +---------+ your code   +------------------+	       	/
+ |Assembler|<------------|C++ compiler 	    |<---------/ 
+ |	   | translated  |     		    |	       	 
+ +---------+into assembly+------------------+		 
+   |   	          code      		      	 other .o files &
+   |	  	       	         +----------+<---libraries etc 
+   \  your code translated into  |linker    |	  +--------------+
+    \--------------------------->|          |---->|Runnable    	 |
+      machine code ('.o' file)   +----------+	  |     program  |
+						  +--------------+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+ What REALLY is this '#include' business anyway?
+
+ #include <iostream.h>?
+ #include "main.h"?
+			  /--- #include'd files 
+			  |    ('.h' files)     
+       	       	       	  v                     
++----+ the code  +-------------+     your code with all the
+|You |---------->|Preprocessor |-----------------------\   
+|    | you wrote |             |    '#'commands handled	\
++----+ '.C' file +-------------+                       	|
+       	       	       	+-only-this-piece----+ 	       	|
+ +---------+ your code  |+------------------+|	       	/
+ |Assembler|<-----------||C++ compiler 	    ||---------/ 
+ |	   | translated ||     		    ||	       	
+ +---------+into assembl|+------------------+| 
+   |   	          code  +-knows-any-C++!-----+ 	 other .o files &
+   |	  	       	         +----------+<---libraries etc 
+   \  your code translated into  |linker    |	  +--------------+
+    \--------------------------->|          |---->|Runnable    	 |
+      machine code ('.o' file)   +----------+	  |     program  |
+						  +--------------+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+---foo.C---    	      
+Hi there	      
+#include "bar.h"      
+Bye now	       	      
+#include "bar.h"      
+---	       	      
+       	       	      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       
+---foo.C---	       
+Hi there	       
+#include "bar.h"       
+Bye now	       	       
+#include "bar.h"       
+---	       	       
+       	       	       
+---bar.h---    	       		                         
+ooga chuga     
+ooga ooga      
+---	       
+ 	       
+
+
+
+
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+---foo.C---    	       	       	    
+Hi there			    
+#include "bar.h"       	       	    
+Bye now	       	      		    
+#include "bar.h"      		    
+---	       	      		    
+       	       	       	       	    
+---bar.h---    	       		                         
+ooga chuga	      	
+ooga ooga	      	
+---		      	
+ 		      	
+% g++ foo.C -o foo.out 	       	
+In file included from foo.C:2:	
+bar.h:1: syntax error before `ooga'	       	    
+% 
+
+
+
+
+
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+
+---foo.C---			   
+Hi there       	       	       	   
+#include "bar.h"       	       	   
+Bye now	       	      		   
+#include "bar.h"      		   
+---	       	      		   
+       	       	       	       	   
+---bar.h--- 	      		                         
+ooga chuga	      		 
+ooga ooga      	       	       	    
+---		      		    
+ 		      		    
+% g++ foo.C -o foo.out 	 	    
+In file included from foo.C:2:	    
+bar.h:1: syntax error before `ooga' 	       	    
+% g++ -E foo.C -o foo.out      	       	
+% 				    
+				    
+ '-E' means 'run the preprocessor only'..    
+       	(not that we need to just preprocess
+       	 that often.. but it's there..)   
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+ 
+---foo.C---			       ---foo.out---   	 
+Hi there			       # 1 "foo.C"       
+#include "bar.h"       	       	       Hi there          
+Bye now	       	      		       # 1 "bar.h" 1  
+#include "bar.h"      		       ooga chuga        
+---	       	      		       ooga ooga         
+       	       	       	       	       # 2 "foo.C" 2     
+---bar.h--- 	      		                         
+ooga chuga	      		       Bye now           
+ooga ooga	      		       # 1 "bar.h" 1  
+---		      		       ooga chuga        
+ 		      		       ooga ooga         
+% g++ foo.C -o foo.out 	 	       # 4 "foo.C" 2     
+In file included from foo.C:2:	       ---   	    
+bar.h:1: syntax error before `ooga'	       	    
+% g++ -E foo.C -o foo.out      	       	
+% 
+
+ '-E' means 'preprocess only'..    
+ Note how 'dumb' the preprocessor is.  If you #include the
+  same file twice, it goes ahead and pastes the contents of
+  the file in twice, etc.
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---    	 ---foo.out---    
+Hi there	 # 1 "foo.C"      
+#include "bar.h" Hi there         
+Bye now	       	 # 1 "bar.h" 1    
+#include "bar.h" ooga chuga       
+---	       	 ooga ooga        
+       	       	 # 2 "foo.C" 2    
+---bar.h--- 	                  
+ooga chuga	 Bye now          
+ooga ooga	 # 1 "bar.h" 1    
+---    	       	 ooga chuga       
+ 		 ooga ooga        
+                 # 4 "foo.C" 2    
+                 ---              
+                                    	       	    
+
+
+
+  
+  
+  g++ -E foo.C -o foo.out
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---    	 ---foo.out---    ---foo.C---     
+Hi there	 # 1 "foo.C"      Hi there        
+#include "bar.h" Hi there         #include "bar.h"
+Bye now	       	 # 1 "bar.h" 1    Bye now         
+#include "bar.h" ooga chuga       #include "bar.h"               
+---	       	 ooga ooga        ---                            
+       	       	 # 2 "foo.C" 2                    
+---bar.h--- 	                  ---bar.h---     
+ooga chuga	 Bye now          #ifndef BAR_H	                 
+ooga ooga	 # 1 "bar.h" 1    #define BAR_H	  
+---    	       	 ooga chuga       ooga chuga                     
+ 		 ooga ooga        ooga ooga       
+                 # 4 "foo.C" 2    #endif     	  
+                 ---              ---                  	    
+                                    	       	    
+
+
+
+
+
+  g++ -E foo.C -o foo.out
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---	 ---foo.out---    ---foo.C---       ---foo.out---
+Hi there	 # 1 "foo.C"      Hi there          # 1 "foo.C"  
+#include "bar.h" Hi there         #include "bar.h"  Hi there     
+Bye now	       	 # 1 "bar.h" 1    Bye now           # 1 "bar.h" 1
+#include "bar.h" ooga chuga       #include "bar.h"               
+---	       	 ooga ooga        ---                            
+       	       	 # 2 "foo.C" 2                      ooga chuga   
+---bar.h--- 	                  ---bar.h---       ooga ooga    
+ooga chuga	 Bye now          #ifndef BAR_H	                 
+ooga ooga	 # 1 "bar.h" 1    #define BAR_H	    # 2 "foo.C" 2
+---    	       	 ooga chuga       ooga chuga                     
+ 		 ooga ooga        ooga ooga         Bye now      
+                 # 4 "foo.C" 2    #endif     	    
+                 ---              ---               ---foo.out---
+                                    	       	    
+
+
+
+
+
+  g++ -E foo.C -o foo.out      	    g++ -E foo.C -o foo.out
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---	 ---foo.out---    ---foo.C---       ---foo.out---
+Hi there	 # 1 "foo.C"      Hi there          # 1 "foo.C"  
+#include "bar.h" Hi there         #include "bar.h"  Hi there     
+Bye now	       	 # 1 "bar.h" 1    Bye now           # 1 "bar.h" 1
+#include "bar.h" ooga chuga       #include "bar.h"               
+---	       	 ooga ooga        ---                            
+       	       	 # 2 "foo.C" 2                      ooga chuga   
+---bar.h--- 	                  ---bar.h---       ooga ooga    
+ooga chuga	 Bye now          #ifndef BAR_H	                 
+ooga ooga	 # 1 "bar.h" 1    #define BAR_H	    # 2 "foo.C" 2
+---    	       	 ooga chuga       ooga chuga                     
+ 		 ooga ooga        ooga ooga         Bye now      
+                 # 4 "foo.C" 2    #endif     	    
+                 ---              ---               ---foo.out---
+                                    	       	    
+       	       	    vv 	       	       	       	      v	  vvv
+'#ifndef FOO' ---> 'If the preprocessor symbol FOO is NOT defined'
+'#define FOO' ---> 'Define the preprocessor symbol FOO'		  
+'#endif'      ---> 'End previously begun preprocessor #if block'
+       	       	    ^^^	       	       	       	       ^^
+  g++ -E foo.C -o foo.out      	    g++ -E foo.C -o foo.out
+
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---    	       	   g++ -E foo.C -o foo.out     	
+Hi there	 	     				
+#include "bar.h" 	  
+Bye now	       	 	  
+#include "bletch.h"    	  
+Done			  
+--- 	       	 	                      		
+			                      		
+---bar.h--- 	 	  
+#ifndef FOO_H	 	                      		
+#define FOO_H	 	  
+hi from bar.h		                      		
+#endif	     	 	  
+---              	  
+                 	                      		
+---bletch.h---                                       	
+#ifndef FOO_H		                       	       	
+#define FOO_H  	       	                      
+bletch.h reporting	  
+#endif			                    
+---   			  
+			  
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---    	       	   g++ -E foo.C -o foo.out     	
+Hi there	 	     				
+#include "bar.h" 	   ---foo.out---    		
+Bye now	       	 	   # 1 "foo.C"         		
+#include "bletch.h"    	   Hi there            		
+Done			   # 1 "bar.h" 1      		
+--- 	       	 	                      		
+			                      		
+---bar.h--- 	 	   hi from bar.h      		
+#ifndef FOO_H	 	                      		
+#define FOO_H	 	   # 2 "foo.C" 2      		
+hi from bar.h		                      		
+#endif	     	 	   Bye now            		
+---              	   # 1 "bletch.h" 1   		
+                 	                      		
+---bletch.h---                                       	
+#ifndef FOO_H		                       	       	
+#define FOO_H  	       	                      
+bletch.h reporting	   # 4 "foo.C" 2    
+#endif			                    
+---   			   Done             
+			   --- 	       	
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---    	       	   g++ -E foo.C -o foo.out     	
+Hi there	 	     				
+#include "bar.h" 	   ---foo.out---    
+Bye now	       	 	   # 1 "foo.C"      
+#include "bletch.h"    	   Hi there         
+Done			   # 1 "bar.h" 1    
+--- 	       	 	                    
+			                    
+---bar.h--- 	 	   hi from bar.h    
+#ifndef FOO_H	 	                    
+#define FOO_H	 	   # 2 "foo.C" 2    
+hi from bar.h		                    
+#endif	     	 	   Bye now          
+---              	   # 1 "bletch.h" 1 
+                 	                    
+---bletch.h---                               
+#ifndef GOO_H   	   bletch.h reporting
+#define GOO_H          	                                        
+bletch.h reporting	   # 4 "foo.C" 2     
+#endif			                                      
+---   			   Done              
+			   --- 	       	
+WHAT THE COMPILER SEES AND WHEN IT SEES IT
+       	       	       	       	  		       	       	 
+---foo.C---    	       	   g++ -E foo.C -o foo.out     	
+Hi there	 	     				
+#include "bar.h" 	   ---foo.out---    
+Bye now	       	 	   # 1 "foo.C"      
+#include "bletch.h"    	   Hi there         
+Done			   # 1 "bar.h" 1    
+--- 	       	 	                    
+			                    
+---bar.h--- 	 	   hi from bar.h    
+#ifndef BAR_H	 	                    
+#define BAR_H	 	   # 2 "foo.C" 2    
+hi from bar.h		                    
+#endif	     	 	   Bye now          
+---              	   # 1 "bletch.h" 1 
+                 	                    
+---bletch.h---                               
+#ifndef BLETCH_H	   bletch.h reporting
+#define BLETCH_H       	                                        
+bletch.h reporting	   # 4 "foo.C" 2     
+#endif			                                      
+---   			   Done              
+			   --- 	       	
+C++ - Hello World, OOPed	
+                          
+---main.h---              ---Hello.h---                    
+#ifndef MAIN_H	          #ifndef HELLO_H                  
+#define MAIN_H            #define HELLO_H                     
+	     	     	                                   
+#include "Hello.h"        #include <iostream.h> 
+                    	  class Hello {                       
+#endif              	  public:                             
+------------        	    void Speak();                     
+                    	  };                                  
+                                                              
+                          #endif                                
+---main.C---              ---------                             
+#include "main.h"      			  
+	    	       	       	       	  
+int main() {              ---Hello.C---                       
+  Hello h;          	  #include "Hello.h"                  
+  h.Speak();	    	                                    
+  return 0;         	  void Hello::Speak()               
+}           	    	  {                                 
+---------           	    cout << "Hello world" << endl;  
+		    	  }                                  
+		    	  ---------                         
+C++ - Hello World, OOPed	
+                          
+---main.h---          --->---Hello.h---                    
+#ifndef MAIN_H	     /    #ifndef HELLO_H                  
+#define MAIN_H      /     #define HELLO_H                     
+	     	   /	                                   
+#include "Hello.h"-       #include <iostream.h>  ------> (etc)
+                    	  class Hello {                       
+#endif              	  public:                             
+------------        	    void Speak();                     
+      ^             	  };                                  
+      \------\                                                
+             |            #endif                                
+---main.C--- |            ---------                             
+#include "main.h"              ^                                
+	    	               \---------\      	      
+int main() {              ---Hello.C---  |                    
+  Hello h;          	  #include "Hello.h"                  
+  h.Speak();	    	                                    
+  return 0;         	  void Hello::Speak()               
+}           	    	  {                                 
+---------           	    cout << "Hello world" << endl;  
+		    	  }                                  
+		    	  ---------                         
+C++ - #include FILE TREE 
+			
+       	       	       	     (etc)
+	    	    	       ^  
+	                       |       	      
+			   <iostream.h>	      
+			       ^	      
+       	       	       	       |	      
+			   "Hello.h"	      
+			      ^ ^             
+			     /   \	      
+	            	    /     \	      
+                           /       \          
+		      "main.h"   Hello.C
+			  ^   		
+	     	    	  |	        
+			  |		
+		       main.C
+
+
+
+		    
+
+
+C++ - #include FILE TREE 
+	        	
+ Danger Will Robinson! 	     (etc)
+  OVERSIMPLIFICATION           ^  
+      WARNING!                 |       	      
+	        	   <iostream.h>	      
+	        	       ^	      
+       	       	       	       |	      
+                           "Hello.h"	      
+	        	      ^ ^             
+	        	     /   \	      
+                            /     \        OVERSIMPLIFICATION
+                           /       \           	WARNING!
+	              "main.h"   Hello.C
+	        	  ^   		
+	            	  |	        
+	        	  |		
+	               main.C
+	      		       	       	      
+	      				      
+	OVERSIMPLIFICATION                    
+	    WARNING!      		      
+		        		     Red Alert!      
+					       whoooop whoooop
+C++ - #include FILE TREE 
+			
+       	       	       	     (etc)
+	    	    	       ^  
+	                       |       	      
+			   <iostream.h>	      
+			       ^	      
+       	       	       	       |	      
+			   "Hello.h"	      
+			      ^ ^             
+			     /   \	      
+	            	    /     \	      
+                           /       \          
+		      "main.h"   Hello.C
+			  ^   		
+	     	    	  |	        
+			  |		
+		       main.C
+
+
+
+		    
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^            is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^     
+       	       	       	       |     
+			   "Hello.h" 
+			      ^ ^    
+                             /   \   
+	            	    /     \  
+                           /       \          			
+		      "main.h"   Hello.C
+			  ^   		
+	     	    	  |	        
+			  |		
+		       main.C     
+								
+
+
+		    
+
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^  	    is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^           Branches, or LINKS,
+       	       	       	       |       <-- connect the pieces    
+			   "Hello.h"       of the tree together. 
+			      ^ ^     
+                             /   \    
+                            /     \    	
+                           /       \          			
+		      "main.h"   Hello.C
+			  ^   		
+	     	    	  |	        
+			  |		
+		       main.C   
+								
+
+
+		    
+
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^  	    is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^           Branches, or LINKS,
+       	       	       	       |       <-- connect the pieces    
+			   "Hello.h"       of the tree together. 
+			      ^ ^          Arrowheads on branches
+                             /   \    <--- might point toward or 
+                            /     \    	   away from the ROOT   
+                           /       \          			
+		      "main.h"   Hello.C  
+			  ^   		  
+	     	    	  |	          
+			  |		  
+		       main.C   
+								
+
+
+		    
+
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^  	    is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^           Branches, or LINKS,
+       	       	       	       |       <-- connect the pieces    
+                           "Hello.h"       of the tree together. 
+                              ^ ^          Arrowheads on branches
+                             /   \    <--- might point toward or 
+                            /     \    	   away from the ROOT   
+                           /       \          			
+                      "main.h"   Hello.C  <-- And down here 	
+                          ^   		      towards the bottom
+                    	  |	              of the picture are
+                          |		      the LEAVES of the 
+                       main.C     <---------- tree             	
+                        					
+                    
+                  
+		    
+
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^  	    is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^           Branches, or LINKS,
+       	       	       	       |       <-- connect the pieces    
+  As we move UP            "Hello.h"       of the tree together. 
+  the picture toward          ^ ^          Arrowheads on branches
+  the ROOT, the branches     /   \    <--- might point toward or 
+  all join up and flow      /     \    	   away from the ROOT   
+  together.                /       \          			
+                      "main.h"   Hello.C  <-- And down here 	
+                          ^   		      towards the bottom
+                    	  |	              of the picture are
+                          |		      the LEAVES of the 
+                       main.C     <---------- tree             	
+                        					
+                     
+                  
+		    
+
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^  	    is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^           Branches, or LINKS,
+       	       	       	       |       <-- connect the pieces    
+  As we move UP            "Hello.h"       of the tree together. 
+  the picture toward          ^ ^          Arrowheads on branches
+  the ROOT, the branches     /   \    <--- might point toward or 
+  all join up and flow      /     \    	   away from the ROOT   
+  together.                /       \          			
+                      "main.h"   Hello.C  <-- And down here 	
+  As we move DOWN         ^   		      towards the bottom
+  the picture away  	  |	              of the picture are
+  from the ROOT,          |		      the LEAVES of the 
+  the branches split   main.C     <---------- tree             	
+  apart from each       					
+  other and end at
+  LEAVES.         
+		    
+
+
+C++ - #include FILE TREE 
+			
+       	       	       	     (etc)
+	    	    	       ^  
+	                       |       	      
+			   <iostream.h>	      
+			       ^	      
+       	       	       	       |	      
+			   "Hello.h"	      
+			      ^ ^             
+			     /   \	      
+	            	    /     \	      
+                           /       \          
+		      "main.h"   Hello.C
+			  ^   		
+	     	    	  |	        
+			  |		
+		       main.C
+
+
+
+		    
+
+
+C++ - #include FILE TREE 
+			
+       	       	       	     (etc)
+	    	    	       ^  
+	                       |       	      
+			   <iostream.h>	      
+			       ^	      
+       	       	       	       |	      
+			   "Hello.h"	      
+                              ^ ^             
+			     /   \	      
+	            	    /     \	      
+			   /       \	      
+		      "main.h"   Hello.C   <----(.C's are the
+			  ^   		    /    'leaves' of the
+	     	    	  |	           /  	 tree)
+			  |               /           
+		       main.C  <---------- 
+
+
+
+		    
+
+
+C++ - #include FILE TREE 
+                        
+       	       	      ------>(etc)
+                     /         ^  
+	            /          |       	      
+ ('.h's go on the  /------><iostream.h>	      
+  interior of     /            ^	      
+  the tree ) ---------\	       |	      
+	      \        \-->"Hello.h"	      
+	       \              ^ ^             
+		\            /   \	      
+	         \          /     \	      
+                  \        /       \          
+                   \->"main.h"   Hello.C
+			  ^   		
+	     	    	  |	        
+			  |		
+		       main.C
+
+
+
+		    
+
+
+C++ - INDEPENDENT COMPILATION OF .C'S
+			
+       	       	       	     (etc)
+	    	    	       ^  
+ Have to do a 'g++ -c'         |
+ for EACH LEAF of the      <iostream.h>
+ tree..                        ^
+       	       	       	       |
+        		   "Hello.h"
+        		      ^ ^       
+        		     /   \	
+                    	    /     \	
+        		   /       \	
+        	      "main.h"   Hello.C
+        		  ^   
+             	    	  |
+        		  |
+        	       main.C
+       
+       	       	 
+       	
+		    
+
+
+C++ - INDEPENDENT COMPILATION OF .C'S
+			
+       	       	       	     (etc)
+	    	    	      ^^  
+ Have to do a 'g++ -c'        ||
+ for EACH LEAF of the      <iostream.h>
+ tree..                       ^^
+       	       	       	      ||
+        		   "Hello.h"
+        		     ^^ ^       
+        		    //   \	
+                    	   //     \	
+        		  //       \	
+        	      "main.h"   Hello.C
+        		 ^^   
+                         ||   
+        		 ||         
+        	       main.C	    
+       				    
+   ( g++ -Wall -pedantic -c main.C 
+           producing main.o )       
+		    
+
+
+C++ - INDEPENDENT COMPILATION OF .C'S
+			
+       	       	       	     (etc)
+	    	    	       ^^ 
+ Have to do a 'g++ -c'         ||
+ for EACH LEAF of the      <iostream.h>
+ tree..                        ^^
+       	       	       	       ||
+        		   "Hello.h"
+        		      ^ ^^      
+        		     /   \\     
+                    	    /     \\    
+        		   /       \\   
+        	      "main.h"   Hello.C                 
+        		  ^   				 
+             	    	  |   ( g++ -Wall -pedantic -c Hello.C 
+        		  |	      producing Hello.o )      
+        	       main.C	    
+       				    
+
+
+		    
+
+
+C++ - INDEPENDENT COMPILATION OF .C'S
+			
+       	       	       	     (etc)
+	    	    	       ^  
+ Have to do a 'g++ -c'         |       	      
+ for EACH LEAF of the      <iostream.h>	      And you end up
+ tree..                        ^              with a '.o' for  
+       	       	       	       |	      each leaf of the 
+        		   "Hello.h"	      tree.	       
+        		      ^ ^       		       
+        		     /   \			       
+                    	    /     \			       
+        		   /       \			       
+        	      "main.h"   Hello.C		       
+        		  ^     (Hello.o)       	       
+                          |   
+        		  |   
+        	       main.C       			       
+       	              (main.o)      		      	       
+
+
+
+
+
+C++ - LINKING OBJECT FILES TO CREATE AN EXECUTABLE
+			
+       	       	       	     (etc)
+	    	    	       ^  
+ Have to do a 'g++ -c'         |       	      
+ for EACH LEAF of the      <iostream.h>	      And you end up
+ tree..                        ^              with a '.o' for  
+       	       	       	       |	      each leaf of the 
+        		   "Hello.h"	      tree.	       
+        		      ^ ^       		       
+        		     /   \			       
+                    	    /     \			       
+        		   /       \			       
+        	      "main.h"   Hello.C		       
+        		  ^     (Hello.o)       	       
+                          |   
+        		  |   
+        	       main.C       			       
+       	              (main.o)      		      	       
+
+Finally, you do a 'g++ -o' to 'link' all the .o's together 
+and make a complete program:
+	        g++ main.o Hello.o -o myhelloworld
+creating 'myhelloworld'.
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+WHY
+
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+WHY
+ - To make life simpler
+
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+WHY
+ - To make life simpler
+ - To avoid having to recompile EVERYTHING when ANYTHING changes
+
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+WHY
+ - To make life simpler
+ - To avoid having to recompile EVERYTHING when ANYTHING changes
+ - To increase isolation between separate components of a program
+
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+WHY
+ - To make life simpler
+ - To avoid having to recompile EVERYTHING when ANYTHING changes
+ - To increase isolation between separate components of a program
+ - To allow multiple programmers to work simultaneously 	 
+
+
+
+UPSHOT 1 - MULTIPLE FILE PROGRAMS 
+        		       	  
+HOW			 	  
+ - Source files always come in .h/.C pairs
+ - Each class goes in its own .h/.C pair  
+ - The main() function lives in main.C
+ - .h files #include other .h files that
+   contain declarations they need 
+ - The set of #include's forms a tree of inclusions with
+   .C files at the leaves         			
+ - An independent compilation (-c) must be performed for each
+   leaf of the tree (.C), producing the corresponding object 
+   file (.o)
+ - All the object files (.o's) are linked together at the end
+   to form an executable program (-o gives the program name).
+
+WHY
+ - To make life simpler
+ - To avoid having to recompile EVERYTHING when ANYTHING changes
+ - To increase isolation between separate components of a program
+ - To allow multiple programmers to work simultaneously 	 
+ - To allow incorporation of existing code as-is 
+
+
+
+
+

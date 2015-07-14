@@ -1,0 +1,1704 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Dave's blocks
+
+
+TODAY:
+ - Stacks & Queues
+ - Program 2 overview
+
+
+HOMEWORK: PC++P Ch 8 & 9
+    Program 2 spec out before I sleep tonight 
+
+    FIRST IN-CLASS QUIZ NEXT WEDNESDAY, FEB 23
+                 COVERS MATERIAL THROUGH TODAY
+
+
+
+
+ LUNATIC FRINGE [from IBM] n.  Customers who can be relied upon to
+	      accept release 1 versions of software.
+
+CLASS DESIGN: UPSHOTS
+    	    
+ - Only the paranoid survive: Always need to worry about insane
+   class users (vs `nobody would pop more than they pushed'...)
+    	    	 
+ - Small class interfaces are safer and more maintainable than
+   large ones.		 
+	      		 
+ - (But) It's also desirable to provide a `natural' interface,
+   even if not strictly minimal.
+			 
+ - Design is about tradeoffs.  
+
+
+
+
+
+
+
+
+
+
+
+
+STACK VS QUEUE		      			    	  
+	      
+
+ 			    	   
+
+ 				    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+ - Last-In, First-Out (LIFO)
+ 			    	   
+
+ 				    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+ - Last-In, First-Out (LIFO): Stack
+       	       	       	     	   
+ - First-In, First-Out (FIFO)
+ 				    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+ - Last-In, First-Out (LIFO): Stack
+ 				   
+ - First-In, First-Out (FIFO): Queue
+ 				    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+ - Last-In, First-Out (LIFO): Stack
+ 				   
+ - First-In, First-Out (FIFO): Queue
+ 				    
+(
+ - First-In, Last-Out (FILO):	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+ - Last-In, First-Out (LIFO): Stack
+ 				   
+ - First-In, First-Out (FIFO): Queue
+ 				    
+(
+ - First-In, Last-Out (FILO):	    
+ - Last-In, Last-Out (LILO):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+ - Last-In, First-Out (LIFO): Stack
+ 				   
+ - First-In, First-Out (FIFO): Queue
+ 				    
+(
+ - First-In, Last-Out (FILO):	    
+ - Last-In, Last-Out (LILO):
+ - Garbage-In, Garbage-Out (GIGO):
+)				  
+
+
+
+
+
+
+
+
+
+
+
+
+       	   
+STACK VS QUEUE		      			    	  
+	      
+  int _data[8]; 	       Stack s;  // Our new Stack, w/ctor
+  int _count;  	       	       s.Insert(5);    	       	       	 
+      	     		       s.Insert(89);
+   s._data  s._count           s.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|  5  |  |  3  |   	       if (s.Remove(a))
+   |-----|  -------   		 cout << a;    // prints -6
+[1]| 89	 |     	      
+   |-----|     	      
+[2]| -6	 |     	      
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  -------    	
+[0]|  5  |  |  3  |   
+   |-----|  -------   
+[1]| 89	 |     	      
+   |-----|     	      
+[2]| -6	 |     	      
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+       	       	       	       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  -------    	       cout << q.Remove(); //want 5
+[0]|  5  |  |  3  |   	       
+   |-----|  -------   
+[1]| 89	 |     	      
+   |-----|     	      
+[2]| -6	 |     	      
+   |-----| 				  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  ------- 
+[0]|  5  |  |  3  |   
+   |-----|  -------   
+[1]| 89	 |     	      
+   |-----|   bool StrawmanQueue::Remove(int& val)
+[2]| -6	 |   {                                     	       	 
+   |-----|     if (_count==0) return false;   // nobody in queue 
+[3]|  ?	 |   
+   |-----|   
+[4]|  ?	 |   
+   |-----|   
+[5]|  ?	 |   
+   |-----|   
+[6]|  ?	 |		 
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  ------- 
+[0]|  5  |  |  3  |   
+   |-----|  -------   
+[1]| 89	 |     	      
+   |-----|   bool StrawmanQueue::Remove(int& val)
+[2]| -6	 |   {                                     	       	 
+   |-----|     if (_count==0) return false;   // nobody in queue 
+[3]|  ?	 |     val = _data[0];                // stash oldest  	 
+   |-----|   
+[4]|  ?	 |   
+   |-----|   
+[5]|  ?	 |   
+   |-----|   
+[6]|  ?	 |		 
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  ------- 
+[0]|  5  |  |  3  |   
+   |-----|  -------   
+[1]| 89	 |     	      
+   |-----|   bool StrawmanQueue::Remove(int& val)
+[2]| -6	 |   {                                     	       	 
+   |-----|     if (_count==0) return false;   // nobody in queue 
+[3]|  ?	 |     val = _data[0];                // stash oldest  	 
+   |-----|     for (int i = 1;i<_count;++i)   // ow pain! move the
+[4]|  ?	 |       _data[i-1] = _data[i];       //  rest down! ouch!
+   |-----|  
+[5]|  ?	 |  
+   |-----|  
+[6]|  ?	 |		 
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  -------
+[0]|  5  |  |  3  |   
+   |-----|  -------   
+[1]| 89	 |     	      
+   |-----|   bool StrawmanQueue::Remove(int& val)
+[2]| -6	 |   {                                     	       	 
+   |-----|     if (_count==0) return false;   // nobody in queue 
+[3]|  ?	 |     val = _data[0];                // stash oldest  	 
+   |-----|     for (int i = 1;i<_count;++i)   // ow pain! move the
+[4]|  ?	 |       _data[i-1] = _data[i];       //  rest down! ouch!
+   |-----|     --_count;                      // 1 less in queue
+[5]|  ?	 |     return true;                   // success       	 
+   |-----|   }                                   		 
+[6]|  ?	 |		 
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  -------    	       int ans;
+[0]|  5  |  |  3  |   	       if (q.Remove(ans)) cout << ans;
+   |-----|  -------   	      
+[1]| 89	 |     	       	      
+   |-----|   bool StrawmanQueue::Remove(int& val)
+[2]| -6	 |   {                                     	       	 
+   |-----|     if (_count==0) return false;   // nobody in queue 
+[3]|  ?	 |     val = _data[0];                // stash oldest  	 
+   |-----|     for (int i = 1;i<_count;++i)   // ow pain! move the
+[4]|  ?	 |       _data[i-1] = _data[i];       //  rest down! ouch!
+   |-----|     --_count;                      // 1 less in queue
+[5]|  ?	 |     return true;                   // success       	 
+   |-----|   }                                   		 
+[6]|  ?	 |		 
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+  int _data[8];        	       StrawmanQueue q;
+  int _count;  	       	       q.Insert(5);    	       	       	 
+      	     		       q.Insert(89);
+   q._data  q._count           q.Insert(-6);   	       
+   -------  -------    	       int ans;
+[0]| 89  |  |  2  |   	       if (q.Remove(ans)) cout << ans;
+   |-----|  -------   
+[1]| -6	 |     	      
+   |-----|   bool StrawmanQueue::Remove(int& val)
+[2]| -6	 |   {                                     	       	 
+   |-----|     if (_count==0) return false;   // nobody in queue 
+[3]|  ?	 |     val = _data[0];                // stash oldest  	 
+   |-----|     for (int i = 1;i<_count;++i)   // ow pain! move the
+[4]|  ?	 |       _data[i-1] = _data[i];       //  rest down! ouch!
+   |-----|     --_count;                      // 1 less in queue
+[5]|  ?	 |     return true;                   // success       	 
+   |-----|   }                                   		 
+[6]|  ?	 |		 
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN	      			    	  
+	      
+Strawman Queue implementation
+			     
+DESCRIBE:
+	
+  Data structure just like Stack.  Insert just like Stack.
+  Remove by taking oldest and copying down everybody else.
+	
+
+   
+
+
+  			    
+
+
+       
+
+
+
+
+
+
+
+QUEUE: STRAWMAN	      			    	  
+	      
+Strawman Queue implementation
+			     
+DESCRIBE:
+	
+  Data structure just like Stack.  Insert just like Stack.
+  Remove by taking oldest and copying down everybody else.
+	
+DEFEND:	
+   
+  + It does implement FIFO behavior
+
+  			    
+
+
+       
+
+
+
+
+
+
+
+QUEUE: STRAWMAN	      			    	  
+	      
+Strawman Queue implementation
+			     
+DESCRIBE:
+	
+  Data structure just like Stack.  Insert just like Stack.
+  Remove by taking oldest and copying down everybody else.
+	
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  			    
+
+
+       
+
+
+
+
+
+
+
+QUEUE: STRAWMAN	      			    	  
+	      
+Strawman Queue implementation
+			     
+DESCRIBE:
+	
+  Data structure just like Stack.  Insert just like Stack.
+  Remove by taking oldest and copying down everybody else.
+	
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  			    
+ATTACK:			    
+  - Remove is O(n):  Too slow!
+       
+
+
+
+
+
+
+
+QUEUE: STRAWMAN	      			    	  
+	      
+Strawman Queue implementation
+			     
+DESCRIBE:
+	
+  Data structure just like Stack.  Insert just like Stack.
+  Remove by taking oldest and copying down everybody else.
+	
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  			    
+ATTACK:			    
+  - Remove is O(n):  Too slow!
+       
+Need to avoid that copy in Remove!  But HOW?
+
+
+
+
+
+
+QUEUE: STRAWMAN 2
+	      	 
+Need to avoid that copy in Remove!  But HOW?
+
+
+
+
+
+		  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUEUE: STRAWMAN 2
+	      	 
+Need to avoid that copy in Remove!  But HOW?
+
+ - Well, in StrawmanQueue we had to copy because
+   _data[0] was always supposed to be the oldest element.
+   So after a remove we needed to put the next oldest guy
+   into _data[0]..					 
+		  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUEUE: STRAWMAN 2
+	      	 
+Need to avoid that copy in Remove!  But HOW?
+
+ - Well, in StrawmanQueue we had to copy because
+   _data[0] was always supposed to be the oldest element.
+   So after a remove we needed to put the next oldest guy
+   into _data[0]..					 
+		  
+ - Well, why not use a SECOND counter to remember where the
+   oldest element is, instead of just putting it at _data[0]?
+   Call it, say, '_front', since it'll remember where the
+   front of the queue is...				 
+
+
+
+
+
+
+
+
+
+
+
+QUEUE: STRAWMAN 2
+	      	 
+Need to avoid that copy in Remove!  But HOW?
+
+ - Well, in StrawmanQueue we had to copy because
+   _data[0] was always supposed to be the oldest element.
+   So after a remove we needed to put the next oldest guy
+   into _data[0]..					 
+		  
+ - Well, why not use a SECOND counter to remember where the
+   oldest element is, instead of just putting it at _data[0]?
+   Call it, say, '_front', since it'll remember where the
+   front of the queue is...				 
+
+ - Yeah!  And the other counter is '_back'!  To insert in
+   the queue, we stick into _data[_back] and increment, and
+   and to remove, we pull out of _data[_front] and increment!
+
+
+
+
+
+
+
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       
+  int _back;   	     	       
+   q._data  q._front           
+   -------  -------    	       
+[0]|  ?  |  |  0  |    	       
+   |-----|  -------   
+[1]|  ?	 |  q._back   
+   |-----|  -------   
+[2]|  ?	 |  |  0  |   
+   |-----|  -------			  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	     	    
+   q._data  q._front        
+   -------  -------    	    
+[0]|  5  |  |  0  |   	    
+   |-----|  -------   	    
+[1]|  ?	 |  q._back   	    
+   |-----|  -------   	    
+[2]|  ?	 |  |  1  |    	    
+   |-----|  -------			  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	     	       q.Insert(89);
+   q._data  q._front  
+   -------  -------    	
+[0]|  5  |  |  0  |   
+   |-----|  -------   
+[1]| 89	 |  q._back   
+   |-----|  -------   
+[2]|  ?	 |  |  2  |   
+   |-----|  -------   			  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	     	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	      
+[0]|  5  |  |  0  |    	      
+   |-----|  -------   	      
+[1]| 89	 |  q._back   
+   |-----|  -------   
+[2]| -6	 |  |  3  |   
+   |-----|  -------			  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	     	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|  5  |  |  1  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]| 89	 |  q._back
+   |-----|  -------
+[2]| -6	 |  |  3  |   	          
+   |-----|  -------			  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	     	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|  5  |  |  2  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]| 89	 |  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89
+[2]| -6	 |  |  3  |
+   |-----|  -------			  
+[3]|  ?	 | 				  
+   |-----| 				  
+[4]|  ?	 | 
+   |-----| 
+[5]|  ?	 | 
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	     	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|  5  |  |  2  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]| 89	 |  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89
+[2]| -6	 |  |  6  |    	       q.Insert(9);
+   |-----|  -------	       q.Insert(13);
+[3]|  9	 | 		       q.Insert(42);
+   |-----| 				  
+[4]| 12	 |     	
+   |-----| 	
+[5]| 42	 |     	
+   |-----|
+[6]|  ?	 |
+   |-----| 
+[7]|  ?	 | 
+   -------
+       	   
+QUEUE: STRAWMAN 2
+	      	 
+  int _data[8]; 	       Strawman2Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|  5  |  |  5  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]| 89	 |  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89 
+[2]| -6	 |  |  6  |    	       q.Insert(9);		  
+   |-----|  -------	       q.Insert(13);		  
+[3]|  9	 | 		       q.Insert(42);   	       	  
+   |-----| 		       if (q.Remove(a))
+[4]| 12	 |     		          cout << a;    //prints -6 
+   |-----| 	       	       if (q.Remove(a))		   
+[5]| 42	 |     		          cout << a;    //prints 9
+   |-----|		       if (q.Remove(a))		  
+[6]|  ?	 |		          cout << a;    //prints 12
+   |-----| 		   
+[7]|  ?	 | 		   
+   -------
+       	   
+QUEUE: STRAWMAN 2     			    	  
+	      	 
+Strawman 2 Queue implementation
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back.  Remove by
+  accessing at '_front' and incrementing _front.      
+
+
+   
+
+
+
+			    
+
+
+       				       
+
+
+
+
+
+QUEUE: STRAWMAN 2     			    	  
+	      	 
+Strawman 2 Queue implementation
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back.  Remove by
+  accessing at '_front' and incrementing _front.      
+
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+
+			    
+
+
+       				       
+
+
+
+
+
+QUEUE: STRAWMAN 2     			    	  
+	      	 
+Strawman 2 Queue implementation
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back.  Remove by
+  accessing at '_front' and incrementing _front.      
+
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  + Remove is O(1) as needed
+			    
+
+
+       				       
+
+
+
+
+
+QUEUE: STRAWMAN 2     			    	  
+	      	 
+Strawman 2 Queue implementation
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back.  Remove by
+  accessing at '_front' and incrementing _front.      
+
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  + Remove is O(1) as needed
+			    
+ATTACK:			    
+
+       				       
+
+
+
+
+
+QUEUE: STRAWMAN 2     			    	  
+	      	 
+Strawman 2 Queue implementation
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back.  Remove by
+  accessing at '_front' and incrementing _front.      
+
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  + Remove is O(1) as needed
+			    
+ATTACK:			    
+  - We'll run off the end of the array!
+       				       
+
+
+
+
+
+QUEUE: STRAWMAN 2     			    	  
+	      	 
+Strawman 2 Queue implementation
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back.  Remove by
+  accessing at '_front' and incrementing _front.      
+
+DEFEND:	
+   
+  + It does implement FIFO behavior
+  + Insert is O(1) as needed
+  + Remove is O(1) as needed
+			    
+ATTACK:			    
+  - We'll run off the end of the array!
+       				       
+ Strawman3Queue ???
+  int _data[1000000000]; //'no one will insert THAT much, right?'
+  int _front;  	       	       
+  int _back;   	       	       
+
+QUEUE
+     	      	 
+Array-based queue
+			       
+DESCRIBE:		       
+			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+
+Essence of class Queue:
+		       
+ enum { _QSIZE = 8 };  	     
+ int _data[_QSIZE];	     
+ int _front;	   	     
+ int _back; 		     
+      	   		     
+  Insert item  	       	       	    Remove()	 
+    _data[_back] = item        	      item = _data[_front]     	 
+    _back = (_back+1)%_QSIZE   	      _front = (_front+1)%_QSIZE 
+       	       	  		      return item      	       	 
+
+       				       
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	      
+  int _back;   	      
+   q._data  q._front  
+   -------  -------  
+[0]|  ?  |  |  0  |  
+   |-----|  -------  
+[1]|  ?	 |  q._back  
+   |-----|  -------  
+[2]|  ?	 |  |  0  |  
+   |-----|  -------  
+[3]|  ?	 | 	     
+   ------- 	     
+               	     
+            	     
+               	     
+           	     
+          	     
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------  
+[0]|  5  |  |  0  |  
+   |-----|  -------  
+[1]| 89	 |  q._back  
+   |-----|  -------  
+[2]| -6	 |  |  3  |  
+   |-----|  -------  
+[3]|  ?	 | 	     
+   ------- 	     
+               	     
+            	     
+               	     
+           	     
+          	     
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|  5  |  |  1  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]| 89	 |  q._back    	  
+   |-----|  -------    	  
+[2]| -6	 |  |  3  |    	  
+   |-----|  -------	  
+[3]|  ?	 | 		  
+   ------- 		  
+               		  
+            	       	  
+               		  
+           		  
+          		  
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|( 5 )|  |  1  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]| 89	 |  q._back    	  
+   |-----|  -------    	  
+[2]| -6	 |  |  3  |    	  
+   |-----|  -------	  
+[3]|  ?	 | 		  
+   ------- 		  
+               		  
+            	       	  
+               		  
+           		  
+          		  
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|( 5 )|  |  2  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]|(89	)|  q._back    	       if (q.Remove(a))           
+   |-----|  -------    	       	  cout << a;    //prints 89 
+[2]| -6	 |  |  3  |    
+   |-----|  -------    
+[3]|  ?	 | 	       
+   ------- 	       
+               	       
+            	       
+
+
+
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]|( 5 )|  |  2  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]|(89	)|  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89 
+[2]| -6	 |  |  0  |    	       q.Insert(9);		  
+   |-----|  -------  
+[3]|  9	 |     	     
+   ------- 	     
+               	     
+            	     
+               	     
+           	     
+          	     
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]| 13  |  |  2  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]|(89	)|  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89 
+[2]| -6	 |  |  1  |    	       q.Insert(9);		  
+   |-----|  -------    	       q.Insert(13);		  
+[3]|  9	 |     		
+   -------     	       	
+               		
+
+
+
+
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]| 13  |  |  3  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]|(89	)|  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89 
+[2]|(-6	)|  |  1  |    	       q.Insert(9);		  
+   |-----|  -------    	       q.Insert(13);   	       	  
+[3]|  9	 |     	       	       if (q.Remove(a))
+   -------     	       	          cout << a;    //prints -6
+               		
+
+
+
+
+           		   
+             		   
+
+       	   
+ARRAY-BASED QUEUE
+	      	 
+  int _data[4];        	       Queue q;
+  int _front;  	       	       q.Insert(5);    	       	       	 
+  int _back;   	       	       q.Insert(89);
+   q._data  q._front           q.Insert(-6);   	       
+   -------  -------    	       int a;
+[0]| 13  |  |  0  |    	       if (q.Remove(a)) 
+   |-----|  -------   	       	  cout << a;    //prints 5     	
+[1]|(89	)|  q._back    	       if (q.Remove(a))           
+   |-----|  -------   	       	  cout << a;    //prints 89 
+[2]|(-6	)|  |  1  |    	       q.Insert(9);		  
+   |-----|  -------    	       q.Insert(13);   	       	  
+[3]|( 9	)|     	       	       if (q.Remove(a))		  
+   -------     	       	          cout << a;    //prints -6
+               		       if (q.Remove(a))	       	       
+				  cout << a;    //prints 9
+
+
+
+           		   
+             		   
+
+       	   
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+
+
+
+
+			 
+
+
+			
+
+
+
+
+       				       
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+DEFEND
+  + Insert is O(1)     
+  + Remove is O(1)
+
+			 
+
+
+			
+
+
+
+
+       				       
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+DEFEND
+  + Insert is O(1)     
+  + Remove is O(1)
+  + memory needed is O(n)
+			 
+
+
+			
+
+
+
+
+       				       
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+DEFEND
+  + Insert is O(1)     
+  + Remove is O(1)
+  + memory needed is O(n)
+			 
+ATTACK
+  - Fixed maximum size must be known at compile-time
+			
+
+cout << 4%3 << endl;
+
+
+       				       
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+OPEN ISSUES
+ 			    
+ - Selecting array size
+
+
+
+    				       
+
+			
+
+
+
+
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+OPEN ISSUES
+ 			    
+ - Selecting array size
+ - Testing for overflow	    
+ - Testing for underflow    
+
+    				       
+
+			
+
+
+
+
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+OPEN ISSUES
+ 			    
+ - Selecting array size
+ - Testing for overflow	    
+ - Testing for underflow    
+ - Making Insert and Remove bulletproof
+    				       
+
+			
+
+
+
+
+QUEUE
+     	      	 
+Array-based queue
+     			       
+DESCRIBE:		       
+     			       
+  Data structure is array plus two indexes.  Insert by
+  storing at '_back' and incrementing _back WITH WRAP-AROUND.
+  Remove by accessing at '_front' and incrementing _front WITH
+  WRAP-AROUND.
+     
+OPEN ISSUES
+ 			    
+ - Selecting array size
+ - Testing for overflow	    
+ - Testing for underflow    
+ - Making Insert and Remove bulletproof
+ - Testing for empty and full	       
+    						     
+
+
+
+
+
+WARNINGS ABOUT MOD (%)
+#include <iostream.h>
+int main() {
+  for (int i = 1; i >= -1; i--) {
+    cout << i << "%4 = " << (i%4) << endl;
+  }
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WARNINGS ABOUT MOD (%)
+#include <iostream.h>
+int main() {
+  for (int i = 1; i >= -1; i--) {
+    cout << i << "%4 = " << (i%4) << endl;
+  }
+  return 0;
+}
+
+1%4 = 1
+0%4 = 0
+-1%4 = -1
+
+
+
+
+
+
+
+
+
+
+
+
+WARNINGS ABOUT MOD (%)
+#include <iostream.h>
+int main() {
+  for (int i = 1; i >= -1; i--) {
+    cout << i << "%4 = " << (i%4) << endl;
+  }
+  return 0;
+}
+
+1%4 = 1
+0%4 = 0
+-1%4 = -1
+
+Warning #1: 'mod' of a negative number gave a negative result!
+            Not good for array indexing!
+
+
+
+
+
+
+
+
+
+WARNINGS ABOUT MOD (%)
+#include <iostream.h>
+int main() {
+  for (int i = 1; i >= -1; i--) {
+    cout << i << "%4 = " << (i%4) << endl;
+  }
+  return 0;
+}
+
+1%4 = 1
+0%4 = 0
+-1%4 = -1
+
+Warning #1: 'mod' of a negative number gave a negative result!
+            Not good for array indexing!
+Warning #2: For 'mod' involving one or two negative numbers,
+            C++ doesn't guarantee sign of the result!  Might be
+            positive or negative!  Can vary with different 
+	    computers/compilers/phase-of-moons!
+("If both operands are nonnegative then the remainder is
+ nonnegative; if not, the sign of the remainder is implementation
+ dependent."   -- Stroustrup 2ndE)
+
+
+WARNINGS ABOUT MOD (%)
+#include <iostream.h>
+int main() {
+  for (int i = 1; i >= -1; i--) {
+    cout << i << "%4 = " << (i%4) << endl;
+  }
+  return 0;
+}
+
+1%4 = 1
+0%4 = 0
+-1%4 = -1
+
+Warning #1: 'mod' of a negative number gave a negative result!
+            Not good for array indexing!
+Warning #2: For 'mod' involving one or two negative numbers,
+            C++ doesn't guarantee sign of the result!  Might be
+            positive or negative!  Can vary with different 
+	    computers/compilers/phase-of-moons!
+("If both operands are nonnegative then the remainder is
+ nonnegative; if not, the sign of the remainder is implementation
+ dependent."   -- Stroustrup 2ndE)
+
+     UPSHOT --->> AVOID NEGATIVE NUMBERS WHEN USING %!
+PROGRAM 2 - DEQUER
+		  
+
+
+
+
+		  
+
+	       	  
+
+  		  
+
+
+		  				  
+		  				  
+
+
+		  				  
+		  				  
+
+
+
+
+		  		  
+PROGRAM 2 - DEQUER
+		  
+ Goals: More experience with classes and objects.
+       	Use free store for dynamic arrays.
+	Implement a class with non-trivial ctors/dtor/op=.
+        Work with overloaded methods.   	  
+        Implement, test, and demonstrate a deque.
+
+	       	  
+
+  		  
+
+
+		  				  
+		  				  
+
+
+		  				  
+		  				  
+
+
+
+
+		  		  
+PROGRAM 2 - DEQUER
+		  
+ Goals: More experience with classes and objects.
+       	Use free store for dynamic arrays.
+	Implement a class with non-trivial ctors/dtor/op=.
+        Work with overloaded methods.   	  
+        Implement, test, and demonstrate a deque.
+		  
+ What's a `deque'?
+	       	  
+  deque --> Double-Ended Queue
+  		  
+
+
+		  				  
+		  				  
+
+
+		  				  
+		  				  
+
+
+
+
+PROGRAM 2 - DEQUER
+		  
+ Goals: More experience with classes and objects.
+       	Use free store for dynamic arrays.
+	Implement a class with non-trivial ctors/dtor/op=.
+        Work with overloaded methods.   	  
+        Implement, test, and demonstrate a deque.
+		  
+ What's a `deque'?
+	       	  
+  deque --> Double-Ended Queue
+  		  
+  stack: O(1) to insert on top       
+       	 O(1) to remove from top     		  
+		  		     		  
+		  		     		  
+  queue: O(1) to insert at back	     
+	 O(1) to remove from front    	       	  
+		  		     		  
+		  				  
+
+
+
+
+PROGRAM 2 - DEQUER
+		  
+ Goals: More experience with classes and objects.
+       	Use free store for dynamic arrays.
+	Implement a class with non-trivial ctors/dtor/op=.
+        Work with overloaded methods.   	  
+        Implement, test, and demonstrate a deque.
+		  
+ What's a `deque'?
+	       	  
+  deque --> Double-Ended Queue 	   
+  		  		   
+  stack: O(1) to insert on top     
+       	 O(1) to remove from top   		  
+		  		   		  
+		  		   		  
+  queue: O(1) to insert at back	   
+	 O(1) to remove from front    	       	  
+		  		   		  
+		  		   		  
+  deque: O(1) to insert on left	   
+       	 O(1) to insert on right
+       	 O(1) to remove from left
+       	 O(1) to remove from right
+PROGRAM 2 - DEQUER
+		  
+ Goals: More experience with classes and objects.
+       	Use free store for dynamic arrays.
+	Implement a class with non-trivial ctors/dtor/op=.
+        Work with overloaded methods.   	  
+        Implement, test, and demonstrate a deque.
+		  
+ What's a `deque'?
+	       	  
+  deque --> Double-Ended Queue
+  		  
+  stack: O(1) to insert on top                LIFO
+       	 O(1) to remove from top		  
+		  				  
+		  				  
+  queue: O(1) to insert at back		      FIFO
+	 O(1) to remove from front    	       	  
+		  				  
+		  				  
+  deque: O(1) to insert on left		     `EIEO'?
+       	 O(1) to insert on right
+       	 O(1) to remove from left
+       	 O(1) to remove from right
+PROGRAM 2 - DEQUER: The program
+ - Requires a deque of char
+ - Command/response-based like blocks
+ - No small compile-time limit on size of deque!
+
+Commands (overview, not final!):
+A     
+      output author response (same as blocks)
+D <ms>
+      <ms> : int
+      output delay response (same as blocks)
+S <size>    	      	  	    			  
+      <size> : int       	       	    
+      set up deque to given size (any positive int!), and empty it
+I <lr><ch>  	       	  				  
+      <lr> : char, either 'L' for 'left' or 'R' for 'right'
+      <ch> : char, any single char (including space, newline, etc)
+      insert given ch in given end of the deque if there's room
+R <lr>	    						       
+      <lr> : char, either 'L' for 'left' or 'R' for 'right'    
+      remove a char from given end of the deque if it's not empty
+Q
+      quit
+

@@ -1,0 +1,1848 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Interlude: How big is your Deque interface?
+ - Quiz postmortem
+
+TODAY:
+ - Administrivia
+ - Expressions, types, and pointers
+		      
+HOMEWORK: PC++P Ch 15 
+ Program 2 due in 2 days 23.5 hours: MON MAR 6 1:30 PM
+		   
+
+
+     SECONDARY DAMAGE n.  When a fatal error occurs (esp. a
+  segfault) the immediate cause may be that a pointer has been
+    trashed due to a previous fandango on core. However, this
+ fandango may have been due to an earlier fandango, so no amount
+	of analysis will reveal (directly) how the damage
+     occurred. "The data structure was clobbered, but it was
+		       secondary damage."
+
+ADMINISTRIVIA
+	     
+ - PROGRAM 1 free late day requests must be on your student
+   resource page before 5PM TODAY!  FINAL WARNING!
+
+ - Ackley office hours end at 4:30 today instead of 5PM!
+   
+ - Program 2 due in 2 days 23.5 hours: MON MAR 6 1:30 PM
+    		     
+ - No `free late day' use on Program 2!
+	  	     
+ - On the CIRT AIX machines:    ~ackley/public/TurnInDequer
+   is now runnable.
+
+ - Turn in: Dequer.h, Dequer.C, Deque.h, Deque.C, and README
+
+ - Procedure for seeking grade changes on programs:
+(1) Meet with the TA that graded your program FIRST.  Discuss
+    your concerns.  The TA may make an adjustment if it is
+    appropriate.  DO NOT CONTACT THE PROFESSOR BEFORE DOING THIS!
+(2) If, AFTER (1), if you STILL feel an error has occurred, you 
+    can request me to regrade your program from scratch.  If I do
+    so, your grade may increase, DECREASE, or remain unchanged.
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    			      
+
+
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+  int i;        
+  i = 3;        
+  cout << i;    
+  int j = 9;    
+  class Foo {   
+  public:    		      		    
+    void Fnc();	
+  };   	  	   	      		    
+  void Foo::Fnc() {
+    cout << 3;  
+  }	      		     
+  Foo bar;      
+  bar.Fnc()     
+
+    			      
+
+
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+  int i;        // (declaration)
+  i = 3;        // EXPRESSION (& definition of 'i')
+  cout << i;    // EXPRESSION			     
+  int j = 9;    
+  class Foo {   
+  public:      	  	      		    		       
+    void Fnc();	
+  };   	  	   	      		    		       
+  void Foo::Fnc() {
+    cout << 3;  
+  }	      		     				      
+  Foo bar;      
+  bar.Fnc()     
+		
+    			      
+		
+
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+  int i;        // (declaration)
+  i = 3;        // EXPRESSION (& definition of 'i')
+  cout << i;    // EXPRESSION			     
+  int j = 9;    // (declaration and) EXPRESSION (& defn of 'j')
+  class Foo {   
+  public:      	  	      		    		       
+    void Fnc();	
+  };   	  	   	      		    		       
+  void Foo::Fnc() {
+    cout << 3;  
+  }	      		     				      
+  Foo bar;      
+  bar.Fnc()     
+		
+    			      
+
+
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+  int i;        // (declaration)
+  i = 3;        // EXPRESSION (& definition of 'i')
+  cout << i;    // EXPRESSION			     
+  int j = 9;    // (declaration and) EXPRESSION (& defn of 'j')
+  class Foo {   // (declaration)			       
+  public:      	  	      		    		       
+    void Fnc();	// (declaration)       	       	    	       
+  };   	       	   	      		    		       
+  void Foo::Fnc() {
+    cout << 3;  
+  }	      		     				      
+  Foo bar;      
+  bar.Fnc()     
+
+    			      
+
+
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+  int i;        // (declaration)
+  i = 3;        // EXPRESSION (& definition of 'i')
+  cout << i;    // EXPRESSION			     
+  int j = 9;    // (declaration and) EXPRESSION (& defn of 'j')
+  class Foo {   // (declaration)			       
+  public:      	  	      		    		       
+    void Fnc();	// (declaration)       	       	    	       
+  };   	  	   	      		    		       
+  void Foo::Fnc() {  // (declaration & definition of Foo::Fnc) 
+    cout << 3;  // EXPRESSION	    			      
+  }	      		     				      
+  Foo bar;      // (declaration)	    		      
+  bar.Fnc()     // EXPRESSION  
+
+    			      
+
+
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+  
+  int i;        // (declaration)
+  i = 3;        // EXPRESSION (& definition of 'i')
+  cout << i;    // EXPRESSION			     
+  int j = 9;    // (declaration and) EXPRESSION (& defn of 'j')
+  class Foo {   // (declaration)			       
+  public:      	  	      		    		       
+    void Fnc();	// (declaration)       	       	    	       
+  };   	  	   	      		    		       
+  void Foo::Fnc() {  // (declaration & definition of Foo::Fnc) 
+    cout << 3;  // EXPRESSION	    			      
+  }	      		     				      
+  Foo bar;      // (declaration)	    		      
+  bar.Fnc()     // EXPRESSION  
+
+    			      
+
+( Lie factor: .7 (ignoring: statements, ctors, etc))
+
+      	  		     
+
+DEEP APPROXIMATELY TRUTHS
+		     
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.  
+
+
+   
+
+     			     
+
+
+
+
+
+	 		     
+
+    			      
+
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+DEEP APPROXIMATELY TRUTHS
+		     
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.
+							    
+and
+   
+  Every EXPRESSION has a TYPE.		     
+     			     
+
+
+
+
+
+	 		     
+
+    			      
+
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+DEEP APPROXIMATELY TRUTHS
+		     
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.
+							    
+and
+   
+  Every EXPRESSION has a TYPE.		     
+     			      
+but			      
+
+  Only some EXPRESSIONS have ADDRESSES.
+					
+
+	 		     
+
+    			      
+
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+EVERY EXPRESSION HAS A TYPE
+
+
+     			   
+
+
+
+	 		     
+
+    			      
+
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769   
+	   
+     7.69  
+	   		     
+     '7'   
+    	   		      
+     true  
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69  
+	 		     
+     '7'  
+       	  		      
+     true 
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'  
+       	 		      
+     true
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true 
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	 		      
+     7/69      
+      	       		     
+     7/69.0        
+	   	   
+    7 == 69	   
+    		   	      
+ true && false     
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double       	
+	 		     		
+     '7'       	       	  char		
+    			      		
+     true		  bool		 
+       	 		      		   
+     7/69 	       	  int    ( int/int ) => int  
+      	  		     			   
+     7/69.0       
+       	   	  
+    7 == 69	  
+    		  	      
+ true && false    
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	       	       	       	       	       
+     7/69 	       	  int 		       
+      	  		     		       
+     7/69.0               double  ( int/double ) => double
+       	       	  
+    7 == 69	  
+       	       		      
+ true && false   
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	 		      
+     7/69 	       	  int 
+      	  		     
+     7/69.0               double  (in arithmetic between int and
+       	       	  		   double, 'double wins')
+    7 == 69	  
+       	       		      
+ true && false   
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	 		      
+     7/69 	       	  int 
+      	  		     
+     7/69.0               double
+	   
+    7 == 69    	       	  bool      ( int == int ) => bool
+    			      
+ true && false   
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	 		      
+     7/69 	       	  int 
+      	  		     
+     7/69.0               double
+	   
+    7 == 69		  bool
+    			      
+ true && false            bool       ( bool && bool ) => bool
+    
+
+    
+    
+
+EVERY EXPRESSION HAS A TYPE
+
+  What is the type of:	   
+     			   
+     769       	       	  int
+
+     7.69                 double
+	 		     
+     '7'       	       	  char
+    			      
+     true		  bool
+       	 		      
+     7/69 	       	  int 
+      	  		     
+     7/69.0               double
+       	       	       	       	 
+    7 == 69		  bool	 
+    			      	 
+ true && false            bool	 
+    				 
+       	       	       	      Those are all `primitive types'.
+    				 There are many many many more
+    				    types than that... 	      
+
+EXPRESSIONS HAVE TYPES
+
+class Foo {    
+public:	       	       	       	       			  
+  void Func1();
+  int Func2(int);
+private:
+  int _data;
+};	      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXPRESSIONS HAVE TYPES
+
+class Foo {    
+public:	       	       	       	       			  
+  void Func1();
+  int Func2(int);
+private:
+  int _data;
+};	      
+
+  A class declaration introduces the class name as a new type.
+
+  Before:
+    Foo f;  // Error, what's a 'Foo'
+   	    
+  After:    
+    Foo f;  // OK, the type of f is Foo
+
+
+
+
+
+
+
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	
+class Foo {    	       	          
+public:	       	       	       	                          
+  void Func1();			   
+  int Func2(int);		   
+private:       	       	       	      
+  int _data;			      
+};	      	   		      
+void Foo::Func1() { cout << "1";}     
+int Foo::Func2(int a) {	       	      
+  return a*3;  	       	       	      
+}				
+
+
+
+
+
+
+
+
+
+
+
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	
+class Foo {    	       	           
+public:	       	       	       	                          
+  void Func1();	       	       	   
+  int Func2(int);		   
+private: 			   
+  int _data;			   
+};	      	   		   
+void Foo::Func1() { cout << "1";}  
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i       
+  int Func2(int);		       ia[1]    
+private: 			        ia      
+  int _data;			        ca      
+};	      	   		        ba      
+void Foo::Func1() { cout << "1";}      ba[-11111]
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]    
+private: 			        ia      
+  int _data;   	       	       	        ca      
+};	      	   		        ba      
+void Foo::Func1() { cout << "1";}      ba[3]    
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia  
+  int _data;			        ca  
+};	      	   		        ba  
+void Foo::Func1() { cout << "1";}      ba[3]
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private:       	       	       	        ia            int[2]   
+  int _data;			        ca     
+};	      	   		        ba     
+void Foo::Func1() { cout << "1";}      ba[3]   
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;   	       	       	        ca            char[3]  
+};	      	   		        ba    
+void Foo::Func1() { cout << "1";}      ba[3]  
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]    
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	   
+  return a*3;  	       	       	   
+}				   
+int main ()			   
+{		       	       	   
+  int i; int ia[2];    	       	   
+  bool b; bool ba[7];	       	   
+  char c; char ca[3];        	   
+  Foo f; Foo fa[4]; 		 
+  f.Func1();	    		 
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f          
+  return a*3;  	       	       	      f._data      
+}				     f.Func1()     
+int main ()			     f.Func2(7)    
+{		       	       	   i = f.Func2(7)  
+  int i; int ia[2];    	       
+  bool b; bool ba[7];	       
+  char c; char ca[3];          
+  Foo f; Foo fa[4]; 	       
+  f.Func1();	    	       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data       
+}				     f.Func1()      
+int main ()			     f.Func2(7)     
+{		       	       	   i = f.Func2(7)   
+  int i; int ia[2];    	       
+  bool b; bool ba[7];	       
+  char c; char ca[3];          
+  Foo f; Foo fa[4]; 	       
+  f.Func1();	    	       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;   	       	       	        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int   
+}      	       	       	       	     f.Func1()  
+int main ()			     f.Func2(7)  
+{		       	       	   i = f.Func2(7)
+  int i; int ia[2];    	       	     		 
+  bool b; bool ba[7];	       	     		 
+  char c; char ca[3];          	     		 
+  Foo f; Foo fa[4];    	       
+  f.Func1();	    	       	     			      
+  i = f.Func2(7);   	       
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int   
+}      	       	       	       	     f.Func1()        /	     
+int main ()			     f.Func2(7)      / 
+{		       	       	   i = f.Func2(7)   / 
+  int i; int ia[2];    	       	     		   / 
+  bool b; bool ba[7];	       	     		  / 
+  char c; char ca[3];          	     		 / 
+  Foo f; Foo fa[4]; 	       	     	  ( Foo . int ) => int
+  f.Func1();	    	       	     			      
+  i = f.Func2(7);   	   	      ( typea . typeb ) => typeb
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}      	       	       	       	     f.Func1()         
+int main ()			     f.Func2(7)  
+{		       	       	   i = f.Func2(7)
+  int i; int ia[2];    	       
+  bool b; bool ba[7];	       
+  char c; char ca[3];          
+  Foo f; Foo fa[4]; 	       
+  f.Func1();	    	       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}      	       	       	       	     f.Func1()         void
+int main ()			     f.Func2(7)  
+{		       	       	   i = f.Func2(7)
+  int i; int ia[2];    	       
+  bool b; bool ba[7];	       
+  char c; char ca[3];          
+  Foo f; Foo fa[4]; 	       
+  f.Func1();	    	       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)  
+  int i; int ia[2];    	       
+  bool b; bool ba[7];	       
+  char c; char ca[3];          
+  Foo f; Foo fa[4]; 	       
+  f.Func1();	    	       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};     	       	       	       	        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}			       	     f.Func1()         void
+int main ()		       	     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	 
+  bool b; bool ba[7];	       	 
+  char c; char ca[3];          	 
+  Foo f; Foo fa[4]; 	       	 
+  f.Func1();	    	       	 
+  i = f.Func2(7);   	   	 
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};     	       	       	       	        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}			       	     f.Func1()         void
+int main ()		       	     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       			      /
+  bool b; bool ba[7];	       			     / 
+  char c; char ca[3];          			    / 
+  Foo f; Foo fa[4]; 	       			   / 
+  f.Func1();	    	       		    ( int = int ) => int
+  i = f.Func2(7);   	   		( typea = typeb ) => typea
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};     	       	       	       	        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}			       	     f.Func1()         void
+int main ()		       	     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	   i = 7.69    	      /
+  bool b; bool ba[7];	                             / 
+  char c; char ca[3];          	   	       	    / 
+  Foo f; Foo fa[4];    	       	    		   / 
+  f.Func1();	    	       	    	    ( int = int ) => int
+  i = f.Func2(7);   	   	    	( typea = typeb ) => typea
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			    
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};     	       	       	       	        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}			       	     f.Func1()         void
+int main ()		       	     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	   i = 7.69    	       int
+  bool b; bool ba[7];	      (int = double) => int  / 
+  char c; char ca[3];          	   	       	    / 
+  Foo f; Foo fa[4];    	       	    		   / 
+  f.Func1();	    	       	    	    ( int = int ) => int
+  i = f.Func2(7);   	   	    	( typea = typeb ) => typea
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			    
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}			       	     f.Func1()         void
+int main ()		       	     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       
+  bool b; bool ba[7];	       
+  char c; char ca[3];          
+  Foo f; Foo fa[4]; 	       
+  f.Func1();	    	       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()    	       	       	     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa         
+  bool b; bool ba[7];	       	       fa[2]       
+  char c; char ca[3];        	   fa[2].Func2(0)  
+  Foo f; Foo fa[4]; 		 ba[fa[2].Func2(0)]
+  f.Func1();	    		      main()       
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa            Foo[4]   
+  bool b; bool ba[7];	       	       fa[2]         
+  char c; char ca[3];          	   fa[2].Func2(0)    
+  Foo f; Foo fa[4]; 		 ba[fa[2].Func2(0)]  
+  f.Func1();	    		      main()         
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{  		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa            Foo[4]   
+  bool b; bool ba[7];	       	       fa[2]           Foo     
+  char c; char ca[3];        	   fa[2].Func2(0)      
+  Foo f; Foo fa[4]; 		 ba[fa[2].Func2(0)]    
+  f.Func1();	    		      main()           
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int 
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa            Foo[4]   
+  bool b; bool ba[7];	       	       fa[2]           Foo     
+  char c; char ca[3];        	   fa[2].Func2(0)      int     
+  Foo f; Foo fa[4]; 		 ba[fa[2].Func2(0)]    
+  f.Func1();	    		      main()           
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa            Foo[4]   
+  bool b; bool ba[7];	       	       fa[2]           Foo     
+  char c; char ca[3];        	   fa[2].Func2(0)      int     
+  Foo f; Foo fa[4]; 		 ba[fa[2].Func2(0)]    bool    
+  f.Func1();	    		      main()           
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  double Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa            Foo[4]   
+  bool b; bool ba[7];	       	       fa[2]           Foo     
+  char c; char ca[3];          	   fa[2].Func2(0)      int     
+  Foo f; Foo fa[4];    	       	 ba[ (i =7.6  )   ]    bool    
+  f.Func1();	    		      main()           int    
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+DEEP APPROXIMATELY TRUTHS
+		     
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.
+							    
+and
+   
+  Every EXPRESSION has a TYPE.		     
+     			      
+but			      
+
+  Only some EXPRESSIONS have ADDRESSES.
+					
+
+	 		     
+
+    			      
+
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+ONLY SOME EXPRESSIONS HAVE ADDRESSES
+				 
+  int i;    	       
+  int ia[3];	       
+
+
+       	       	       
+
+	       	  
+
+	       	       
+
+	       	       
+
+	       	       
+
+	       	       
+
+	       	       
+
+	       	       
+
+
+      
+ONLY SOME EXPRESSIONS HAVE ADDRESSES
+				 
+  int i;    	       
+  int ia[3];	       
+
+Which of these expressions are legal?
+       	       	       
+   i   	       
+	       	  
+   i+3	       
+	       	       
+   i = 9       
+	       	       
+   i+3 = 9     
+	       	       
+   ia	       
+	       	       
+   ia[2]       
+	       	       
+   ia[2]+0 = 10
+	       	       
+   ia[i+3] = 9 	       
+
+      
+ONLY SOME EXPRESSIONS HAVE ADDRESSES
+				 
+  int i;    	       
+  int ia[3];	       
+
+Which of these expressions are legal?
+       	       	       
+   i   	       	  legal	       
+		  	       
+   i+3		  legal	       
+		       	       
+   i = 9       	  legal	       
+	   	       	       
+   i+3 = 9 	  error          Only expressions with addresses
+	   	       		 can appear on the left side of	
+   ia	   	        	 an assignment.     	  
+		       		 'i' has an address, 'i+3' doesn't
+   ia[2]	         
+      		       	 
+   ia[2]+0 = 10           
+		       	  
+   ia[i+3] = 9	          
+
+      
+ONLY SOME EXPRESSIONS HAVE ADDRESSES
+				 
+  int i;    	       
+  int ia[3];	       
+
+Which of these expressions are legal?
+       	       	       
+   i   	       	  legal	       
+		  	       
+   i+3		  legal	       
+		       	       
+   i = 9   	  legal	       
+	   	       	       
+   i+3 = 9 	  error          Only expressions with addresses
+	   	       		 can appear on the left side of	
+   ia	   	  legal		 an assignment.     	
+		       		 'i' has an address, 'i+3' doesn't
+   ia[2]	  legal
+       	       	       	      
+   ia[2]+0 = 10   error	       	'ia[2]' has an address,
+		       			 'ia[2]+0' doesn't
+   ia[i+3] = 9	  legal
+
+      
+POINTERS
+				 
+  We can point at anything that has an ADDRESS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a DIFFERENT TYPE than the thing!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+	int*          a pointer to an integer
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+	int*          a pointer to an integer
+        int**         a pointer to a pointer to integer
+
+
+
+
+
+
+
+
+
+
+
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+	int*          a pointer to an integer
+        int**         a pointer to a pointer to integer
+
+  &, the 'address of' operator, gives us a pointer to an
+  expression (or an error if the expression has no address).
+
+
+
+
+
+
+
+
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+	int*          a pointer to an integer
+        int**         a pointer to a pointer to integer
+
+  &, the 'address of' operator, gives us a pointer to an
+  expression (or an error if the expression has no address).
+
+
+  int i; int * pi; int ** ppi;
+
+               	     i 	       	 pi	      ppi      
+            	     --------- 	 ---------    --------- 
+               	     | 	   ? | 	 |     ? |    |     ? |
+	    	     ---------	 ---------    ---------
+       	       	       	
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+	int*          a pointer to an integer
+        int**         a pointer to a pointer to integer
+
+  &, the 'address of' operator, gives us a pointer to an
+  expression (or an error if the expression has no address).
+
+
+  int i; int * pi; int ** ppi;
+
+  i = 2;       	     i 	       	 pi	      ppi      
+            	     --------- 	 ---------    --------- 
+               	     | 	   2 | 	 |     ? |    |     ? |
+	    	     ---------	 ---------    ---------
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+	int*          a pointer to an integer
+        int**         a pointer to a pointer to integer
+
+  &, the 'address of' operator, gives us a pointer to an
+  expression (or an error if the expression has no address).
+
+
+  int i; int * pi; int ** ppi;
+       	       	       _______ 
+  i = 2;       	     i/	      \	 pi	      ppi      
+  pi = &i;  	     v-------- \ ---------    --------- 
+               	     | 	   2 | 	-----    |    |     ? |
+	    	     --------- 	 ---------    ---------	
+
+	    
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+       	int*          a pointer to an integer 
+        int**         a pointer to a pointer to integer
+					      
+  &, the 'address of' operator, gives us a pointer to an
+  expression (or an error if the expression has no address).
+					      
+					      
+  int i; int * pi; int ** ppi;		      
+		       _______      _______             
+  i = 2;       	     i/       \  pi/       \  ppi       
+  pi = &i;  	     v-------- \ -v-------  \ --------- 
+  ppi = &pi;   	     |     2 |  -----    |   ------   | 
+	    	     ---------   ---------    --------- 
+
+	    
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+       	       	       	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+       	       	       	
+Address      
+  100:  --   
+  101:  --   
+  102:  --   
+  103:  --   
+  104:  --   
+  105:  --  	    
+  106:  --  	    
+  107:  --  	    
+  108:  --  	    
+  109:  --  	   	     
+  110:  --  
+  111:  --  
+  112:  --  
+  etc
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+       	       	       	
+Address             Address            		   	
+  100:  --  	           +0 +1 +2 +3 
+  101:  --  	      100: -- -- -- -- 
+  102:  --  	      104: -- -- -- --    	  
+  103:  --  	      108: -- -- -- -- 
+  104:  --  	      112: -- etc      	  
+  105:  --  	    
+  106:  --  	    
+  107:  --  	    
+  108:  --  	    
+  109:  --  	   	     
+  110:  --  
+  111:  --  
+  112:  --  
+  etc
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100: -- -- -- -- 
+ 104: -- -- -- -- 
+ 108: -- -- -- -- 
+ 112: -- -- -- -- 
+ 116: -- -- -- -- 
+ 120: -- -- -- --    
+ 124: -- -- -- --      	     
+ 128: -- -- -- --
+	     
+
+
+
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100: -- -- -- --      	     int * pi; int ** ppi; int i;
+ 104: -- -- -- --              	       		       	 
+ 108: -- -- -- --       
+ 112: -- -- -- --     	
+ 116: -- -- -- --    	
+ 120: -- -- -- --    
+ 124: -- -- -- --      	     
+ 128: -- -- -- --
+	     
+
+
+
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100: -- -- -- -- (pi) 	     int * pi; int ** ppi; int i;
+ 104: -- -- -- -- (ppi)	       	       		       	 
+ 108: -- -- -- -- (i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120: -- -- -- --    
+ 124: -- -- -- --      	     
+ 128: -- -- -- --
+	     
+
+
+
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100: -- -- -- -- (pi) 	     int * pi; int ** ppi; int i;
+ 104: -- -- -- -- (ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120: -- -- -- --      	 	   
+ 124: -- -- -- --      	     	   
+ 128: -- -- -- -- 	     i = 2;
+	     	       	     
+
+
+
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100:(        108)(pi) 	     int * pi; int ** ppi; int i;
+ 104: -- -- -- -- (ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120: -- -- -- --      	 	   
+ 124: -- -- -- --      	     	   
+ 128: -- -- -- -- 	     i = 2;
+	     	       	     pi = &i;
+       	       	       	     
+
+
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100:(        108)(pi) 	     int * pi; int ** ppi; int i;
+ 104:(        100)(ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120:(          7)(j) 	 	   			     
+ 124: -- -- -- --      	     	   			     
+ 128: -- -- -- -- 	     i = 2;			     
+	       	       	     pi = &i;	    cout << *pi;
+       	       	       	     ppi = &pi;	    
+       	       	       	    
+			     int j = 7;  // suppose j gets 120
+ 
+
+
+
+

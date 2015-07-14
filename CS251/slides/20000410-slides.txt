@@ -1,0 +1,1584 @@
+QUESTIONS
+
+LAST TIME:
+ - Second in-class quiz (cumulative)
+
+TODAY:
+ - Quiz postmortem
+ - Intro to templates
+ - Quiz return	     
+
+HOMEWORK:  PC++P Ch 24
+   Program 4 out Wednesday
+
+   BETA n.  1. Mostly working, but still under test; usu. used
+  with `in': `in beta'. In the Real World, systems (hardware or
+    software) software often go through two stages of release
+  testing: Alpha (in-house) and Beta (out-house?). Beta releases
+   are generally made to a group of lucky (or unlucky) trusted
+    customers. 2. Anything that is new and experimental. "Her
+    boyfriend is in beta" means that she is still testing for
+     compatibility and reserving judgment. 3. Flaky; dubious;
+       suspect (since beta software is notoriously buggy).
+ 
+
+QUIZ 2
+
+ - Upshot:  Mixed, good and bad, but
+	    large train wreck component
+
+       	       	    QUIZ 2
+       	          RAW   FINAL  (min(RAW+9,100))
+	     max   98    100             
+	     avg   71     80             
+	     min   25     34             
+	   
+	   
+	   
+	   
+	   
+	   
+
+
+
+
+
+
+
+
+QUIZ 2
+  #include <iostream.h>
+  class A {
+  public:
+    A() { _l = NULL; cout << "CA"; }     	       	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       
+    void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:					       
+    struct _B {					       
+      bool b;
+      _B * p;
+      _B(bool d,_B*lk)
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+>>  A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     
+  #include <iostream.h>	       +-------+
+  class A {		       |  NULL |
+  public:		       +-------+       
+>>  A() { _l = NULL; cout << "CA"; }     	       	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+    void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:					       
+    struct _B {					       
+      bool b;
+      _B * p;
+      _B(bool d,_B*lk)
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+>   A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     
+  #include <iostream.h>	       +-------+
+  class A {		       |  NULL |
+  public:		       +-------+       
+    A() { _l = NULL; cout << "CA"; }     	       	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+>>  void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:					       
+    struct _B {					       
+      bool b;
+      _B * p;
+      _B(bool d,_B*lk)
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     	     +-----+
+  #include <iostream.h>	       +-------+     |false|
+  class A {		       |  NULL |     |-----|
+  public:		       +-------+     |NULL |
+    A() { _l = NULL; cout << "CA"; }         +-----+   	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+ >  void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:     	       	    ^^^^^^^^^^^^ 	       
+    struct _B {				 	       
+      bool b;  	       	       	       	 
+      _B * p;
+      _B(bool d,_B*lk)	  vvv
+>>     {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     	     +-----+
+  #include <iostream.h>	       +-------+     |false|
+  class A {		       |      ------>|-----|
+  public:		       +-------+     |NULL |
+    A() { _l = NULL; cout << "CA"; }         +-----+   	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+ >  void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:     	       ^^^^              	       
+    struct _B {		   		 	       
+      bool b;  	       	       	       	 
+      _B * p;		   
+      _B(bool d,_B*lk) 	   
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     	     +-----+
+  #include <iostream.h>	       +-------+     |false|
+  class A {		       |      ------>|-----|
+  public:		       +-------+     |NULL |
+    A() { _l = NULL; cout << "CA"; }         +-----+   	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+    void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:     	                         	       
+    struct _B {		   		 	       
+      bool b;  	       	       	       	 
+      _B * p;		   
+      _B(bool d,_B*lk) 	   
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+>>  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     	     +-----+
+  #include <iostream.h>	       +-------+     |false|
+  class A {		       |      ------>|-----|
+  public:		       +-------+     |NULL |
+    A() { _l = NULL; cout << "CA"; }         +-----+   	   
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+>>  void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:
+    struct _B {		   		 	       
+      bool b;  	       	       	       	 
+      _B * p;		   
+      _B(bool d,_B*lk) 	   
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     	     +-----+   	+-----+
+  #include <iostream.h>	       +-------+     |false|< 	|true |
+  class A {		       |      ------>|-----| \ 	|-----|
+  public:		       +-------+     |NULL |  \---    |
+    A() { _l = NULL; cout << "CA"; }         +-----+   	+-----+
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CA.
+ >  void Ins(bool t) { _l = new _B(t,_l); }	       
+  private:     	       	    ^^^^^^^^^^^^	      
+    struct _B {	       	       	       	       	       
+      bool b;  	       	       	       	 
+      _B * p;		   
+      _B(bool d,_B*lk) 	   
+>>     {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2			    object     	     +-----+   	+-----+
+  #include <iostream.h>	       +-------+     |false|< 	|true |
+  class A {		       |      ------>|-----| \ 	|-----|
+  public:		       +-------+     |NULL |  \---    |
+    A() { _l = NULL; cout << "CA"; }         +-----+   	+-----+
+    ~A() { cout << "DA" << endl;  delete _l;}  	       CACB    
+ >  void Ins(bool t) { _l = new _B(t,_l); }	       .       
+  private:     	       	    ^^^^^^^^^^^^	      
+    struct _B {	       	       	       	       	       
+      bool b;  	       	       	       	 	 
+      _B * p;  	       	   			 
+      _B(bool d,_B*lk) 	  vvv vvvvvvvvvvvvvvvvvvv
+>>     {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+    ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+ >  void Ins(bool t) { _l = new _B(t,_l); }    	       .   
+  private:     	       ^^^^ 
+    struct _B {	       	       	       	       	       
+      bool b;  	       	       	       	 	 
+      _B * p;  	       	   			 
+      _B(bool d,_B*lk) 	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+ >  for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+    ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       .   
+    struct _B {	       	       	       	       	       
+      bool b;  	       	       	       	 	 
+      _B * p;  	       	   			 
+      _B(bool d,_B*lk) 	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+>>  cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+    ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       .   
+    struct _B {	       	       	       	       	       
+      bool b;  	       	       	       	 	 
+      _B * p;  	       	   			 
+      _B(bool d,_B*lk) 	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+>>  return 0;
+  }
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+>>  ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       .   
+    struct _B {	       	       	       	       	       
+      bool b;  	       	       	       	 	 
+      _B * p;  	       	   			 
+      _B(bool d,_B*lk) 	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+      ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+ >  ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       DA  
+    struct _B {	       	       	       	       	       . 
+      bool b;  	       	       	       	 	 
+      _B * p;  	       	   			 
+      _B(bool d,_B*lk) 	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+>>    ~_B() { cout<<"DB" << b; delete p; }
+    };
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+ >  ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       DA  
+    struct _B {	       	       	       	       	       DB1.
+      bool b;  	       	       	       	 	 	
+      _B * p;  	       	   			 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}
+ >    ~_B() { cout<<"DB" << b; delete p; }
+    }; 	       	       	       ^^^^^^^^
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+ >  ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       DA  
+    struct _B {	       	       	       	       	       DB1DB0.
+      bool b;  	       	       	       	 	 	
+      _B * p;  	       	   			 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}	
+>>    ~_B() { cout<<"DB" << b; delete p; }     	       	
+    }; 	       	       	       ^^^^^^^^
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   +-----+  ->|true |
+  class A {		       |      --/    |false|<- 	|-----|
+  public:		       +-------+     |-----|  \---    |
+    A() { _l = NULL; cout << "CA"; }         |NULL |   	+-----+
+ >  ~A() { cout << "DA" << endl;  delete _l;}+-----+   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       DA  
+    struct _B {	       	       	       	       	       DB1DB0.
+      bool b;  	       	       	       	 	 	
+      _B * p;  	       	   			 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}	
+ >    ~_B() { cout<<"DB" << b; delete p; }     	       	
+    }; 	       	       	       ^^^^^^^^
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+-----+
+  #include <iostream.h>	       +-------+ /   + - - +  ->|true |
+  class A {    	       	       |      --/           <- 	|-----|
+  public:		       +-------+     |  ?  |  \---    |
+    A() { _l = NULL; cout << "CA"; }                   	+-----+
+ >  ~A() { cout << "DA" << endl;  delete _l;}+ - - +   CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       DA  
+    struct _B {	       	       	       	       	       DB1DB0.
+      bool b;  	       	       	       	 	 	
+      _B * p;  	       	   			 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}	
+ >    ~_B() { cout<<"DB" << b; delete p; }     	       	
+    }; 	       	       	       	       	 ^
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	  /----------\ 	+ - - +
+  #include <iostream.h>	       +-------+ /            ->       
+  class A {    	       	       |      --/               |  ?  |
+  public:		       +-------+                       
+    A() { _l = NULL; cout << "CA"; }                   	+ - - +
+ >  ~A() { cout << "DA" << endl;  delete _l;}          CACB
+    void Ins(bool t) { _l = new _B(t,_l); }	       Done
+  private:     	            			       DA  
+    struct _B {	       	       	       	       	       DB1DB0.
+      bool b;  	       	       	       	 	 	
+      _B * p;  	       	   			 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}	
+ >    ~_B() { cout<<"DB" << b; delete p; }     	       	
+    }; 	       	       	       	       	 ^
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+ >}
+
+QUIZ 2 	       	       	    object     	
+  #include <iostream.h>	       +-------+
+  class A {    	       	       |   ?   |
+  public:		       +-------+                       
+    A() { _l = NULL; cout << "CA"; }    
+    ~A() { cout << "DA" << endl;  delete _l;}          CACB
+    void Ins(bool t) { _l = new _B(t,_l); }  	       Done
+  private:     	            		  	       DA  
+    struct _B {	       	       	       	       	       DB1DB0.
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}	
+      ~_B() { cout<<"DB" << b; delete p; }     	       	
+    }; 	       	       	       	          
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+  
+QUIZ 2 	       	       	   
+  #include <iostream.h>	   
+  class A {    	       	   
+  public:		   
+    A() { _l = NULL; cout << "CA"; }    
+    ~A() { cout << "DA" << endl;  delete _l;}          CACB
+    void Ins(bool t) { _l = new _B(t,_l); }  	       Done
+  private:     	            		     	       DA  
+    struct _B {	       	       	       	       	       DB1DB0 
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+      _B(bool d,_B*lk) 	       	       	       	       	
+       {b = d; p = lk; if (b) cout<< "CB" << endl;}	
+      ~_B() { cout<<"DB" << b; delete p; }     	       	
+    }; 	       	       	       	          
+    _B * _l;     // head pointer
+  };
+  int main() {
+    A object;
+    for (int i = 0;i<2;++i) object.Ins(i==1);
+    cout << "Done" << endl;
+    return 0;
+  }
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+
+// A.C
+..
+int A::TrueCount() const {
+
+  		
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+
+
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;
+
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;
+  for (_B * t = _l;
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;      
+  for (_B * t = _l; t;
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;       	       
+  for (_B * t = _l; t; t = t->p)
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;
+  for (_B * t = _l; t; t = t->p) if (t->b) 
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;
+  for (_B * t = _l; t; t = t->p) if (t->b) ++count;
+
+QUIZ 2 	       	       	   
+
+Assume this line is added to the public portion of the class A
+declaration in problem 1:
+
+  int TrueCount() const;  // Returns # of true elements in A
+
+The job of TrueCount is to walk down the list pointed to by _l and
+count the number of _B's that have their 'b' set to true, and
+return that count.  Implement this method, completing the code
+started below:
+    struct _B {
+      bool b;  	       	       	       	  	 	
+      _B * p;  	       	   		  	 	
+ .. }; 	       	       	       	          
+    _B * _l;     // head pointer
+ ..   
+
+// A.C
+..
+int A::TrueCount() const {
+  int count = 0;
+  for (_B * t = _l; t; t = t->p) if (t->b) ++count;
+  return count; }
+QUIZ 2 	       	       	   
+int i;     int ia[3];   double f();  double * pd;  void f(double);
+int * pi;  int f(char); double d;    double da[2]; char ca[22];
+			       	       	       	    
+			 			    
+3a      i+pi     int * 	       	     3d     da[d]    
+       	  		 			     	  
+3b      &pi                          3e     i[da]    
+       	       	       	 			     	   
+3c   pd[ia[i]] 	               	     3f     f(f())   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+int i;     int ia[3];   double f();  double * pd;  void f(double);
+int * pi;  int f(char); double d;    double da[2]; char ca[22];
+				 
+			       	       	       	     
+3a      i+pi     int * 	       	     3d     da[d]    
+       	  		 			     	  
+3b      &pi      int **              3e     i[da]    
+       	       	       	 			     	   
+3c   pd[ia[i]] 	 double *      	     3f     f(f())   
+     
+     
+     ia[i] => int
+     intary[int] => int
+     dblptr[int] => double
+     
+
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+int i;     int ia[3];   double f();  double * pd;  void f(double);
+int * pi;  int f(char); double d;    double da[2]; char ca[22];
+				 
+       	       	       	       	       	       	     
+3a      i+pi     int * 	       	     3d     da[d]    
+       	  					     	  
+3b      &pi      int **              3e     i[da]    
+		       				     	   
+3c   pd[ia[i]] 	 double	       	     3f     f(f())   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+int i;     int ia[3];   double f();  double * pd;  void f(double);
+int * pi;  int f(char); double d;    double da[2]; char ca[22];
+				 
+
+3a      i+pi     int * 	       	     3d     da[d]    Error     	 
+       	  					  	  
+3b      &pi      int **              3e     i[da]    
+		       				     	   
+3c   pd[ia[i]] 	 double	       	     3f     f(f())   
+
+
+
+       	       A[B] <=> *(A+B)
+			      
+	       i[da] <=> *(i+da) <=> *(da+i) <=> da[i]
+
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+int i;     int ia[3];   double f();  double * pd;  void f(double);
+int * pi;  int f(char); double d;    double da[2]; char ca[22];
+				 
+
+3a      i+pi     int * 	       	     3d     da[d]    Error     	 
+       	  					  	  
+3b      &pi      int **              3e     i[da]    double   
+		       				  	   
+3c   pd[ia[i]] 	 double	       	     3f     f(f())   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+int i;     int ia[3];   double f();  double * pd;  void f(double);
+int * pi;  int f(char); double d;    double da[2]; char ca[22];
+				 
+
+3a      i+pi     int * 	       	     3d     da[d]    Error     	 
+       	  					  	  
+3b      &pi      int **              3e     i[da]    double   
+		       				  	   
+3c   pd[ia[i]] 	 double	       	     3f     f(f())   void
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ 2 	       	       	   
+Given an integer n, choose which of (A)-(E) best describes the
+running time for each of the following code fragments
+		       	    2  	       	     	     
+(A) O(1)  (B) O(n)   (C) O(n )  (D) O(log n)  (E) something else
+       	       	       	      	      		     
+4a: Circle the answer:    (A)    (B)    (C)   (D)   (E)
+for (int i = n; i<n; ++i)     
+  for (int j = 0; j<n; ++j)
+      cout << "*";
+
+4b: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+ int i = n;
+ int j = n*n;
+ cout << i*j;
+
+4c: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = 0; i < n; ++i)
+  for (int j = 0; j < n*n; ++j)
+     cout << "!";
+
+4d: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = n; i>0; i = i/2)
+  cout << "@";
+QUIZ 2 	       	       	   
+Given an integer n, choose which of (A)-(E) best describes the
+running time for each of the following code fragments
+		       	    2  	       	     	     
+(A) O(1)  (B) O(n)   (C) O(n )  (D) O(log n)  (E) something else
+       	       	       	 +---+	      		     
+4a: Circle the answer:   |(A)|   (B)    (C)   (D)   (E)
+for (int i = n; i<n; ++i)+---+
+  for (int j = 0; j<n; ++j)
+      cout << "*";
+
+4b: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+ int i = n;
+ int j = n*n;
+ cout << i*j;
+
+4c: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = 0; i < n; ++i)
+  for (int j = 0; j < n*n; ++j)
+     cout << "!";
+
+4d: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = n; i>0; i = i/2)
+  cout << "@";
+QUIZ 2 	       	       	   
+Given an integer n, choose which of (A)-(E) best describes the
+running time for each of the following code fragments
+		       	    2  	       	     	     
+(A) O(1)  (B) O(n)   (C) O(n )  (D) O(log n)  (E) something else
+			 +---+	      		     
+4a: Circle the answer:   |(A)|   (B)    (C)   (D)   (E)
+for (int i = n; i<n; ++i)+---+
+  for (int j = 0; j<n; ++j)  
+      cout << "*";	     
+			 +---+ 	
+4b: Circle the answer:   |(A)|   (B)    (C)    (D)    (E)
+ int i = n;		 +---+
+ int j = n*n;
+ cout << i*j;
+
+4c: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = 0; i < n; ++i)
+  for (int j = 0; j < n*n; ++j)
+     cout << "!";
+
+4d: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = n; i>0; i = i/2)
+  cout << "@";
+QUIZ 2 	       	       	   
+Given an integer n, choose which of (A)-(E) best describes the
+running time for each of the following code fragments
+		       	    2  	       	     	     
+(A) O(1)  (B) O(n)   (C) O(n )  (D) O(log n)  (E) something else
+			 +---+	      		     
+4a: Circle the answer:   |(A)|   (B)    (C)   (D)   (E)
+for (int i = n; i<n; ++i)+---+
+  for (int j = 0; j<n; ++j)  
+      cout << "*";	     
+			 +---+
+4b: Circle the answer:   |(A)|   (B)    (C)    (D)    (E)
+ int i = n;		 +---+
+ int j = n*n;		     
+ cout << i*j;		     
+			       	       	       	     +---+
+4c: Circle the answer:    (A)    (B)    (C)    (D)   |(E)|
+for (int i = 0; i < n; ++i)			     +---+
+  for (int j = 0; j < n*n; ++j)
+     cout << "!";
+
+4d: Circle the answer:    (A)    (B)    (C)    (D)    (E)
+for (int i = n; i>0; i = i/2)
+  cout << "@";
+QUIZ 2 	       	       	   
+Given an integer n, choose which of (A)-(E) best describes the
+running time for each of the following code fragments
+		       	    2  	       	     	     
+(A) O(1)  (B) O(n)   (C) O(n )  (D) O(log n)  (E) something else
+       	       	       	 +---+	      		     
+4a: Circle the answer:   |(A)|   (B)    (C)   (D)   (E)
+for (int i = n; i<n; ++i)+---+
+  for (int j = 0; j<n; ++j)  
+      cout << "*";	     
+			 +---+
+4b: Circle the answer:   |(A)|   (B)    (C)    (D)    (E)
+ int i = n;		 +---+
+ int j = n*n;		     
+ cout << i*j;		     
+			       	       	       	     +---+
+4c: Circle the answer:    (A)    (B)    (C)    (D)   |(E)|
+for (int i = 0; i < n; ++i)			     +---+
+  for (int j = 0; j < n*n; ++j)				 
+     cout << "!";					 
+    					      +---+    	 
+4d: Circle the answer:    (A)    (B)    (C)   |(D)|   (E)
+for (int i = n; i>0; i = i/2)		      +---+
+  cout << "@";
+QUIZ 2 	       	       	   
+    						     
+Starting in the outlined boxes, write the gdb commands to
+
+Execute your program   	       	 Put breakpoint at start of main()
+(gdb) r	       	       	       	 (gdb) b main
+       					     
+Print the stack	       	       	 Print current object in a method
+(gdb) where    	       	       	 (gdb) p *this
+      (or bt)
+
+    
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {			     f|	      |
+  Foo(int i)			      +-------+
+  { num = i; p1 = p2 = NULL; }	      
+  ~Foo() { }			      
+  int num; Foo * p1; Foo * p2; };     
+int main() {   Foo * f = new Foo(1);  
+  f->p1 = new Foo(2);	   	      
+  f->p1->p2 = new Foo(3);  	      
+  f->p2 = new Foo(4);	   	      
+  f->p1->p1 = f->p2;	   	      
+  f->p2 = f;   return 0;  }	      
+       	       	       	       	      
+Draw boxes and arrows representing 
+the objects as of the return 0
+statement. A box representing `f' 
+is already drawn to get you
+started:
+ 
+
+
+
+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	    +-----+
+int main() {   Foo * f = new Foo(1);<< 	    |  1  |
+  f->p1 = new Foo(2);	   	      	    |-----|
+  f->p1->p2 = new Foo(3);      	       	    |NULL |
+  f->p2 = new Foo(4);	   	      	    |-----|
+  f->p1->p1 = f->p2;	   	      	    |NULL |
+  f->p2 = f;   return 0;  }	      	    +-----+
+       	       	       	       	      
+Draw boxes and arrows representing 
+the objects as of the return 0
+statement. A box representing `f' 
+is already drawn to get you
+started:
+ 
+
+
+
+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	    +-----+
+int main() {   Foo * f = new Foo(1);  	    |  1  |
+>>f->p1 = new Foo(2);	   	      	    |-----|
+  f->p1->p2 = new Foo(3);      	       	    |   ---\
+  f->p2 = new Foo(4);  	       	       	    |-----| |  	     
+  f->p1->p1 = f->p2;	   	      	    |NULL | |  +-----+	 
+  f->p2 = f;   return 0;  }	      	    +-----+ \->|  2  |	 
+       	       	       	       	      		       |-----|	 
+Draw boxes and arrows representing 		       | NULL|	 
+the objects as of the return 0			       |-----|	 
+statement. A box representing `f' 		       | NULL|	 
+is already drawn to get you			       +-----+
+started:
+ 
+
+
+
+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	    +-----+
+int main() {   Foo * f = new Foo(1);  	    |  1  |
+  f->p1 = new Foo(2);	   	      	    |-----|
+>>f->p1->p2 = new Foo(3);      	       	    |   ---\
+  f->p2 = new Foo(4);  	       	       	    |-----| |  	     
+  f->p1->p1 = f->p2;	   	      	    |NULL | |  +-----+	 
+  f->p2 = f;   return 0;  }	      	    +-----+ \->|  2  |	 
+       	       	       	       	      		       |-----|	 
+Draw boxes and arrows representing 		       | NULL|	 
+the objects as of the return 0			       |-----|	 
+statement. A box representing `f' 		       |    ---v 
+is already drawn to get you			       +-----++--+
+started:						      |3 |
+ 							      |--|
+							      |NU|
+							      |--|
+							      |NU|
+							      +--+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	    +-----+
+int main() {   Foo * f = new Foo(1);  	    |  1  |
+  f->p1 = new Foo(2);	   	      	    |-----|
+  f->p1->p2 = new Foo(3);      	       	    |   ---\
+>>f->p2 = new Foo(4);  	       	       	    |-----| |  	     
+  f->p1->p1 = f->p2;	   	      	 /----    | |  +-----+	 
+  f->p2 = f;   return 0;  }    	      	 v  +-----+ \->|  2  |	 
+       	       	       	       	     +-----+	       |-----|	 
+Draw boxes and arrows representing   |	4  |	       | NULL|	 
+the objects as of the return 0	     |-----|	       |-----|	 
+statement. A box representing `f'    |NULL |	       |    ---v 
+is already drawn to get you	     |-----|	       +-----++--+
+started:			     |NULL |		      |3 |
+ 				     +-----+		      |--|
+							      |NU|
+							      |--|
+							      |NU|
+							      +--+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	 ^  |  	 
+  ~Foo() { }			      	 |  v  	 
+  int num; Foo * p1; Foo * p2; };     	 |  +-----+
+int main() {   Foo * f = new Foo(1);  	 |  |  1  |
+  f->p1 = new Foo(2);	   	      	 |  |-----|
+  f->p1->p2 = new Foo(3);      	       	 |  |   ---\
+  f->p2 = new Foo(4);  	       	       	 |  |-----| |  	     
+>>f->p1->p1 = f->p2;   	       	       	 \----    | |  +-----+	 
+  f->p2 = f;   return 0;  }    	      	 v  +-----+ \->|  2  |	 
+       	       	       	       	     +-----+	       |-----|	 
+Draw boxes and arrows representing   |	4  |<-------------   |	 
+the objects as of the return 0	     |-----|	       |-----|	 
+statement. A box representing `f'    |NULL |	       |    ---v 
+is already drawn to get you	     |-----|	       +-----++--+
+started:			     |NULL |		      |3 |
+ 				     +-----+		      |--|
+							      |NU|
+							      |--|
+							      |NU|
+							      +--+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	 /->+-----+
+int main() {   Foo * f = new Foo(1);  	 |  |  1  |
+  f->p1 = new Foo(2);	   	      	 |  |-----|
+  f->p1->p2 = new Foo(3);      	       	 |  |   ---\
+  f->p2 = new Foo(4);  	       	       	 |  |-----| |  	     
+  f->p1->p1 = f->p2;   	       	       	 \----    | |  +-----+	 
+>>f->p2 = f;   return 0;  }    	      	    +-----+ \->|  2  |	 
+       	       	       	       	     +-----+	       |-----|	 
+Draw boxes and arrows representing   |	4  |<-------------   |	 
+the objects as of the return 0	     |-----|	       |-----|	 
+statement. A box representing `f'    |NULL |	       |    ---v 
+is already drawn to get you	     |-----|	       +-----++--+
+started:			     |NULL |		      |3 |
+ 				     +-----+		      |--|
+							      |NU|
+							      |--|
+							      |NU|
+							      +--+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	 /->+-----+
+int main() {   Foo * f = new Foo(1);  	 |  |  1  |
+  f->p1 = new Foo(2);	   	      	 |  |-----|
+  f->p1->p2 = new Foo(3);      	       	 |  |   ---\
+  f->p2 = new Foo(4);  	       	       	 |  |-----| |  	     
+  f->p1->p1 = f->p2;   	       	       	 \----    | |  +-----+	 
+  f->p2 = f;   return 0;  }    	      	    +-----+ \->|  2  |	 
+                                     +-----+	       |-----|
+Write code that could be             |	4  |<-------------   |	 
+inserted just before the return      |-----|	       |-----|	 
+0; to make this program be           |NULL |	       |    ---v 
+leak-free, with no improper          |-----|	       +-----++--+
+pointer references.                  |NULL |		      |3 |
+ 				     +-----+		      |--|
+							      |NU|
+							      |--|
+							      |NU|
+							      +--+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	 /->+-----+
+int main() {   Foo * f = new Foo(1);  	 |  |  1  |
+  f->p1 = new Foo(2);	   	      	 |  |-----|
+  f->p1->p2 = new Foo(3);      	       	 |  |   ---\
+  f->p2 = new Foo(4);  	       	       	 |  |-----| |  	     
+  f->p1->p1 = f->p2;   	       	       	 \----    | |  +-----+	 
+  f->p2 = f;   return 0;  }    	      	    +-----+ \->|  2  |	 
+                                     + - - +	       |-----|
+Write code that could be                    <-------------   |	 
+inserted just before the return      |     |	       |-----|	 
+0; to make this program be              ?   	       |    ---v 
+leak-free, with no improper          |     |	       +-----++--+
+pointer references.                         		      |3 |
+  		   		     + - - +		      |--|
+  delete f->p1->p1;					      |NU|
+  							      |--|
+  							      |NU|
+  							      +--+
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	 /->+-----+
+int main() {   Foo * f = new Foo(1);  	 |  |  1  |
+  f->p1 = new Foo(2);	   	      	 |  |-----|
+  f->p1->p2 = new Foo(3);      	       	 |  |   ---\
+  f->p2 = new Foo(4);  	       	       	 |  |-----| |  	     
+  f->p1->p1 = f->p2;   	       	       	 \----    | |  +-----+	 
+  f->p2 = f;   return 0;  }    	      	    +-----+ \->|  2  |	 
+                                     + - - +	       |-----|
+Write code that could be                    <-------------   |	 
+inserted just before the return      |     |	       |-----|	 
+0; to make this program be              ?   	       |    ---v 
+leak-free, with no improper          |     |	       +-----++ -+
+pointer references.                         		          
+  		   		     + - - +		      |  |
+  delete f->p1->p1;					       ?  
+  delete f->p1->p2;    	       	       	       	       	      |  |
+  							          
+  							      +- +
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };     	 /->+-----+
+int main() {   Foo * f = new Foo(1);  	 |  |  1  |
+  f->p1 = new Foo(2);	   	      	 |  |-----|
+  f->p1->p2 = new Foo(3);      	       	 |  |   ---\
+  f->p2 = new Foo(4);  	       	       	 |  |-----| |  	     
+  f->p1->p1 = f->p2;   	       	       	 \----    | |  + - - +	 
+  f->p2 = f;   return 0;  }    	      	    +-----+ \->       	 
+                                               	       |     |
+Write code that could be                                  ?   	 
+inserted just before the return                	       |     |	 
+0; to make this program be                   	                 
+leak-free, with no improper                  	       + - - +
+pointer references.                          	  	          
+  	       	       	       	   
+  delete f->p1->p1;					      
+  delete f->p1->p2;    	       	       	       	       	      
+  delete f->p1;						          
+  delete f->p2;						      
+QUIZ 2 	       	       	   
+#include <stddef.h> /*for NULL*/      +-------+
+struct Foo {   	       	       	     f|	      |
+  Foo(int i)			      +-----\-+	 
+  { num = i; p1 = p2 = NULL; }	      	    |  	 
+  ~Foo() { }			      	    v  	 
+  int num; Foo * p1; Foo * p2; };      	    + - - +
+int main() {   Foo * f = new Foo(1);   	      
+  f->p1 = new Foo(2);	   	       	    |     |
+  f->p1->p2 = new Foo(3);      	       	       ?    
+  f->p2 = new Foo(4);  	       	       	    |     |
+  f->p1->p1 = f->p2;   	       	       	 	   
+  f->p2 = f;   return 0;  }    	       	    + - - +
+                                               	   
+Write code that could be                           
+inserted just before the return                	   
+0; to make this program be                   	                 
+leak-free, with no improper                  	   
+pointer references.                          	  	          
+  	       	       	       	   
+  delete f->p1->p1;					      
+  delete f->p1->p2;    	       	       	       	       	      
+  delete f->p1;						          
+  delete f;						      
+QUIZ 2 	       	       	   
+
+ - There's no substitute for understanding types of expressions
+
+ - There's no substitute for understanding pointers, new & delete
+   								 
+ - There's no substitute for understanding the basics of big-O
+
+ - Expect to see all of this again, only different, on the final
+	      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+ Overloaded functions and operators are pretty cool.
+ 						    
+
+
+			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+ Overloaded functions and operators are pretty cool.
+ 						    
+ But sometimes overloaded functions aren't enough to 
+ avoid nasty duplicated code.			 
+			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+ Overloaded functions and operators are pretty cool.
+ 						    
+ But sometimes overloaded functions aren't enough to 
+ avoid nasty duplicated code.			 
+			     
+ Another C++ gizmo: Templates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+#include <iostream.h>
+
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+#include <iostream.h>
+
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+% ./foo
+gah? 10 gah!
+gah? 8.7 gah!
+gah? barf! gah!
+%
+
+
+
+
+TEMPLATES
+----
+#include <iostream.h>
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+----
+#include <iostream.h>
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+TEMPLATES
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+% ./foo
+gah? 10 gah!
+gah? 8.7 gah!
+gah? barf! gah!
+%
+
+
+
+
+
+
+

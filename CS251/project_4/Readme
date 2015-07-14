@@ -1,0 +1,16 @@
+Project: Program 4, Dequer TEMPLATE
+Name:    Ken Segura
+Email:   ksegura@unm.edu
+Class:   CS251 Spring 2000
+Date:    4/24/2000
+
+Description:    Can be found at.
+                http://www.cs.unm.edu/~ackley/cs251/projects/4/p4-1.0.html
+Additions:      Added command 'd' for debug information to be output.
+
+Bugs:           (1) Copy ctor may not be implimented correctlly.
+                (2) Assignment operator may not be implimented correctlly.
+                (3) Lcount objs is broken.
+                (4) Label objects do not get added to the Deque.
+                (5) Memory leaks may exist.
+

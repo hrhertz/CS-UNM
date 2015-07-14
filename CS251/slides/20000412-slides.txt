@@ -1,0 +1,1800 @@
+QUESTIONS
+
+LAST TIME:
+ - Quiz postmortem
+ - Intro to templates
+ - Quiz return	     
+
+TODAY:
+ - Templates II
+	    
+HOMEWORK:  PC++P Ch 24
+
+   Program 4 out before I sleep again
+       	    
+              ..it's Dequer with templates..
+
+
+
+
+
+
+
+
+ 
+TEMPLATES
+
+ Overloaded functions and operators are pretty cool.
+ 						    
+
+
+			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+ Overloaded functions and operators are pretty cool.
+ 						    
+ But sometimes overloaded functions aren't enough to 
+ avoid nasty duplicated code.			 
+			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+ Overloaded functions and operators are pretty cool.
+ 						    
+ But sometimes overloaded functions aren't enough to 
+ avoid nasty duplicated code.			 
+			     
+ Another C++ gizmo: Templates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+#include <iostream.h>
+
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+#include <iostream.h>
+
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+% ./foo
+gah? 10 gah!
+gah? 8.7 gah!
+gah? barf! gah!
+%
+
+
+
+
+TEMPLATES
+----
+#include <iostream.h>
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+----
+#include <iostream.h>
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+TEMPLATES
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+
+% ./foo
+gah? 10 gah!
+gah? 8.7 gah!
+gah? barf! gah!
+%
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {				  
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}                             
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double d) { cout << "dubba dubba " << d << endl; }
+int main() {				  
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}                             
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double d) { cout << "dubba dubba " << d << endl; }
+int main() {				  
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}                             
+
+gah? 10 gah!
+dubba dubba 8.7
+gah? barf! gah!
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+class Foo { public: Foo(); private: int _i; }
+int main() {				  
+  Foo f;
+  func(10);
+  func(f);
+  func("barf!");
+  return 0;
+}                             
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+class Foo { public: Foo(); private: int _i; }
+int main() {				  
+  Foo f;
+  func(10);
+  func(f);
+  func("barf!");
+  return 0;
+}                             
+g++ -Wall -pedantic foo.C -o foo; ./foo
+foo.C: In function `void func<Foo>(class Foo)':
+foo.C:8:   instantiated from here
+foo.C:3: no match for `ostream & << Foo &'
+/usr/include/g++-2/iostream.h:77: candidates are: ostream::operator <<(char)
+/usr/include/g++-2/iostream.h:78:                 ostream::operator <<(unsigned char)
+/usr/include/g++-2/iostream.h:79:                 ostream::operator <<(signed char)
+/usr/include/g++-2/iostream.h:80:                 ostream::operator <<(const char *)
+/usr/include/g++-2/iostream.h:82:                 ostream::operator <<(const unsigned char *)
+/usr/include/g++-2/iostream.h:84:                 ostream::operator <<(const signed char *)
+/usr/include/g++-2/iostream.h:85:                 ostream::operator <<(const void *)
+  (etc. etc. etc -- like everything iostream knows how to print..)
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+class Foo {
+public:
+  Foo() { _i = 12; }
+  friend ostream & operator<<(ostream&o,const Foo & f) {
+    o << "[Foo:" << f._i << "]"; return o;}
+private:
+  int _i;
+};
+int main() {				  
+  Foo f;
+  func(10);
+  func(f);
+  func("barf!");
+  return 0;
+}                             
+
+	 
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+class Foo {
+public:
+  Foo() { _i = 12; }
+  friend ostream & operator<<(ostream&o,const Foo & f) {
+    o << "[Foo:" << f._i << "]"; return o;}
+private:
+  int _i;
+};
+int main() {				  
+  Foo f;
+  func(10);
+  func(f);
+  func("barf!");
+  return 0;
+}                             
+
+gah? 10 gah!
+gah? [Foo:12] gah!
+gah? barf! gah!
+
+TEMPLATES - UPSHOTS I
+
+
+
+
+
+					
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS I
+
+ - Normally the compiler must know the types of everything at
+   the time it sees the code.  Templates allow you to provide
+   'type parameters' that get 'instantiated' later, when the
+   template code is used.
+					
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS I
+
+ - Normally the compiler must know the types of everything at
+   the time it sees the code.  Templates allow you to provide
+   'type parameters' that get 'instantiated' later, when the
+   template code is used.
+					
+ - Templates have 'template parameters'.  The process of 
+   generating a function from a template and some type
+   arguments is called 'template instantiation'.  The 
+   generated (classes and) functions are called 'specializations'.
+
+
+
+   
+
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS I
+
+ - Normally the compiler must know the types of everything at
+   the time it sees the code.  Templates allow you to provide
+   'type parameters' that get 'instantiated' later, when the
+   template code is used.
+					
+ - Templates have 'template parameters'.  The process of 
+   generating a function from a template and some type
+   arguments is called 'template instantiation'.  The 
+   generated (classes and) functions are called 'specializations'.
+
+ - Explicitly-written functions beat template-generated functions,
+   so 'special-case functions' can be provided if needed.	  
+   
+
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS I
+
+ - Normally the compiler must know the types of everything at
+   the time it sees the code.  Templates allow you to provide
+   'type parameters' that get 'instantiated' later, when the
+   template code is used.
+					
+ - Templates have 'template parameters'.  The process of 
+   generating a function from a template and some type
+   arguments is called 'template instantiation'.  The 
+   generated (classes and) functions are called 'specializations'.
+
+ - Explicitly-written functions beat template-generated functions,
+   so 'special-case functions' can be provided if needed.	  
+   
+ - The template code may be expecting arbitrary 'abilities' 
+   (== defined methods, in the case of classes) on the part
+   of the types used in an instantiation.  Without reading
+   the (comments at the front of the) template code, there's
+   no sure way to know what methods the types must have.    
+
+
+
+
+TEMPLATES - UPSHOTS I
+
+ - Normally the compiler must know the types of everything at
+   the time it sees the code.  Templates allow you to provide
+   'type parameters' that get 'instantiated' later, when the
+   template code is used.
+					
+ - Templates have 'template parameters'.  The process of 
+   generating a function from a template and some type
+   arguments is called 'template instantiation'.  The 
+   generated (classes and) functions are called 'specializations'.
+
+ - Explicitly-written functions beat template-generated functions,
+   so 'special-case functions' can be provided if needed.	  
+   
+ - The template code may be expecting arbitrary 'abilities' 
+   (== defined methods, in the case of classes) on the part
+   of the types used in an instantiation.  Without reading
+   the (comments at the front of the) template code, there's
+   no sure way to know what methods the types must have.    
+
+ - Instantiating a template with a type that's missing some 
+   method will produce either a compilation error or just
+   incorrect runtime behavior.				 
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T1,class T2>
+void func(T1 a,T2 b) { cout << "func" << a/b << endl; }
+
+int main() {
+  func(1,2.0);
+  func(1.0,2);
+  func(1,2);
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T1,class T2>
+void func(T1 a,T2 b) { cout << "func" << a/b << endl; }
+
+int main() {
+  func(1,2.0);
+  func(1.0,2);
+  func(1,2);
+  return 0;
+}
+
+func0.5
+func0.5
+func0
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T>
+void func() { T num = 11; cout << "func" << num/1 << endl; }
+
+int main() {
+  func();
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T>
+void func() { T num = 11; cout << "func" << num/2 << endl; }
+
+int main() {
+  func();
+  return 0;
+}
+
+foo.C: In function `int main()':
+foo.C:7: no matching function for call to `func ()'
+
+
+
+
+
+
+   
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T>
+void func() { T num = 11; cout << "func" << num/2 << endl; }
+	      
+int main() {  
+  func<int>();
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T>
+void func() { T num = 11; cout << "func" << num/2 << endl; }
+	      
+int main() {  
+  func<int>();
+  return 0;
+}
+
+% ./foo
+func5
+% 
+
+
+
+
+
+   
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T>
+void func() { T num = 11; cout << "func" << num/2 << endl; }
+	      
+int main() {  
+  func<int>();
+  func<double>();
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+   
+TEMPLATES
+#include <iostream.h>			  
+
+template <class T>
+void func() { T num = 11; cout << "func" << num/2 << endl; }
+	      
+int main() {  
+  func<int>();
+  func<double>();
+  return 0;
+}
+
+% ./foo
+func5  
+func5.5
+%      
+
+
+
+
+
+
+
+   
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  return 0;
+}
+% ./foo
+1
+1
+% 
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  Foo<int*> z;    cout << z.Up() << endl;
+  return 0;
+}
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  Foo<int*> z;    cout << z.Up() << endl;
+  return 0;
+}
+% ./foo
+1
+1
+0x4
+% 
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  Foo<int*> z;    cout << z.Up() << endl;
+  Foo<char*> w;   cout << w.Up() << endl;
+  return 0;
+}
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  Foo<int*> z;    cout << z.Up() << endl;
+  Foo<char*> w;   cout << w.Up() << endl;
+  return 0;
+}
+% ./foo
+1
+1
+0x4
+Segmentation fault (core dumped)
+TEMPLATES - UPSHOTS II
+  		      
+ - Templates may have multiple type parameters.
+	  
+
+
+					
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS II
+  		      
+ - Templates may have multiple type parameters.
+	  
+ - Template instantiations may (usually do) need to 
+   specify the type arguments explicitly.
+					
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS II
+  		      
+ - Templates may have multiple type parameters.
+	  
+ - Template instantiations may (usually do) need to 
+   specify the type arguments explicitly.
+					
+ - Template declarations can define entire classes, not
+   just single functions.
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS II
+  		      
+ - Templates may have multiple type parameters.
+	  
+ - Template instantiations may (usually do) need to 
+   specify the type arguments explicitly.
+					
+ - Template declarations can define entire classes, not
+   just single functions.
+
+ - It may not be at all obvious what methods a class used
+   as a type argument to a template needs to have.	 
+
+
+
+   
+
+
+
+
+
+
+
+
+TEMPLATES - UPSHOTS II
+  		      
+ - Templates may have multiple type parameters.
+	  
+ - Template instantiations may (usually do) need to 
+   specify the type arguments explicitly.
+					
+ - Template declarations can define entire classes, not
+   just single functions.
+
+ - It may not be at all obvious what methods a class used
+   as a type argument to a template needs to have.  (So the
+   template author damn well better TELL US in comments in
+   the .h!)
+
+   
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Foo<int> f(82);
+  cout << f.Get() << endl;
+  return 0;
+}
+  		      
+
+
+
+
+					
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Foo<int> f(82);
+  cout << f.Get() << endl;
+  return 0;
+}
+  		      
+% ./foo
+82	  
+% 
+
+					
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Foo<int> f(82);
+  cout << f.Get() << endl;
+
+  int ia[4] = { 17,23,42,87 };
+  Foo<int*> g(ia);
+  cout << g.Get() << endl;
+
+  return 0;
+}
+
+
+
+   
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Foo<int> f(82);
+  cout << f.Get() << endl;
+
+  int ia[4] = { 17,23,42,87 };
+  Foo<int*> g(ia);
+  cout << g.Get() << endl;
+
+  return 0;
+}
+
+82
+0xbffffc84
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Foo<int> f(82);
+  cout << f.Get() << endl;
+
+  int ia[4] = { 17,23,42,87 };
+  Foo<int*> g(ia);
+  cout << g.Get()[2] << endl;    // Gah!
+
+  return 0;
+}
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Foo<int> f(82);
+  cout << f.Get() << endl;
+
+  int ia[4] = { 17,23,42,87 };
+  Foo<int*> g(ia);
+  cout << g.Get()[2] << endl;    // Gah!
+			     
+  return 0;		     
+}			     
+			     
+82			     
+42
+
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+  
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+  
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  return 0;
+}
+
+% ./foo
+1
+% 
+  
+
+
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+
+template <class T> class Foo { public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  Foo<Bar> h(b);
+  cout << h.Get().Num() << endl;
+  return 0;
+}
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+
+template <class T> class Foo { public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  Foo<Bar> h(b);
+  cout << h.Get().Num() << endl;
+  return 0;
+}
+foo.C: In method `Foo<Bar>::Foo<Bar>(struct Bar)':
+foo.C:16:   instantiated from here
+foo.C:9: no matching function for call to `Bar::Bar ()'
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar() { a = new int; *a = 100; }
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+	    
+template <class T> class Foo { public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  Foo<Bar> h(b);
+  cout << h.Get().Num() << endl;
+  return 0;
+}
+% ./foo
+1
+134520648
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+
+
+
+
+
+
+
+
+
+
+   		    
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+
+
+
+
+
+
+   		    
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+ - With 'pointer semantics', copying and assignment can produce
+   objects that share representation, so that subsequent changes
+   to one can have effects on the other.
+
+
+
+   		    
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+ - With 'pointer semantics', copying and assignment can produce
+   objects that share representation, so that subsequent changes
+   to one can have effects on the other.
+
+ - To avoid massive pain, it is best wherever possible to use only
+   classes with value semantics in template instantiations.
+   		    
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+ - With 'pointer semantics', copying and assignment can produce
+   objects that share representation, so that subsequent changes
+   to one can have effects on the other.
+
+ - To avoid massive pain, it is best wherever possible to use only
+   classes with value semantics in template instantiations.
+   		    
+ - Typically needed for template <class T>:
+       T()                      default ctor
+       T(const T &)             copy ctor (prefer value semantics)
+       T& operator=(const T &)  assignment operator (ditto)    	  
+       ~T()                     dtor
+
+
+
+
+
+
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+ - With 'pointer semantics', copying and assignment can produce
+   objects that share representation, so that subsequent changes
+   to one can have effects on the other.
+
+ - To avoid massive pain, it is best wherever possible to use only
+   classes with value semantics in template instantiations.
+   		    
+ - Typically needed for template <class T>:
+       T()                      default ctor
+       T(const T &)             copy ctor (prefer value semantics)
+       T& operator=(const T &)  assignment operator (ditto)    	  
+       ~T()                     dtor
+ - Often needed for template <class T>:
+       bool operator==(const T &)
+       bool operator<(const T &)
+       arithmetic ops, op+ etc
+
+
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+ - With 'pointer semantics', copying and assignment can produce
+   objects that share representation, so that subsequent changes
+   to one can have effects on the other.
+
+ - To avoid massive pain, it is best wherever possible to use only
+   classes with value semantics in template instantiations.
+   		    
+ - Typically needed for template <class T>:
+       T()                      default ctor
+       T(const T &)             copy ctor (prefer value semantics)
+       T& operator=(const T &)  assignment operator (ditto)    	  
+       ~T()                     dtor
+ - Often needed for template <class T>:
+       bool operator==(const T &)
+       bool operator<(const T &)
+       arithmetic ops, op+ etc
+ - Sometimes needed for template <class T>:
+   You name it: ostream& operator<<(ostream&,const T&);op>>;op[]..
+TEMPLATES - AFTER
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+/tmp/cckLNlQs.o: In function `main':
+/hom...res/foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/hom...res/foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/hom...res/foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+  
+
+
+TEMPLATES - AFTER
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+/tmp/cckLNlQs.o: In function `main':
+/hom...res/foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/hom...res/foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/hom...res/foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+  
+           --- What happened??
+
+TEMPLATES - AFTER
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+/tmp/cckLNlQs.o: In function `main':
+/hom...res/foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/hom...res/foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/hom...res/foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+  
+           --- What happened??
+       	       	       	       	     ..Now the pain begins..
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+	|  Stack<int> s;   |	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+
+
+
+
+       	       	   
+
+	       	   
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+       	+------------------+  	     +------------------+
+g++ -c main.C -o main.o                
+ 
+ 
+
+
+       	       	   
+	       	   
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+ - We need to instantiate 
+   'Stack<int>'
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+ - We need to instantiate 
+   'Stack<int>'
+ - We can generate the 	   
+   class Stack<int> DECLARATION
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+ - We need to instantiate 
+   'Stack<int>'
+ - We can generate the 	   
+   class Stack<int> DECLARATION
+ - We CAN NOT generate any of  
+   implementations 	   
+   Stack<int>::Stack(), etc,   	   	       
+   since we can't see Stack.C
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	
+ - We need to instantiate 	
+   'Stack<int>'			
+ - We can generate the 	   	
+   class Stack<int> DECLARATION	
+ - We CAN NOT generate any of  	
+   implementations 	   	
+   Stack<int>::Stack(), etc,   	
+   since we can't see Stack.C	
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class 	  - 'Stack' is a template class
+ - We need to instantiate 	  
+   'Stack<int>'			  
+ - We can generate the 	   	  
+   class Stack<int> DECLARATION	  
+ - We CAN NOT generate any of  	  
+   implementations 	   	  
+   Stack<int>::Stack(), etc,   	  
+   since we can't see Stack.C	  
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	  - 'Stack' is a template class
+ - We need to instantiate      	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  
+   class Stack<int> DECLARATION	  
+ - We CAN NOT generate any of  	  
+   implementations 	   	  
+   Stack<int>::Stack(), etc,   	  
+   since we can't see Stack.C	  
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class 	  - 'Stack' is a template class
+ - We need to instantiate 	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  - We can see the template method
+   class Stack<int> DECLARATION	    definitions	       	       	  
+ - We CAN NOT generate any of  	 
+   implementations 	   	 
+   Stack<int>::Stack(), etc,   	 
+   since we can't see Stack.C	 
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	  - 'Stack' is a template class
+ - We need to instantiate 	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  - We can see the template method
+   class Stack<int> DECLARATION	    definitions	       	       	  
+ - We CAN NOT generate any of  	  - We CAN NOT see the fact that
+   implementations 	   	    somebody needs Stack<int>, 	
+   Stack<int>::Stack(), etc,   	    Stack<Foo*>, etc., since we 
+   since we can't see Stack.C	    can't see main.C, etc
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	  - 'Stack' is a template class
+ - We need to instantiate 	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  - We can see the template method
+   class Stack<int> DECLARATION	    definitions	       	       	  
+ - We CAN NOT generate any of  	  - We CAN NOT see the fact that
+   implementations 	   	    somebody needs Stack<int>, 	
+   Stack<int>::Stack(), etc,   	    Stack<Foo*>, etc., since we 
+   since we can't see Stack.C	    can't see main.C, etc
+ >>>>SO WHO GENERATES Stack<int>::Stack() { ... } ETC ETC???<<<<

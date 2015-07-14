@@ -1,0 +1,2188 @@
+QUESTIONS
+
+LAST TIME:
+ - Templates II
+
+TODAY:
+ - Templates III
+		
+	    	
+HOMEWORK:  PC++P Ch 24
+		
+   Program 4 DUE MON APR 24 1PM - UNDER 10 DAYS!
+     One known bug in spec 0.9: Unload command description missing
+
+
+
+
+
+
+      SOFTY n. [IBM] Hardware hackers' term for a software
+	expert who is largely ignorant of the mysteries
+			  of hardware.
+
+
+TEMPLATES I
+----
+#include <iostream.h>
+void func(int arg) { cout << "gah? " << arg << " gah!" << endl; }
+void func(double arg) {cout << "gah? " << arg << " gah!" << endl;}
+void func(char * arg) {cout << "gah? " << arg << " gah!" << endl;}
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+#include <iostream.h>
+template <class K>
+void func(K arg) { cout << "gah? " << arg << " gah!" << endl; }
+
+int main() {
+  func(10);
+  func(8.7);
+  func("barf!");
+  return 0;
+}
+---
+TEMPLATES II
+#include <iostream.h>			  
+template <class T>
+class Foo {
+public:
+  Foo() { _data = 0; }
+  T Up() { return _data+1; }
+private:
+  T _data;
+};
+int main() {
+  Foo<int> x;
+  Foo<double> y;
+  cout << x.Up() << endl;
+  cout << y.Up() << endl;
+  return 0;
+}
+% ./foo
+1
+1
+% 
+
+
+
+TEMPLATES II
+#include <iostream.h>			  
+struct Bar {
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+
+template <class T> class Foo { public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  Foo<Bar> h(b);
+  cout << h.Get().Num() << endl;
+  return 0;
+}
+
+
+
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+
+template <class T> class Foo { public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  Foo<Bar> h(b);
+  cout << h.Get().Num() << endl;
+  return 0;
+}
+foo.C: In method `Foo<Bar>::Foo<Bar>(struct Bar)':
+foo.C:16:   instantiated from here
+foo.C:9: no matching function for call to `Bar::Bar ()'
+
+TEMPLATES
+#include <iostream.h>			  
+struct Bar {
+  Bar() { a = new int; *a = 100; }
+  Bar(int n) { a = new int; *a = n; }
+  int Num() { return a[0]; }
+  ~Bar() { delete a; }
+  int * a; };
+	    
+template <class T> class Foo { public:
+  Foo(T p) { _data = p; }
+  T Get() { return _data; }
+private:  T _data; };
+
+int main() {
+  Bar b(1);
+  cout << b.Num() << endl;
+  Foo<Bar> h(b);
+  cout << h.Get().Num() << endl;
+  return 0;
+}
+% ./foo
+1
+134520648
+TEMPLATES - VALUE SEMANTICS vs POINTER SEMANTICS
+   
+ - For a class to have 'value semantics' it must be the case that
+   copying and assignment produce fully distinct objects, so that
+   subsequent changes to one have no effect on the other.
+
+ - With 'pointer semantics', copying and assignment can produce
+   objects that share representation, so that subsequent changes
+   to one can have effects on the other.
+
+ - To avoid massive pain, it is best wherever possible to use only
+   classes with value semantics in template instantiations.
+   		    
+ - Typically needed for template <class T>:
+       T()                      default ctor
+       T(const T &)             copy ctor (prefer value semantics)
+       T& operator=(const T &)  assignment operator (ditto)    	  
+       ~T()                     dtor
+ - Often needed for template <class T>:
+       bool operator==(const T &)
+       bool operator<(const T &)
+       arithmetic ops, op+ etc
+ - Sometimes needed for template <class T>:
+   You name it: ostream& operator<<(ostream&,const T&);op>>;op[]..
+TEMPLATES - BEFORE
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(int);  // Push an int on a stack 	       
+  int Remove();	     // Pop int off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(int i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+
+
+TEMPLATES
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(int);  // Push an int on a stack 	       
+  int Remove();	     // Pop int off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(int i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+
+TEMPLATES
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(int);  // Push an int on a stack 	       
+  int Remove();	     // Pop int off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(int i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+TEMPLATES
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(T);    // Push a T on a stack 	       
+  int Remove();	     // Pop int off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(int i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+TEMPLATES
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(T);    // Push a T on a stack 	       
+  T Remove();  	     // Pop a T off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(int i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+TEMPLATES
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(T);    // Push a T on a stack 	       
+  T Remove();  	     // Pop a T off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(T i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+TEMPLATES - AFTER (Take 1)
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(T);    // Push a T on a stack 	       
+  T Remove();  	     // Pop a T off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(T i,_Elt * p) { data = i; next = p; }
+    T data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+TEMPLATES - BEFORE
+#include "Stack.h"
+#include <stddef.h>
+Stack::Stack() { _head = NULL; }     
+Stack::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+void Stack::Insert(int i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+
+bool Stack::IsEmpty() { return !_head; }
+
+#include <assert.h>
+int Stack::Remove() {                 
+   assert(_head);     	    
+   _Elt * temp = _head;             
+   _head = _head->next;             
+   int value = temp->data;          
+   delete temp;                     
+   return value;                    
+}                          
+       	       	      
+TEMPLATES
+#include "Stack.h"
+#include <stddef.h>
+template <class T>
+Stack<T>::Stack() { _head = NULL; }     
+
+Stack::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+void Stack::Insert(int i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+
+bool Stack::IsEmpty() { return !_head; }
+
+
+
+
+
+
+
+
+
+TEMPLATES
+#include "Stack.h"
+#include <stddef.h>
+template <class T>
+Stack<T>::Stack() { _head = NULL; }     
+
+template <class T>
+Stack<T>::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+void Stack::Insert(int i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+
+bool Stack::IsEmpty() { return !_head; }
+
+
+
+
+
+
+
+
+TEMPLATES
+#include "Stack.h"
+#include <stddef.h>
+template <class T>
+Stack<T>::Stack() { _head = NULL; }     
+
+template <class T>
+Stack<T>::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+template <class T>
+void Stack<T>::Insert(T i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+
+bool Stack::IsEmpty() { return !_head; }
+
+
+
+
+
+
+
+TEMPLATES
+#include "Stack.h"
+#include <stddef.h>
+template <class T>
+Stack<T>::Stack() { _head = NULL; }     
+
+template <class T>
+Stack<T>::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+template <class T>
+void Stack<T>::Insert(T i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+
+template <class T>
+bool Stack<T>::IsEmpty() { return !_head; }
+
+
+
+
+
+
+TEMPLATES
+ ...
+
+#include <assert.h>
+int Stack::Remove() {                 
+   assert(_head);     	    
+   _Elt * temp = _head;             
+   _head = _head->next;             
+   int value = temp->data;          
+   delete temp;                     
+   return value;                    
+}                          
+       	       	      
+
+
+
+
+
+
+
+
+
+       	       	      
+
+TEMPLATES - AFTER (Take 1)
+ ...
+
+#include <assert.h>
+template<class T>
+T Stack<T>::Remove() {                 
+   assert(_head);     	    
+   _Elt * temp = _head;             
+   _head = _head->next;             
+   T value = temp->data;          
+   delete temp;                     
+   return value;                    
+}                          
+       	       	      
+       	       	      
+
+
+
+       	       	      
+       	       	      
+
+
+
+
+TEMPLATES - BEFORE
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - BEFORE
+  
+#include <iostream.h>			  
+#include "Stack.h"
+  
+int main() {
+  Stack s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+} 
+  
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+% 
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - BEFORE
+  
+#include <iostream.h>			  
+#include "Stack.h"
+  
+int main() {
+  Stack s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+} 
+  
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+% ./foo
+12
+% 
+
+
+
+
+
+
+
+
+TEMPLATES - AFTER (Take 1)
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - AFTER (Take 1)
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+
+
+
+
+
+
+
+
+  
+
+
+TEMPLATES - AFTER (Take 1)
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+/tmp/cckLNlQs.o: In function `main':
+/hom...res/foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/hom...res/foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/hom...res/foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+  
+
+
+TEMPLATES - AFTER (Take 1)
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+/tmp/cckLNlQs.o: In function `main':
+/hom...res/foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/hom...res/foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/hom...res/foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+  
+           --- What happened??
+
+TEMPLATES - AFTER (Take 1)
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(12);
+  cout << s.Remove(); 
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+/tmp/cckLNlQs.o: In function `main':
+/hom...res/foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/hom...res/foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/hom...res/foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/hom...res/foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+  
+           --- What happened??
+       	       	       	       	     ..Now the pain begins..
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+	|  Stack<int> s;   |	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+
+
+
+
+       	       	   
+
+	       	   
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+       	+------------------+  	     +------------------+
+g++ -c main.C -o main.o                
+ 
+ 
+
+
+       	       	   
+	       	   
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+ - We need to instantiate 
+   'Stack<int>'
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+ - We need to instantiate 
+   'Stack<int>'
+ - We can generate the 	   
+   class Stack<int> DECLARATION
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o                
+ - 'Stack' is a template class
+ - We need to instantiate 
+   'Stack<int>'
+ - We can generate the 	   
+   class Stack<int> DECLARATION
+ - We CAN NOT generate any of  
+   implementations 	   
+   Stack<int>::Stack(), etc,   	   	       
+   since we can't see Stack.C
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	
+ - We need to instantiate 	
+   'Stack<int>'			
+ - We can generate the 	   	
+   class Stack<int> DECLARATION	
+ - We CAN NOT generate any of  	
+   implementations 	   	
+   Stack<int>::Stack(), etc,   	
+   since we can't see Stack.C	
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class 	  - 'Stack' is a template class
+ - We need to instantiate 	  
+   'Stack<int>'			  
+ - We can generate the 	   	  
+   class Stack<int> DECLARATION	  
+ - We CAN NOT generate any of  	  
+   implementations 	   	  
+   Stack<int>::Stack(), etc,   	  
+   since we can't see Stack.C	  
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	  - 'Stack' is a template class
+ - We need to instantiate      	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  
+   class Stack<int> DECLARATION	  
+ - We CAN NOT generate any of  	  
+   implementations 	   	  
+   Stack<int>::Stack(), etc,   	  
+   since we can't see Stack.C	  
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class 	  - 'Stack' is a template class
+ - We need to instantiate 	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  - We can see the template method
+   class Stack<int> DECLARATION	    definitions	       	       	  
+ - We CAN NOT generate any of  	 
+   implementations 	   	 
+   Stack<int>::Stack(), etc,   	 
+   since we can't see Stack.C	 
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	  - 'Stack' is a template class
+ - We need to instantiate 	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  - We can see the template method
+   class Stack<int> DECLARATION	    definitions	       	       	  
+ - We CAN NOT generate any of  	  - We CAN NOT see the fact that
+   implementations 	   	    somebody needs Stack<int>, 	
+   Stack<int>::Stack(), etc,   	    Stack<Foo*>, etc., since we 
+   since we can't see Stack.C	    can't see main.C, etc
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+                   +---------------------+
+		   |Stack.h            	 |
+       	       	   |template <class T>	 |
+       	       	   |class Stack { ... }; |
+		   +---------------------+
+		      /	       	      \	
+		  #include     	    #include 
+	+------------------+   	     +------------------+
+       	|main.C            |	     |Stack.C ...      	|
+       	|  ...             |   	     |template <class T>|
+       	|  Stack<int> s;   |   	     |Stack<T>::Stack(){|
+	+------------------+	     +------------------+
+g++ -c main.C -o main.o          g++ -c Stack.C -o Stack.o
+ - 'Stack' is a template class	  - 'Stack' is a template class
+ - We need to instantiate 	  - We can see the template class
+   'Stack<int>'			    declarations       	       	 
+ - We can generate the 	   	  - We can see the template method
+   class Stack<int> DECLARATION	    definitions	       	       	  
+ - We CAN NOT generate any of  	  - We CAN NOT see the fact that
+   implementations 	   	    somebody needs Stack<int>, 	
+   Stack<int>::Stack(), etc,   	    Stack<Foo*>, etc., since we 
+   since we can't see Stack.C	    can't see main.C, etc
+ >>>>SO WHO GENERATES Stack<int>::Stack() { ... } ETC ETC???<<<<
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS
+						 
+#include <iostream.h>			  	 
+#include "Stack.h"				 
+						 
+int main() {					 
+  Stack<int> s;					 
+  s.Insert(12);					 
+  cout << s.Remove(); 				 
+  return 0;					 
+}						 
+						 
+% g++ -c -Wall -pedantic foo.C -o foo.o
+% g++ -c -Wall -pedantic Stack.C -o Stack.o
+% g++ foo.o Stack.o -o foo
+foo.o: In function `main':
+foo.o(.text+0xb): undefined reference to `Stack<int>::Stack(void)'
+foo.o(.text+0x19): undefined reference to `Stack<int>::Insert(int)'
+foo.o(.text+0x25): undefined reference to `Stack<int>::Remove(void)'
+foo.o(.text+0x43): undefined reference to `Stack<int>::~Stack(void)'
+foo.o(.text+0x67): undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+
+( SIDEBAR: ANOTHER REASON TO USE -g )
+% g++ -c -Wall -pedantic foo.C -o foo.o
+% g++ -c -Wall -pedantic Stack.C -o Stack.o
+% g++ foo.o Stack.o -o foo
+foo.o: In function `main':
+foo.o(.text+0xb): undefined reference to `Stack<int>::Stack(void)'
+foo.o(.text+0x19): undefined reference to `Stack<int>::Insert(int)'
+foo.o(.text+0x25): undefined reference to `Stack<int>::Remove(void)'
+foo.o(.text+0x43): undefined reference to `Stack<int>::~Stack(void)'
+foo.o(.text+0x67): undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+           ( versus )
+% g++ -g -c -Wall -pedantic foo.C -o foo.o
+% g++ -g -c -Wall -pedantic Stack.C -o Stack.o
+% g++ foo.o Stack.o -o foo
+foo.o: In function `main':
+/home/.../foo.C:5: undefined reference to `Stack<int>::Stack(void)'
+/home/.../foo.C:6: undefined reference to `Stack<int>::Insert(int)'
+/home/.../foo.C:7: undefined reference to `Stack<int>::Remove(void)'
+/home/.../foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+/home/.../foo.C:8: undefined reference to `Stack<int>::~Stack(void)'
+collect2: ld returned 1 exit status
+% 
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+          Shun the use of templates.  Just Say No!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+	(2) Let the compiler see the bodies of the template class
+	    methods when compiling uses of the template code     
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - THE PROBLEM
+//Foo.h	       	      |//Foo.C                	| //main.C
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {	      | cout << _data << endl;	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |				|
+#endif	 	      |				|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - THE PROBLEM
+//Foo.h	       	      |//Foo.C                	| //main.C
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {	      | cout << _data << endl;	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |				|
+#endif	 	      |				|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+THE PROBLEM
+% g++ -g -c main.C
+% g++ -g -c Foo.C
+% g++ main.o Foo.o -o foo
+main.o: In function `main':
+/hom...res/main.C:5: undefined reference to `Foo<char>::Hop(void)'
+collect2: ld returned 1 exit status
+% 
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                	| //main.C
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {	      | cout << _data << endl;	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |				|
+#endif	 	      |				|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 1 - EXPLICIT INSTANTIATION
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                	| //main.C
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {	      | cout << _data << endl;	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |// Explicit instantiation|
+#endif	 	      |template Foo<char>;     	|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 1 - EXPLICIT INSTANTIATION
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                	| //main.C
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {    	      | cout << _data << endl; 	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |// Explicit instantiation|
+#endif	 	      |template Foo<char>;     	|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 1 - EXPLICIT INSTANTIATION
+% g++ -g -c main.C
+% g++ -g -c Foo.C
+% g++ main.o Foo.o -o foo
+% ./foo
+			
+% 
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                 	| //main.C
+#ifndef FOO_H  	      |#include <iostream.h>   	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() {    
+		      |template <class T>      	|   Foo<char> fc; 
+template <class T>    |void Foo<T>::Hop() {    	|   fc.Hop();     
+class Foo {	      | cout << _data << endl;	|   Foo<int> fi;
+ public:   void Hop();|}                       	|   fi.Hop();     
+ private:  T _data;   |				|   return 0;     
+};	 	      |// Explicit instantiation| }    	     
+#endif 	       	      |template Foo<char>;     	| 
+		      |				| 
+       	       	      |				| 
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 1 - EXPLICIT INSTANTIATION
+% g++ -g -c main.C
+% g++ -g -c Foo.C
+% g++ main.o Foo.o -o foo
+main.o: In function `main':
+/hom...es/main.C:7: undefined reference to `Foo<int>::Hop(void)'
+collect2: ld returned 1 exit status
+% 
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                 	| //main.C
+#ifndef FOO_H  	      |#include <iostream.h>   	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() {    
+		      |template <class T>      	|   Foo<char> fc; 
+template <class T>    |void Foo<T>::Hop() {    	|   fc.Hop();     
+class Foo {	      | cout << _data << endl;	|   Foo<int> fi;
+ public:   void Hop();|}                       	|   fi.Hop();     
+ private:  T _data;   |				|   return 0;     
+};	 	      |// Explicit instantiation| }    	     
+#endif 	       	      |template Foo<char>;     	| 
+		      |template Foo<int>;	| 
+       	       	      |				| 
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 1 - EXPLICIT INSTANTIATION
+% g++ -g -c main.C               
+% g++ -g -c Foo.C                
+% g++ main.o Foo.o -o foo        
+% ./foo                          
+                               
+134519148                        
+%                                
+                                 
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                 	|//main.C
+#ifndef FOO_H  	      |#include <iostream.h>   	|#include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	|#include <iostream.h>       int main() {    
+		      |template <class T>      	|struct Bar {   
+template <class T>    |void Foo<T>::Hop() {    	|  int stuff;   
+class Foo {	      | cout << _data << endl;	|  friend ostream 
+ public:   void Hop();|}                       	|   operator<<(ost
+ private:  T _data;   |				|          const B
+};	 	      |// Explicit instantiation|    o << b.stuff;
+#endif 	       	      |template Foo<char>;     	|  }
+		      |template Foo<int>;	|}; 
+       	       	      |				|   
+		      |				|int main() {
+------------------------------------------------|  Foo<Bar> fb;
+`SOLUTION' 1 - EXPLICIT INSTANTIATION		|  fb.Hop();
+% g++ -g -c main.C     	       	                |  return 0;
+% g++ -g -c Foo.C    				|}
+% g++ main.o Foo.o -o foo      	       	        ------------------
+main.o: In function `main':                        
+/h...main.C:15: undefined reference to `Foo<Bar>::Hop(void)'
+collect2: ld returned 1 exit status              
+%                                                
+       	       	       	       	 
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                 	|//main.C
+#ifndef FOO_H  	      |#include <iostream.h>   	|#include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	|#include <iostream.h>       int main() {    
+		      |template <class T>      	|struct Bar {   
+template <class T>    |void Foo<T>::Hop() {    	|  int stuff;   
+class Foo {	      | cout << _data << endl;	|  friend ostream 
+ public:   void Hop();|}                       	|   operator<<(ost
+ private:  T _data;   |				|          const B
+};	 	      |// Explicit instantiation|    o << b.stuff;
+#endif 	       	      |template Foo<char>;     	|  }
+		      |template Foo<int>;	|}; 
+       	       	      |template Foo<Bar>;	|   
+		      |			 	|int main() {
+------------------------------------------------|  Foo<Bar> fb;
+`SOLUTION' 1 - EXPLICIT INSTANTIATION	 	|  fb.Hop();
+% g++ -g -c main.C     	       	                |  return 0;
+                     			 	|}
+                               	       	        ------------------
+
+% g++ -g -c Foo.C
+Foo.C:12: `Bar' was not declared in this scope
+Foo.C:12: template argument 1 is invalid
+Foo.C:12: explicit instantiation of non-template type `{error}'
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 1
+//Foo.h	       	      |//Foo.C                 	|//main.C
+#ifndef FOO_H  	      |#include <iostream.h>   	|#include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	|#include <iostream.h>       int main() {    
+		      |template <class T>      	|struct Bar {   
+template <class T>    |void Foo<T>::Hop() {    	|  int stuff;   
+class Foo {	      | cout << _data << endl;	|  friend ostream 
+ public:   void Hop();|}                       	|   operator<<(ost
+ private:  T _data;   |				|          const B
+};	 	      |// Explicit instantiation|    o << b.stuff;
+#endif 	       	      |template Foo<char>;     	|  }
+       	       	      |template Foo<int>;	|}; 
+       	       	      |template Foo<class Bar>	|   
+		      |			 	|int main() {
+------------------------------------------------|  Foo<Bar> fb;
+`SOLUTION' 1 - EXPLICIT INSTANTIATION	 	|  fb.Hop();
+% g++ -g -c main.C     	       	                |  return 0;
+                     			 	|}
+% g++ -g -c Foo.C           	       	        ------------------
+Foo.C: In instantiation of `Foo<Bar>':
+Foo.C:12:   instantiated from here
+Foo.C:12: invalid use of undefined type `class Bar'
+Foo.C:12: confused by earlier errors, bailing out
+% 
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - THE PROBLEM
+//Foo.h	       	      |//Foo.C                	| //main.C
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {	      | cout << _data << endl;	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |				|
+#endif	 	      |				|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+THE PROBLEM
+% g++ -g -c main.C
+% g++ -g -c Foo.C
+% g++ main.o Foo.o -o foo
+main.o: In function `main':
+/hom...res/main.C:5: undefined reference to `Foo<char>::Hop(void)'
+collect2: ld returned 1 exit status
+% 
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.C                	| //main.C	
+#ifndef FOO_H	      |#include <iostream.h>  	| #include "Foo.h"
+#define FOO_H	      |#include "Foo.h"       	| int main() { 
+		      |template <class T>     	|   Foo<char> fc;
+template <class T>    |void Foo<T>::Hop() {   	|   fc.Hop();
+class Foo {	      | cout << _data << endl;	|   return 0;
+ public:   void Hop();|}                       	| }          
+ private:  T _data;   |				|
+};	 	      |				|
+#endif	 	      |				|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning!	| //main.C	
+#ifndef FOO_H	      |// This is not a separate| #include "Foo.h"
+#define FOO_H	      |// compilation unit!    	| int main() {
+		      |#include <iostream.h>   	|   Foo<char> fc;
+template <class T>    |                        	|   fc.Hop();
+class Foo {	      |template <class T>      	|   return 0;
+ public:   void Hop();|void Foo<T>::Hop() {    	| }          
+ private:  T _data;   | cout << _data << endl; 	|
+};	 	      |}                       	|
+#endif	 	      |				|
+		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning!	| //main.C	
+#ifndef FOO_H	      |// This is not a separate| #include "Foo.h"
+#define FOO_H	      |// compilation unit!    	| int main() {
+		      |#include <iostream.h>   	|   Foo<char> fc;
+template <class T>    |                        	|   fc.Hop();
+class Foo {	      |template <class T>      	|   return 0;
+ public:   void Hop();|void Foo<T>::Hop() {    	| }          
+ private:  T _data;   | cout << _data << endl; 	|
+};	 	      |}                       	|
+#include "Foo.template"				|
+#endif		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning!	| //main.C	
+#ifndef FOO_H	      |// This is not a separate| #include "Foo.h"
+#define FOO_H	      |// compilation unit!    	| int main() {
+		      |#include <iostream.h>   	|   Foo<char> fc;
+template <class T>    |                        	|   fc.Hop();
+class Foo {    	      |template <class T>      	|   return 0;
+ public:   void Hop();|void Foo<T>::Hop() {    	| }          
+ private:  T _data;   | cout << _data << endl; 	|
+};	 	      |}                       	|
+#include "Foo.template"				|
+#endif		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+% g++ -g -c main.C
+% g++ -g -c Foo.C
+Foo.C:6: redefinition of `void Foo<T>::Hop()'
+Foo.template:6: `void Foo<T>::Hop()' previously declared here
+Foo.C: In instantiation of `Foo<Bar>':
+Foo.C:12:   instantiated from here
+Foo.C:12: invalid use of undefined type `class Bar'
+Foo.C:12: confused by earlier errors, bailing out
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning!	| //main.C	
+#ifndef FOO_H	      |// This is not a separate| #include "Foo.h"
+#define FOO_H	      |// compilation unit!    	| int main() {
+		      |#include <iostream.h>   	|   Foo<char> fc;
+template <class T>    |                        	|   fc.Hop();
+class Foo {    	      |template <class T>      	|   return 0;
+ public:   void Hop();|void Foo<T>::Hop() {    	| }          
+ private:  T _data;   | cout << _data << endl; 	|
+};	 	      |}                       	|
+#include "Foo.template"				|
+#endif		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+% g++ -g -c main.C
+% g++ -g -c Foo.C
+Foo.C:6: redefinition of `void Foo<T>::Hop()'
+Foo.template:6: `void Foo<T>::Hop()' previously declared here
+Foo.C: In instantiation of `Foo<Bar>':
+Foo.C:12:   instantiated from here
+        ..Oh yeah, there IS NO Foo.C anymore...
+        ..And we DON'T compile Foo.template directly...
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning!	| //main.C	
+#ifndef FOO_H	      |// This is not a separate| #include "Foo.h"
+#define FOO_H	      |// compilation unit!    	| int main() {
+		      |#include <iostream.h>   	|   Foo<char> fc;
+template <class T>    |                        	|   fc.Hop();
+class Foo {	      |template <class T>      	|   return 0;
+ public:   void Hop();|void Foo<T>::Hop() {    	| }          
+ private:  T _data;   | cout << _data << endl; 	|
+};	 	      |}                       	|
+#include "Foo.template"				|
+#endif		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+% g++ -g -c main.C
+% g++ main.o -o foo
+% ./foo
+134519200
+% 
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning!	| //main.C	
+#ifndef FOO_H	      |// This is not a separate| #include "Foo.h"
+#define FOO_H  	      |// compilation unit!    	| int main() {
+       	       	      |#include <iostream.h>   	|   Foo<char> fc;
+template <class T>    |                        	|   fc.Hop();
+class Foo {	      |template <class T>      	|   Foo<int*> fpi;
+ public:   void Hop();|void Foo<T>::Hop() {    	|   fpi.Hop(); 	  
+ private:  T _data;   | cout << _data << endl; 	|   return 0; 
+};	 	      |}                       	| }    	     
+#include "Foo.template"				|
+#endif		      |				|
+       	       	      |				|
+		      |				|
+------------------------------------------------------------------
+`SOLUTION' 2 - REVEAL THE BODIES
+% g++ -g -c main.C
+% g++ main.o -o foo
+% ./foo
+
+0x8049968
+% 
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - `SOLUTION' 2
+//Foo.h	       	      |//Foo.template: Warning! |//main.C
+#ifndef FOO_H  	      |// This is not a separate|#include "Foo.h"
+#define FOO_H	      |// compilation unit!     |#include <iostream.h>       int main() {    
+		      |#include <iostream.h>    |struct Bar {   
+template <class T>    |                         |  int stuff;   
+class Foo {	      |template <class T>       |  friend ostream 
+ public:   void Hop();|void Foo<T>::Hop() {     |   operator<<(ost
+ private:  T _data;   | cout << _data << endl;  |          const B
+};	 	      |}                        |    o << b.stuff;
+#include "Foo.template"                        	|  }
+#endif 	       	      |                   	|}; 
+       	       	      |                       	|   
+		      |			 	|int main() {
+------------------------------------------------|  Foo<Bar> fb;
+`SOLUTION' 2 - REVEAL THE BODIES       	 	|  fb.Hop();
+% g++ -g -c main.C     	       	                |  return 0;
+% g++ main.o -o foo  			 	|}
+% ./foo                     	       	        ------------------
+134519200
+% 
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+	(2) Let the compiler see the bodies of the template class
+	    methods when compiling uses of the template code     
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+  Bogus: Have to update the template code implementation file 
+       	 every time the template code user decides to make another
+       	 instantiation.						  
+
+
+		   
+	(2) Let the compiler see the bodies of the template class
+	    methods when compiling uses of the template code     
+		   
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+  Bogus: Have to update the template code implementation file 
+       	 every time the template code user decides to make another
+       	 instantiation.						  
+         Template code implementation file would have to 'see'
+         any user classes used in instantiations.
+		   
+	(2) Let the compiler see the bodies of the template class
+	    methods when compiling uses of the template code     
+		   
+
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+  Bogus: Have to update the template code implementation file 
+       	 every time the template code user decides to make another
+       	 instantiation.						  
+         Template code implementation file would have to 'see'
+         any user classes used in instantiations.
+		   
+	(2) Let the compiler see the bodies of the template class
+	    methods when compiling uses of the template code     
+       	      	   
+  Less bogus. 
+
+
+
+TEMPLATES - WHY THEY'RE HARD FOR COMPILER-WRITERS - UPSHOT
+
+ - It's hard for compilers to deal with templates and separate
+   compilation.  When compiling the template code, don't know
+   what instantiations will be needed.  When compiling uses of
+   the template code, don't have the bodies of the template   
+   class methods.  What to do?				   
+			      
+	(1) Say what instantiations will be needed when compiling
+	    the template code	 			     
+
+  Bogus: Have to update the template code implementation file 
+       	 every time the template code user decides to make another
+       	 instantiation.						  
+         Template code implementation file would have to 'see'
+         any user classes used in instantiations.
+		   
+	(2) Let the compiler see the bodies of the template class
+	    methods when compiling uses of the template code     
+		   
+  Less bogus. (But still bogus: Compiler has to see the entire
+       	 template code implementation for every file that uses
+         any of it.  Software vendors precious proprietary code
+       	 swinging in the wind for all to see...)
+TEMPLATES - REVEALING THE BODIES
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES
+
+ Include file structure example
+       			
+         BEFORE			       	 AFTER	       	      
+    	    		      	       	      
+       	 Foo.h 	       	      
+    	 ^   ^		      
+       	/     \	       	      
+     Foo.C    Main.h   	      
+       		^   	      
+    		|	      
+    	      Main.C	      
+    		    	      		       		    
+       	       	    	      		       
+			      	       	       
+
+
+
+
+
+
+   
+
+TEMPLATES - REVEALING THE BODIES
+
+ Include file structure example
+       			
+         BEFORE			       	 AFTER	       	       	
+    	    			       	      
+       	 Foo.h 	       	       	
+    	 ^   ^			
+       	/     \	       	       	
+     Foo.C    Main.h   		
+       		^   		
+    		|		
+    	      Main.C		
+    		    			       		    
+       	       	    			       
+				       	       
+Two compilation units: 	       	
+     Foo.C & Main.C		
+so two .o's   	      
+     Foo.o & Main.o   	   
+
+
+   
+
+TEMPLATES - REVEALING THE BODIES
+
+ Include file structure example
+       			
+         BEFORE			       	 AFTER
+    	    			       	      
+       	 Foo.h 	       	       	       	 Foo.h->Foo.template
+    	 ^   ^				   ^		    
+       	/     \	       	       	       	   |		    
+     Foo.C    Main.h   			 Main.h		    
+       		^   			   ^   		    
+    		|			   |		    
+    	      Main.C			 Main.C		    
+       	       	       	       		       		    
+       	       	    	       		       
+			       	       	       
+Two compilation units: 	       
+     Foo.C & Main.C	       
+so two .o's   	      
+     Foo.o & Main.o   	   
+
+
+   
+
+TEMPLATES - REVEALING THE BODIES
+
+ Include file structure example
+       			
+         BEFORE			       	 AFTER
+    	    			       	      
+       	 Foo.h 	       	       	       	 Foo.h->Foo.template
+    	 ^   ^				   ^		    
+       	/     \	       	       	       	   |		    
+     Foo.C    Main.h   			 Main.h		    
+       		^   			   ^   		    
+    		|			   |		    
+    	      Main.C			 Main.C		    
+    		    			       		    
+       	       	    			       
+				       	       
+Two compilation units: 	       	     One compilation unit: Main.C
+     Foo.C & Main.C		     so one .o: Main.o 	       	 
+so two .o's   	      
+     Foo.o & Main.o   	   
+
+
+   
+
+TEMPLATES - METHOD IMPLEMENTATIONS - BEFORE
+// Stack.C
+#include "Stack.h"
+#include <stddef.h>
+Stack::Stack() { _head = NULL; }     
+Stack::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+void Stack::Insert(int i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+
+bool Stack::IsEmpty() { return !_head; }
+
+#include <assert.h>
+int Stack::Remove() {                 
+   assert(_head);     	    
+   _Elt * temp = _head;             
+   _head = _head->next;             
+   int value = temp->data;          
+   delete temp;                     
+   return value;                    
+}                          
+TEMPLATES - METHOD IMPLEMENTATIONS - MIDDLE
+// Stack.C
+#include "Stack.h"
+#include <stddef.h>
+template <class T>
+Stack<T>::Stack() { _head = NULL; }     
+  
+template <class T>
+Stack<T>::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+template <class T>
+void Stack<T>::Insert(T i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+  
+template <class T>
+bool Stack<T>::IsEmpty() { return !_head; }
+  
+#include <assert.h>
+template<class T>
+T Stack<T>::Remove() {                 
+..
+TEMPLATES - METHOD IMPLEMENTATIONS - AFTER
+// Stack.template
+// This is included from Stack.h! Not a separate compilation unit!
+#include <stddef.h>
+template <class T>
+Stack<T>::Stack() { _head = NULL; }     
+  
+template <class T>
+Stack<T>::~Stack() {              
+  while (_head) Remove();             
+}                            
+       	    
+template <class T>
+void Stack<T>::Insert(T i) {      
+  _head = new _Elt(i,_head);        
+}                                   
+  
+template <class T>
+bool Stack<T>::IsEmpty() { return !_head; }
+  
+#include <assert.h>
+template<class T>
+T Stack<T>::Remove() {                 
+..
+TEMPLATES - HEADER FILE - BEFORE
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(int);  // Push an int on a stack 	       
+  int Remove();	     // Pop int off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(int i,_Elt * p) { data = i; next = p; }
+    int data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+
+
+TEMPLATES - HEADER FILE - MIDDLE
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(T);    // Push a T on a stack 	       
+  T Remove();  	     // Pop a T off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(T i,_Elt * p) { data = i; next = p; }
+    T data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#endif
+
+TEMPLATES - HEADER FILE - AFTER
+//Stack.h
+#ifndef STACK_H
+#define STACK_H
+/* Provide a Stack of any class T.  T must have value semantics */
+template <class T>
+class Stack {  	       
+public:	       	       
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(T);    // Push a T on a stack 	       
+  T Remove();  	     // Pop a T off stack -- or die if stack empty
+  bool IsEmpty();    // True if stack is empty else false	  
+private:       	       
+  class _Elt {        
+  public:      	   	                                       
+    _Elt(T i,_Elt * p) { data = i; next = p; }
+    T data;	      
+    _Elt * next;      
+  };   	       	      
+  _Elt * _head;	      
+};		       
+#include "Stack.template" 
+#endif			     
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+
+
+
+
+
+
+
+
+  
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+}
+
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+g++: Stack.C: No such file or directory
+% 
+  
+
+
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+
+int main() {
+  Stack<int> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+}
+  
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+g++: Stack.C: No such file or directory	     
+% g++ -g -Wall -pedantic foo.C -o foo
+% 
+
+
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+  
+int main() {
+  Stack<int> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+} 
+  
+% g++ -g -Wall -pedantic foo.C Stack.C -o foo
+g++: Stack.C: No such file or directory	     
+% g++ -g -Wall -pedantic foo.C -o foo
+% ./foo
+84
+% 
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+  
+int main() {
+  Stack<int> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+} 
+  
+% g++ -g -Wall -pedantic foo.C -o foo
+% ./foo
+84
+% 
+
+
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+  
+int main() {
+  Stack<char> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+} 
+  
+% g++ -g -Wall -pedantic foo.C -o foo
+% ./foo
+84
+% 
+
+
+
+
+
+
+
+
+TEMPLATES - REVEALING THE BODIES - USING THE TEMPLATE
+
+#include <iostream.h>			  
+#include "Stack.h"
+  
+int main() {
+  Stack<char> s;
+  s.Insert(84);
+  cout << s.Remove() << endl;
+  return 0;
+} 
+  
+% g++ -g -Wall -pedantic foo.C -o foo
+% ./foo				     
+84				     
+% g++ -g -Wall -pedantic foo.C -o foo
+% ./foo
+T
+% 
+
+
+
+
+
+
+
+
+

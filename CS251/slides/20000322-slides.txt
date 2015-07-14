@@ -1,0 +1,2112 @@
+QUESTIONS
+	 
+LAST TIME:
+ - Bug fixes
+ - Bignum questions    	       	     Bignum a,b,c;
+ - Linked lists			     a = b+c;  	  
+ - Recursion
+
+
+TODAY:
+ - Administrivia: Program 3 due date adjustment and time penalties
+ - Recursion, linked lists, binary search
+
+
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365)
+
+ Time extended for program 3:
+
+   Program 3 due: 1PM MON Apr 3, 2000
+    
+
+
+
+
+ADMINISTRIVIA
+
+ Time extended for program 3:
+
+Was:
+    Due: 5PM THU Mar 30, 2000
+
+Is:    	     	       	       	       	      vvv
+     Due: 1PM MON Apr 3, 2000  NOTE THAT'S >>>1PM<<<
+	   				      ^^^
+Free                 TIME PENALTIES FOR PROGRAM 3
+Late           	     Last turned in BEFORE 1PM on:
+DaysTHU3/30 FRI3/31 SAT4/1 SUN4/2  MON4/3 TUE4/4 WED4/5 LATER
++------------------------------------------------------------+
+| 0 |  +3% |   0%  |   0% |   0%  |   0% | -33% | -66% |-100%|
++------------------------------------------------------------+
+| 1 |  +3% |   0%  |   0% |   0%  |   0% |   0% | -33% |-100%|
++------------------------------------------------------------+
+| 2 |  +3% |   0%  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+| 3 |  +3% |   0%  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+NO CREDIT FOR PROGRAM 3 AFTER CLASS STARTS ON WED APR 5, 2000.
+           
+BIGNUM STATUS SURVEY
+
+`Clean frontier' (highest test level passed) is:
+     level 9: 1      0
+     level 8: 0	     0
+     level 7: 0	     0
+     level 6: 0	     1
+     level 5: 0	     1
+     level 4: 1	     0
+     level 3: 0	     3
+     level 2: 6	     4
+     level 1: 0	     1
+     level 0: 5	     22
+Planning to	       
+ drop CS251	       
+     anyway : oo     oo
+
+
+
+
+
+
+
+
+RECURSION
+
+Need a 'base case' that does NOT involve calling oneself!
+
+int fact(int n) {
+  if (n==0) return 1;           // base case
+  else return n*fact(n-1);	// recursive case
+}
+
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<9;++i)
+    cout << "fact(" << i << ") = " << fact(i) << endl;
+  return 0;
+}
+fact(0) = 1
+fact(1) = 1
+fact(2) = 2
+fact(3) = 6
+fact(4) = 24
+fact(5) = 120
+fact(6) = 720
+fact(7) = 5040
+fact(8) = 40320
+RECURSION VS ITERATION
+
+#include <assert.h>
+int factr(int n) {
+  assert(n>=0);
+  if (n==0) return 1;           // base case
+  else return n*factr(n-1);	// recursive case
+}
+int facti(int n) {
+  assert(n>=0);
+  int result = 1;
+  for (int i = n; i>0; --i) result *= i;
+  return result;
+}
+#include <iostream.h>
+int main() {
+  for (int i = 0;i<10000000; ++i) factr(12); //facti(12) for fooi
+  return 0;
+}
+% time ./foor
+8.07user 0.03system 0:08.35elapsed 96%CPU (0avgtext+0avgdata 0...
+% time ./fooi
+5.52user 0.00system 0:05.69elapsed 96%CPU (0avgtext+0avgdata 0...
+%
+RECURSION VS ITERATION
+
+ - Every recursive function can be turned into an
+   iterative function (perhaps with the addition of
+   an explicit stack).
+
+ - Recursive definitions are often more natural than the
+   corresponding iterative definitions (after your head
+   stops exploding)
+
+ - Recursive definitions are sometimes slower to execute
+   than the corresponding iterative definitions
+
+ - The potential for fewer bugs because of increased
+   clarity of recursive definitions sometimes argues in
+   their favor even if they're a little slower.
+
+ - Rule of thumb: If the iterative version would REQUIRE an
+   explicit stack, favor recursive definition.
+
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:		hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+>>hd = new Foo('B',hd);<<      |---------|
+  delete hd;		       |     	 |
+  cout << endl;		       +------|--+
+  return 0;    		 	      |
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:      		hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+  hd = new Foo('B',hd);        |---------|
+>>delete hd;<< 	       	       |       	 |
+  cout << endl;		       +------|--+
+  return 0;    		 	      |
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<
+private:      		hd
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	     	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+  hd = new Foo('B',hd);        |---------|
+>>delete hd;<< 	       	       |       	 |
+  cout << endl;		       +------|--+
+  return 0;    		 	      |
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<
+private:       ^^^^^ 	hd
+  char _c;     	   	+------+    	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	     	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+  hd = new Foo('B',hd);        |---------|
+>>delete hd;<< 	       	      >|       	 |<
+  cout << endl;		       +------|--+
+  return 0;    		       	^^^^^^|^^
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next)>delete _next;<cout << "-" << _c; }<<
+private:       ^^^^^ 	hd
+  char _c;     	   	+------+    	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	     	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+  hd = new Foo('B',hd);        |---------|
+>>delete hd;<< 	       	      >|       	 |<
+  cout << endl;		       +------|--+
+  return 0;    		       	^^^^^^|^^
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<
+private:             	hd
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+	   ~Foo::this
+  hd = new Foo('A',hd);	       | 'B'   	 |     	   +------------+
+  hd = new Foo('B',hd);        |---------|	/----- 	       	|
+>>delete hd;<< 	       	       |       	 |	|  +------------+
+  cout << endl;		       +------|--+	|
+  return 0;    		 	      |	    	V
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next; cout << "-" << _c; }<<
+private:       ^^^^^ 	hd
+  char _c;     	    	+------+	       	  ~Foo::this
+  Foo * _next;	    	|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL;  	    \->+---------+	   ~Foo::this
+  hd = new Foo('A',hd);	       | 'B'   	 |     	   +------------+
+  hd = new Foo('B',hd);        |---------|	/----- 	       	|
+>>delete hd;<< 	       	       |       	 |	|  +------------+
+  cout << endl;	       	       +------|--+	|
+  return 0;    		 	      |	    	V
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B          				  |---------|
+% 					 >|    	NULL|<
+					  +---------+
+					   ^^^^^^^^^
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next;>cout << "-" << _c;<}<<
+private:             	hd
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+	   ~Foo::this
+  hd = new Foo('A',hd);	       | 'B'   	 |     	   +------------+
+  hd = new Foo('B',hd);        |---------|	/----- 	       	|
+>>delete hd;<< 	       	       |       	 |	|  +------------+
+  cout << endl;		       +------|--+	|
+  return 0;    		 	      |	    	V
+}	       			      \-->+---------+
+% ./foo	       				  |'A'	    |
++A+B-A        				  |---------|
+% 					  |    	NULL|
+					  +---------+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next;>cout << "-" << _c;<}<<
+private:             	hd
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+  hd = new Foo('B',hd);        |---------|
+>>delete hd;<< 	       	       |       	 |
+  cout << endl;		       +------|--+
+  return 0;    		 	      |
+}	       			      \-->+ - - - - +
+% ./foo
++A+B-A        				  |    ?    |
+%
+					  + - - - - +
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+>>~Foo() { if (_next) delete _next;>cout << "-" << _c;<}<<
+private:             	hd
+  char _c;     	   	+------+	       	  ~Foo::this
+  Foo * _next;		|      |       	       	  +------------+
+};     	       	       	+---|--+       	/----------    	       |
+int main() {   	       	    |  	       	V      	  +------------+
+  Foo * hd = NULL; 	    \->+---------+
+  hd = new Foo('A',hd);	       | 'B'   	 |
+  hd = new Foo('B',hd);        |---------|
+>>delete hd;<< 	       	       |       	 |
+  cout << endl;		       +------|--+
+  return 0;    		 	      |
+}	       			      \-->+ - - - - +
+% ./foo
++A+B-A-B      				  |    ?    |
+%
+					  + - - - - +
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+ - - - - +
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);        |    ?    |
+>>delete hd;<<
+  cout << endl;		       + - - - - +
+  return 0;
+}
+% ./foo
++A+B-A-B
+
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+ - - - - +
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);        |    ?    |
+  delete hd;
+>>cout << endl;<<	       + - - - - +
+>>return 0;<<
+}<<
+% ./foo
++A+B-A-B
+%
+
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+ - - - - +
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);        |    ?    |
+  delete hd;
+>>cout << endl;<<	       + - - - - +
+>>return 0;<<
+}<<
+% ./foo	       In this case, calling
++A+B-A-B        'delete hd;' deletes the whole list,
+%      	       	because Foo::~Foo calls ITSELF *RECURSIVELY*
+	       	as long as the '_next's are non-NULL!
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+ - - - - +
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);        |    ?    |
+  delete hd;
+>>cout << endl;<<	       + - - - - +
+>>return 0;<<
+}<<
+% ./foo	       In this case, calling
++A+B-A-B        'delete hd;' deletes the whole list,
+%      	       	because Foo::~Foo calls ITSELF *RECURSIVELY*
+	       	as long as the '_next's are non-NULL!
+
+       	Is this a good use of recursion?
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; cout << "+" << _c;}
+  ~Foo() { if (_next) delete _next; cout << "-" << _c; }
+private:             	hd
+  char _c;     	   	+------+
+  Foo * _next;		|      |
+};     	       	       	+---|--+
+int main() {   	       	    |
+  Foo * hd = NULL; 	    \->+ - - - - +
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);        |    ?    |
+  delete hd;
+>>cout << endl;<<	       + - - - - +
+>>return 0;<<
+}<<
+% ./foo	       In this case, calling
++A+B-A-B        'delete hd;' deletes the whole list,
+%      	       	because Foo::~Foo calls ITSELF *RECURSIVELY*
+	       	as long as the '_next's are non-NULL!
+
+       	Is this a good use of recursion?     Pretty nifty anyway..
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Forward() { cout << _c; if (_next) _next->Forward(); }
+  void Backward() { if (_next) _next->Backward(); cout << _c; }
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL;
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);
+  hd = new Foo('C',hd);
+  hd->Forward();   cout << endl;
+  hd->Backward();  cout << endl;
+  delete hd;
+  return 0;
+}
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Forward() { cout << _c; if (_next) _next->Forward(); }
+  void Backward() { if (_next) _next->Backward(); cout << _c; }
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL;
+  hd = new Foo('A',hd);
+  hd = new Foo('B',hd);
+  hd = new Foo('C',hd);
+  hd->Forward();   cout << endl;
+  hd->Backward();  cout << endl;
+  delete hd;
+  return 0;
+}
+CBA
+ABC
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Backward(ostream & o) {
+    if (_next) _next->Backward(o); o << _c;
+  }
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL;
+  hd = new Foo('A',hd);hd = new Foo('B',hd);hd = new Foo('C',hd);
+  hd->Backward(cout);
+  cout << endl;
+  delete hd;
+  return 0;
+}
+ABC
+
+
+USING DYNAMIC OBJECTS: Linked list and Recursion
+#include <iostream.h>
+class Foo {
+public:
+  Foo(char ch,Foo* n) { _c = ch; _next = n; }
+  ~Foo() { if (_next) delete _next; }
+  void Backward(ostream & o) {
+    if (_next) _next->Backward(o); o << _c;    }
+  friend ostream & operator<<(ostream&o,const Foo & f) {
+    f.Backward(o);
+    return o;
+  }
+private:
+  char _c;
+  Foo * _next;
+};
+int main() {
+  Foo * hd = NULL;
+  hd = new Foo('A',hd);hd = new Foo('B',hd);hd = new Foo('C',hd);
+  cout << *hd << endl
+  delete hd;
+  return 0;
+}
+ABC
+LINKED LIST AND RECURSION: Example - deep copying a Stack of int
+//Stack.h
+class Stack {
+public:
+  Stack();           // Create an empty stack
+  ~Stack();    	     // Destroy a(n empty or not) stack
+  void Insert(int);  // Push an int on a stack
+  int Remove();	     // Pop int off stack -- or die if stack empty
+  void Empty();      // Empty out an existing stack
+  bool IsEmpty();    // True if stack is empty else false
+  Stack & operator=(const Stack &); // Assign one stack to another
+private:		 
+  class _Elt {       // Linked list element..
+  public:      	       	 		     
+    _Elt(int,_Elt *);	 		     
+    ~_Elt();					      
+    int data;        // Payload
+    _Elt * next; 	      
+  };		      
+  _Elt * _head;
+};
+    Assume we want value semantics for Stack, so
+       Stack & operator=(const Stack &) will need
+       to do a deep copy.. Let's try iteration first..
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);                       //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}
+ 				 *this._head
+s._head				  +-------+ 
++------+       	       	       	  |     ----->+-----+
+|      |			  +-------+   |	99  |
++--\---+				      |-----|
+    \					      |	NULL|
+     \->+----+				      +-----+
+     	|  12|
+     	|----|
+	|   ----->+-----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+>>Empty();<<         // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);                       //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 				 *this._head
+s._head				  +-------+ 
++------+       	       	       	  |   NULL|
+|      |			  +-------+
++--\---+				   
+    \					   
+     \->+----+				   
+     	|  12|
+     	|----|
+	|   ----->+-----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();    VVVVVVV// Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);                       //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 	     p 	     		 *this._head
+s._head	    +--------+		  +-------+ 
++------+    |  	     | 	       	  |   NULL|
+|      |    +/-------+		  +-------+
++--\---+    / 				   
+    \	    V				   
+     \->+----+				   
+     	|  12|
+     	|----|
+	|   ----->+-----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);      ^^               //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 	     p 	     		 *this._head
+s._head	    +--------+		  +-------+ 
++------+    |  	     | 	       	  |   NULL|
+|      |    +/-------+		  +-------+
++--\---+    / 				   
+    \	    V				   
+     \->+----+				   
+     	|  12|
+     	|----|
+	|   ----->+-----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+ >> Insert(p->data); <<                    //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 	     p 	     	    	 *this._head
+s._head	    +--------+	    	  +-------+ 
++------+    |  	     | 	       	  |       |
+|      |    +/-------+		  +----\--+
++--\---+    / 				\  
+    \	    V				 \->+----+
+     \->+----+				    |  12|
+     	|  12|				    |----|
+     	|----|				    |NULL|
+	|   ----->+-----+		    +----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);          ^^^^^^^^^^^  //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 	     p 	     	    	 *this._head
+s._head	    +--------+	    	  +-------+ 
++------+    |  	     | 	       	  |       |
+|      |    +----\---+		  +----\--+
++--\---+      	  \			\  
+    \	     	   \			 \->+----+
+     \->+----+ 	    |			    |  12|
+     	|  12|	    |			    |----|
+     	|----|	    V			    |NULL|
+	|   ----->+-----+		    +----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);      ^^               //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 	     p 	     	    	 *this._head
+s._head	    +--------+	    	  +-------+ 
++------+    |  	     | 	       	  |       |
+|      |    +----\---+		  +----\--+
++--\---+      	  \			\  
+    \	     	   \			 \->+----+
+     \->+----+ 	    |			    |  12|
+     	|  12|	    |			    |----|
+     	|----|	    V			    |NULL|
+	|   ----->+-----+		    +----+
+	+----+	  |   73|
+		  |-----|
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+ >> Insert(p->data); <<                    //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	     
+ 	     p 	     	     	 *this._head
+s._head	    +--------+	     	  +-------+ 
++------+    |  	     | 	       	  |       |
+|      |    +----\---+	     	  +----/--+
++--\---+      	  \	     	      /	   
+    \	     	   \	       	     | 	   >+----+
+     \->+----+ 	    |		     V 	  ->|  12|
+     	|  12|	    |		  +----+ /  |----|
+     	|----|	    V		  |  73| |  |NULL|
+	|   ----->+-----+	  |----| |  +----+
+	+----+	  |   73|	  |   --/
+		  |-----|	  +----+
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);          ^^^^^^^^^^^  //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	       
+ 	     p 	     	     	 *this._head
+s._head	    +--------+	     	  +-------+ 
++------+    |  	NULL | 	       	  |       |
+|      |    +--------+ 	       	  +----/--+
++--\---+      	    	     	      /	   
+    \	     	    	       	     | 	   >+----+
+     \->+----+ 	     		     V 	  ->|  12|
+     	|  12|	     		  +----+ /  |----|
+     	|----|	     		  |  73| |  |NULL|
+	|   ----->+-----+	  |----| |  +----+
+	+----+	  |   73|	  |   --/
+		  |-----|	  +----+
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);      ^^               //	and stuff in temp
+  return *this;      // We are now an exact copy of s
+}	       	       	       	       
+ 	     p 	     	     	 *this._head
+s._head	    +--------+	     	  +-------+ 
++------+    |  	NULL | 	       	  |       |
+|      |    +--------+ 	       	  +----/--+
++--\---+      	    	     	      /	   
+    \	     	    	       	     | 	   >+----+
+     \->+----+ 	     		     V 	  ->|  12|
+     	|  12|	     		  +----+ /  |----|
+     	|----|	     		  |  73| |  |NULL|
+	|   ----->+-----+	  |----| |  +----+
+	+----+	  |   73|	  |   --/
+		  |-----|	  +----+
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);                       //	and stuff in temp
+>>return *this;<<    // We are now an exact copy of s
+}      	       	       	       	       	       	  
+       	       	       	     	 *this._head	  
+s._head	               	     	  +-------+ 	  
++------+                       	  |       |	  
+|      |                       	  +----/--+
++--\---+      	    	     	      /	   
+    \	     	    	       	     | 	   >+----+
+     \->+----+ 	     		     V 	  ->|  12|
+     	|  12|	     		  +----+ /  |----|
+     	|----|	     		  |  73| |  |NULL|
+	|   ----->+-----+	  |----| |  +----+
+	+----+	  |   73|	  |   --/
+		  |-----|	  +----+
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);                       //	and stuff in temp
+>>return *this;<<    // We are now an exact copy of s
+}	       	       	 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+       	       	       	     	 *this._head	   \
+s._head	               	     	  +-------+ 	    \-I don't 
++------+                       	  |       |	      think so!
+|      |                       	  +----/--+
++--\---+      	    	     	      /	   
+    \	     	    	       	     | 	   >+----+
+     \->+----+ 	     		     V 	  ->|  12|
+     	|  12|	     		  +----+ /  |----|
+     	|----|	     		  |  73| |  |NULL|
+	|   ----->+-----+	  |----| |  +----+
+	+----+	  |   73|	  |   --/
+		  |-----|	  +----+
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+(WARNING: This code is busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    Insert(p->data);                       //	and stuff in temp
+>>return *this;<<    // We are now an exact copy of s
+}	       	       	 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+       	       	       	     	 *this._head	   \
+s._head	               	     	  +-------+ 	    \-I don't 
++------+                       	  |       |    	      think so!
+|      |                       	  +----/--+	      
++--\---+      	    	     	      /	   	      The elements
+    \	     	    	       	     | 	   >+----+    in *this are
+     \->+----+ 	     		     V 	  ->|  12|    backwards!  
+     	|  12|	     		  +----+ /  |----|		
+     	|----|	     		  |  73| |  |NULL|    How to fix?
+	|   ----->+-----+	  |----| |  +----+
+	+----+	  |   73|	  |   --/
+		  |-----|	  +----+
+		  | NULL|
+		  +-----+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+(WARNING: This code is STILL busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+
+
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+(WARNING: This code is STILL busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+.. Just reverse everything into a temp stack, then
+   reverse them all again into their final destination ..
+							 
+
+
+
+
+      
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+(WARNING: This code is STILL busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+.. Just reverse everything into a temp stack, then
+   reverse them all again into their final destination ..
+							 
+What is the runtime of this op= in terms of the number of
+elements in s?
+
+
+      
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+(WARNING: This code is STILL busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+.. Just reverse everything into a temp stack, then
+   reverse them all again into their final destination ..
+							 
+What is the runtime of this op= in terms of the number of
+elements in s?
+
+  O(n) {for loop} + O(n) {while loop} = O(n)
+      
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+(WARNING: This code is STILL busted!) 
+
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+.. Just reverse everything into a temp stack, then
+   reverse them all again into their final destination ..
+							 
+What is the runtime of this op= in terms of the number of
+elements in s?
+
+  O(n) {for loop} + O(n) {while loop} = O(n)
+      
+What is still wrong with this code?
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+int main() {
+  Stack a, b;
+  b.Insert(23);
+  b.Insert(42);
+  b = b;
+  cout << b.Remove();
+  return 0;
+}
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}      	       	                        b._head      	       	 
+       	       	                        +------+     		 
+int main() {   	                        |     ---\   	       	 
+  Stack a, b;	                        +------+ |   	     	 
+  b.Insert(23);	       	                         v   	     	 
+>>b.Insert(42);<<	                   +------+  		 
+  b = b;		                   |    42|  		 
+  cout << b.Remove();  	        +-------+  |------|  		 
+  return 0;		        |     23|<----    |  		 
+}      	       	       	        |-------|  +------+  	       	 
+			        |   NULL|           		 
+			        +-------+           		 
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {<<<<<<<<<
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}      	       	                        b._head (also known as 	 
+       	       	                        +------+     s._head) 	 
+int main() {   	                        |     ---\   	       	 
+  Stack a, b;  	                        +------+ |   	     	 
+  b.Insert(23);	       	                         v   	     	 
+  b.Insert(42);  	                   +------+  		 
+>>b = b;<<     	 	                   |    42|  		 
+  cout << b.Remove();  	        +-------+  |------|  		 
+  return 0;		        |     23|<----    |  		 
+}      	       	       	        |-------|  +------+  	       	 
+			        |   NULL|           		 
+       	       	       	        +-------+           		 
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {<<<<<<<<<
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);  	       //  stick it in ourself.
+  }	    	   				
+  return *this;                // We are now an exact copy of s
+}      	       	    this                b._head (also known as 	 
+       	       	    +---------+      -->+------+     s._head) 	 
+int main() {   	    |        -------/   |     ---\ 
+  Stack a, b;  	    +---------+         +------+ | 
+  b.Insert(23);	       	                         v 
+  b.Insert(42);        	                   +------+
+>>b = b;<<     	       	                   |    42|
+  cout << b.Remove();  	        +-------+  |------|
+  return 0;	       	        |     23|<----    |
+}      	       	       	        |-------|  +------+
+		       	        |   NULL|          
+       	       	       	        +-------+          
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+>>Empty();<<         // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }	    
+  return *this;                // We are now an exact copy of s
+}      	       	    this                b._head (also known as 	 
+       	       	    +---------+      -->+------+     s._head) 	 
+int main() {   	    |        -------/   |  NULL|
+  Stack a, b;  	    +---------+         +------+
+  b.Insert(23);	       	                        
+  b.Insert(42);  	        
+>>b = b;<<     	 	        
+  cout << b.Remove();  	        
+  return 0;		        
+}      	       	       	        
+			        
+			        
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+>>Empty();<<         // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }	    			     
+  return *this;                // We are now an exact copy of s
+}      	       	    this                b._head (also known as 	 
+       	       	    +---------+      -->+------+     s._head) 	 
+int main() {   	    |        -------/   |  NULL|
+  Stack a, b;  	    +---------+         +------+
+  b.Insert(23);	       	             	     ..oops..
+  b.Insert(42);        	     Have to handle the  
+>>b = b;<<     	       	     case where 's' and          
+  cout << b.Remove();  	     '*this' are the             
+  return 0;		     same object!           
+}      	       	       	        
+			        
+			        
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+
+
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+
+     Is it correct?
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+
+     Is it correct?  ..Yes.
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+
+     Is it correct?  ..Yes.
+
+     Is it elegant?
+		   
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+       	       	    
+     Is it correct?  ..Yes.
+		    
+     Is it elegant?  ..It's correct..
+		   
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+
+  Empty();           // Flush ourselves out
+  Stack temp;        // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+  return *this;                // We are now an exact copy of s
+}
+
+
+     Is it correct?  ..Yes.
+
+     Is it elegant?  ..It's correct..
+		   
+
+       	 Let's try recursion instead of iteration..
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}      	       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+    
+void Stack::_Elt::ReverseInsert(Stack & t) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t); // Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}	      
+
+
+
+
+
+
+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+>>if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t); // Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}      	    
+  s._head                              this->_head
+ +------+              	       	       +--------+               
+ |     ------>+------+	 -->+-----+    |    NULL|               
+ +------+     |	 12  |	/   |  9  |    +--------+               
+     	      |------| /    |-----|
+STACK	      |	   ---/	    | NULL|
+op=    	      +------+	    +-----+
+       
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+>>if (next) next->ReverseInsert(t); // Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}      	       	       	       	      
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v			       +--------+
+ |     ------>+------+	 -->+-----+    |    NULL|
+ +------+     |	 12  |	/   |  9  |    +--------+      	       	
+     	      |------| /    |-----|
+STACK	      |	   ---/	    | NULL|
+op=    	      +------+	    +-----+
+RevIns
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+>>if (next) next->ReverseInsert(t); // Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v	       	      	       +--------+
+ |     ------>+------+	 -->+-----+    |    NULL|
+ +------+     |	 12  |	/ / |  9  |    +--------+
+     	      |------| / /  |-----|
+STACK	      |	   ---/	 |  | NULL|
+op=    	      +------+	 |  +-----+
+RevIns #1		 |
+RevIns #2      	       	  \-RevIns's 'this' #2
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t); // Base case is next==NULL
+>>t.Insert(data);               // O(1) Insert-at-head
+}
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v	       	      	       +--------+
+ |     ------>+------+	 -->+-----+    |      ---->+----+
+ +------+     |	 12  |	/ / |  9  |    +--------+  |  9	|
+     	      |------| / /  |-----|		   |----|
+STACK	      |	   ---/	 |  | NULL|		   |NULL|
+op=    	      +------+	 |  +-----+		   +----+
+RevIns #1		 |
+RevIns #2      	       	  \-RevIns's 'this' #2
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t);<</ Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v	       	      	       +--------+
+ |     ------>+------+	 -->+-----+    |      ---->+----+
+ +------+     |	 12  |	/   |  9  |    +--------+  |  9	|
+     	      |------| /    |-----|		   |----|
+STACK	      |	   ---/	    | NULL|		   |NULL|
+op=    	      +------+	    +-----+		   +----+
+RevIns #1
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t); // Base case is next==NULL
+>>t.Insert(data);               // O(1) Insert-at-head
+}
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v	       	      	       +--------+
+ |     ------>+------+	 -->+-----+    |      ---->+---+  >+----+
+ +------+     |	 12  |	/   |  9  |    +--------+  | 12| / |  9 |
+     	      |------| /    |-----|		   |---|/  |----|
+STACK	      |	   ---/	    | NULL|		   |  --   |NULL|
+op=    	      +------+	    +-----+		   +---+   +----+
+RevIns #1
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+>>return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t); // Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v	       	      	       +--------+
+ |     ------>+------+	 -->+-----+    |      ---->+---+  >+----+
+ +------+     |	 12  |	/   |  9  |    +--------+  | 12| / |  9 |
+     	      |------| /    |-----|		   |---|/  |----|
+STACK	      |	   ---/	    | NULL|		   |  --   |NULL|
+op=    	      +------+	    +-----+		   +---+   +----+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+
+Stack & Stack::operator=(const Stack & s) {
+  if (this==&s) return *this;   // shortcut self-assignment
+  Empty();                      // Flush ourselves out
+  if (s._head) s._head->ReverseInsert(*this);
+  return *this;                 // Done
+}
+
+void Stack::_Elt::ReverseInsert(Stack & t) {
+  if (next) next->ReverseInsert(t); // Base case is next==NULL
+  t.Insert(data);               // O(1) Insert-at-head
+}
+  s._head     /--RevIns's 'this'#1     t._head (op= this->_head)
+ +------+     v	       	      	       +--------+
+ |     ------>+------+	 -->+-----+    |      ---->+---+  >+----+
+ +------+     |	 12  |	/   |  9  |    +--------+  | 12| / |  9 |
+     	      |------| /    |-----|		   |---|/  |----|
+      	      |	   ---/	    | NULL|		   |  --   |NULL|
+       	      +------+	    +-----+		   +---+   +----+
+
+
+
+
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Recursive:
+ Stack & Stack::operator=(const Stack & s) {
+   if (this==&s) return *this;   // shortcut self-assignment
+   Empty();                      // Flush ourselves out
+   if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+   return *this;                 // Done
+ }
+ void Stack::_Elt::ReverseInsert(Stack & t) {
+   if (next) next->ReverseInsert(t); // Base case is next==NULL
+   t.Insert(data);               // O(1) Insert-at-head
+ }
+
+vs Iterative (with an explicit stack):
+ ..
+  Empty();                      // Flush ourselves out
+  Stack temp;                   // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+ ..
+LINKED LIST AND RECURSION: Example - deep copying a Stack
+Recursive:
+ Stack & Stack::operator=(const Stack & s) {
+   if (this==&s) return *this;   // shortcut self-assignment
+   Empty();                      // Flush ourselves out
+   if (s._head) s._head->ReverseInsert(*this);// Fill w/s's stuff
+   return *this;                 // Done
+ }
+ void Stack::_Elt::ReverseInsert(Stack & t) {
+   if (next) next->ReverseInsert(t); // Base case is next==NULL
+   t.Insert(data);               // O(1) Insert-at-head
+ }
+       	       	 ...  Is THIS a good use of recursion?
+vs Iterative (with an explicit stack):
+ ..
+  Empty();                      // Flush ourselves out
+  Stack temp;                   // Get a buffer
+  for (_Elt * p = s._head; p; p = p->next) // copy each elt of s
+    temp.Insert(p->data);                  //  	and stuff in temp
+  while (!temp.IsEmpty()) {    // Now temp has everything reversed
+    int item = temp.Remove();  // So pull out each item and
+    Insert(item);	       //  stick it in ourself.
+  }
+ ..
+RECURSION VS ITERATION
+
+ - Every recursive function can be turned into an
+   iterative function (perhaps with the addition of
+   an explicit stack).
+
+ - Recursive definitions are often more natural than the
+   corresponding iterative definitions (after your head
+   stops exploding)
+
+ - Recursive definitions are sometimes slower to execute
+   than the corresponding iterative definitions
+
+ - The potential for fewer bugs because of increased
+   clarity of recursive definitions sometimes argues in
+   their favor even if they're a little slower.
+
+ - Rule of thumb: If the iterative version would REQUIRE an
+   explicit stack, favor recursive definition.
+
+
+
+
+
+RECURSION VS ITERATION
+
+
+
+
+                                                                 
+
+
+
+                                                                 
+
+
+
+
+
+
+                                                                 
+ - Rule of thumb: If the iterative version would REQUIRE an
+   explicit stack, favor recursive definition.
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+Guess the number.
+ Find some unknown number x in [0..1000000000]
+ as quickly as possible, given a function
+			      / -1 if n<x
+ int Test(int n) that returns |	 0 if n==x
+       			      \	 1 if n>x
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+Guess the number.
+ Find some unknown number x in [0..1000000000]
+ as quickly as possible, given a function
+			      / -1 if n<x
+ int Test(int n) that returns |	 0 if n==x
+       			      \	 1 if n>x
+
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+Guess the number.
+ Find some unknown number x in [0..1000000000]
+ as quickly as possible, given a function
+			      / -1 if n<x
+ int Test(int n) that returns |	 0 if n==x
+       			      \	 1 if n>x
+
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+Works?
+
+Fast?
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+Guess the number.
+ Find some unknown number x in [0..1000000000]
+ as quickly as possible, given a function
+			      / -1 if n<x
+ int Test(int n) that returns |	 0 if n==x
+       			      \	 1 if n>x
+
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+Works?
+
+Fast?   How many calls on 'Test(int)'?
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+Guess the number.
+ Find some unknown number x in [0..1000000000]
+ as quickly as possible, given a function
+			      / -1 if n<x
+ int Test(int n) that returns |	 0 if n==x
+       			      \	 1 if n>x
+
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+Works?
+
+Fast?   How many calls on 'Test(int)'?    What's 'n'?
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+Guess the number.
+ Find some unknown number x in [0..1000000000]
+ as quickly as possible, given a function
+			      / -1 if n<x
+ int Test(int n) that returns |	 0 if n==x
+       			      \	 1 if n>x
+
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+Works?
+
+Fast?   How many calls on 'Test(int)'?    What's 'n'?  O(n).
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;
+  int val = Test(mid);
+  if (val<0) return GuessR(mid+1,hi);
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);
+  if (val<0) return GuessR(mid+1,hi);
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);  // low, raise range bottom
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);  // low, raise range bottom
+  if (val>0) return GuessR(lo,mid-1);  // high, lower range top
+  return mid;			       // just right
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);  // low, raise range bottom
+  if (val>0) return GuessR(lo,mid-1);  // high, lower range top
+  return mid;			       // just right
+}
+int Guess2() { return GuessR(0,1000000000); }
+>            0  1000000000
+>            0   499999999
+>            0   249999998
+>            0   124999998
+>            0    62499998
+>            0    31249998
+<            0    15624998
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);  // low, raise range bottom
+  if (val>0) return GuessR(lo,mid-1);  // high, lower range top
+  return mid;			       // just right
+}
+int Guess2() { return GuessR(0,1000000000); }
+>            0  1000000000
+>            0   499999999
+>            0   249999998
+>            0   124999998
+>            0    62499998
+>            0    31249998
+<            0    15624998
+<      7812500    15624998
+>     11718750    15624998
+>     11718750    13671873
+<     11718750    12695310
+>     12207031    12695310
+<     12207031    12451169
+>     12329101    12451169
+>     12329101    12390134
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);  // low, raise range bottom
+  if (val>0) return GuessR(lo,mid-1);  // high, lower range top
+  return mid;			       // just right
+}
+int Guess2() { return GuessR(0,1000000000); }
+>            0  1000000000    <     12329101    12359616
+>            0   499999999    >     12344359    12359616
+>            0   249999998    >     12344359    12351986
+>            0   124999998    >     12344359    12348171
+>            0    62499998    <     12344359    12346264
+>            0    31249998    >     12345312    12346264
+<            0    15624998
+<      7812500    15624998
+>     11718750    15624998
+>     11718750    13671873
+<     11718750    12695310
+>     12207031    12695310
+<     12207031    12451169
+>     12329101    12451169
+>     12329101    12390134
+RECURSION: BINARY SEARCH
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;              // find midpoint of range
+  int val = Test(mid);		       // test it
+  if (val<0) return GuessR(mid+1,hi);  // low, raise range bottom
+  if (val>0) return GuessR(lo,mid-1);  // high, lower range top
+  return mid;			       // just right
+}
+int Guess2() { return GuessR(0,1000000000); }
+>            0  1000000000    <     12329101    12359616
+>            0   499999999    >     12344359    12359616
+>            0   249999998    >     12344359    12351986
+>            0   124999998    >     12344359    12348171
+>            0    62499998    <     12344359    12346264
+>            0    31249998    >     12345312    12346264
+<            0    15624998    <     12345312    12345787
+<      7812500    15624998    <     12345550    12345787
+>     11718750    15624998    >     12345669    12345787
+>     11718750    13671873    >     12345669    12345727
+<     11718750    12695310    >     12345669    12345697
+>     12207031    12695310    <     12345669    12345682
+<     12207031    12451169    >     12345676    12345682
+>     12329101    12451169    <     12345676    12345678
+>     12329101    12390134    =     12345678    12345678

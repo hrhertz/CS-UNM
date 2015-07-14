@@ -1,0 +1,1152 @@
+QUESTIONS
+
+LAST TIME:
+ - Templates III
+		
+TODAY:		
+ - Trees I
+ 		
+Announcements:
+	   FREE UNIX INSTALL PARTY APRIL 22 8AM-3PM.
+      UNM SUB BALLROOM.  See http://www.cs.unm.edu/~acm/
+			  Get Linux!
+
+       ACKLEY OFFICE HOURS PUSHED BACK TODAY 3:45-5:30
+
+HOMEWORK:  PC++P Ch 24
+		
+   Program 4 DUE MON APR 24 1PM - UNDER ONE WEEK!
+     One known bug in spec 1.0: CharMain should say Dequer<char>
+
+ QUALITY BAR: The remarkably flexible level of acceptability in
+   a product. Tends inexorably to drop as the pressure of an
+ impending milestone, content freeze, or other deadline builds.
+                                          --`Microspeak'
+INTRO
+     
+
+     						    
+
+							   
+
+
+   
+
+     
+
+     
+
+
+     
+
+     
+
+     
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+
+							   
+
+
+   
+
+     
+
+     
+
+
+     
+
+     
+
+     
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+      							   
+
+
+   
+
+     
+
+     
+
+
+     
+
+     
+
+     
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+							   
+ - What would their kid be?
+
+   
+
+     
+
+     
+
+
+     
+
+     
+
+     
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+							   
+ - What would their kid be?
+
+      Partly like  +-----+
+      an array..   |	 |
+     		   |-----|
+		   | 	 |
+     		   +-----+
+		  
+
+     
+
+     
+
+     
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+							   
+ - What would their kid be?
+		       	      ..and partly like a linked list..
+      Partly like  +-----+	  +-----+      +-----+
+      an array..   |   ---------->|   -------->|     |
+     		   |-----| 	  |-----|      |-----|
+		   | 	 | 	  |   	|      |     |
+       	       	   +-----+ 	  +-----+      +-----+
+		  
+
+     
+
+     
+
+     
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+							   
+ - What would their kid be?
+		       	      ..and partly like a linked list..
+      Partly like  +-----+	  +-----+      +-----+
+      an array..   |   ---------->|   -------->|     |
+       	       	   |-----| 	  |-----|      |-----|
+		   |   ----\	  |   	|      |     |
+       	       	   +-----+  \	  +-----+      +-----+
+		  	     \
+			      \-->+-----+      +-----+
+     				  |   -------->|     |
+				  |-----|      |-----|
+     				  |   ----\    |     |
+				  +-----+  \   +-----+
+     					    \ 	 +-----+
+			..but different than \-->|     |
+			  either of them..     	 |-----|
+					       	 |     |
+					       	 +-----+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+							   
+ - What would their kid be?
+		       	      ..and partly like a linked list..
+      Partly like  +-----+	  +-----+      +-----+
+      an array..   |   ---------->|   -------->|     |
+       	       	   |-----| 	  |-----|      |-----|
+		   |   ----\	  |   	|      |     |
+       	       	   +-----+  \	  +-----+      +-----+
+		  	     \
+			      \-->+-----+      +-----+
+     				  |   -------->|     |
+				  |-----|      |-----|
+     				  |   ----\    |     |
+				  +-----+  \   +-----+
+     					    \ 	 +-----+
+			..but different than \-->|     |
+			  either of them..     	 |-----|
+	     ..a TREE.			       	 |     |
+       	     				       	 +-----+
+TREES - Defined
+
+
+     
+
+
+     	      
+
+     
+
+     
+
+     
+
+
+     
+
+     
+
+     
+
+
+
+
+TREES - Defined
+
+Given that:
+     
+ a VERTEX is an object, possibly labelled and possibly with
+   other associated information
+     	      
+and  
+     
+ an EDGE is a connection between two vertices
+     
+and  	      
+     
+ a PATH is a list of distinct vertices in which successive
+   entries are connected by edges
+     
+and  
+     
+ exactly one node is designated the ROOT node
+     
+then 
+ a TREE is a nonempty collection of vertices and edges
+ such that there is exactly one path between the root and
+ each other vertex.
+TREES - Examples
+	       	  
+Tree or not tree:               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					       	  
+
+
+
+     	      
+
+TREES - Examples
+       	       	       	   
+Tree or not tree:          
+			   
+			   
+			   
+not tree - no vertices	   
+			   
+
+			   
+
+
+
+
+
+
+
+
+					       	  
+
+
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+                       	       	       	       	       D
+				                
+
+
+
+
+
+
+
+
+					       	  
+
+
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+                   				       D
+				                          Tree.
+						 (Following the
+						  computer science
+						  convention that 
+						  the root is 
+						  always drawn at
+		    				  the top!)    	 
+		    
+		    
+		    			       	  
+		    
+       	       	    
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+Tree or not tree:				       D
+				                          Tree.
+           A			       	       	       	       
+	  / \		                             	
+       	 B   C 	       	       	       	 	   	
+       	  \ /  	       	       	      
+       	   D   	       	     	      
+		    
+		    
+		    
+		    			       	  
+		    
+       	       	    
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+Tree or not tree:				       D
+				                          Tree.
+           A			       	       	       	       
+	  / \			 
+       	 B   C 	       	       	       	 	   	
+       	  \ /  	       	   
+       	   D 		   
+	   		   
+not tree - more than   	   
+ one path from A to D	   
+			   		       	  
+
+
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+Tree or not tree:				       D
+				                          Tree.
+           A			       	       	       	       
+	  / \			  Tree or not tree:	
+       	 B   C 	       	       	       	 	   	
+ 	  \ /			       	      A	   	
+       	   D 			  	     / 		
+	   			  	    B  	C	
+not tree - more than   	       	  	   / 	  
+ one path from A to D  	       	  	  D    	  
+				  	       	  
+				  
+				  
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+Tree or not tree:				       D
+				                          Tree.
+           A			       	       	       	       
+	  / \			  Tree or not tree:	
+       	 B   C 	       	       	       	 	   	
+ 	  \ /			       	      A	   	
+       	   D 			  	     / 		
+	   			  	    B  	C	
+not tree - more than   	       	  	   / 	  
+ one path from A to D			  D    	  
+					       	  
+				       not tree	- no path from
+					 A to C	       	      
+
+     	      
+
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+Tree or not tree:				       D
+				                          Tree.
+           A			       	       	       	       
+	  / \			  Tree or not tree:	
+       	 B   C 	       	       	       	 	   	
+ 	  \ /			       	      A	   	
+       	   D 			  	     / 		
+	   			  	    B  	C	
+not tree - more than   	       	  	   / 	  
+ one path from A to D			  D    	  
+					       	  
+Tree or not tree:       A 	       not tree	- no path from
+		       /|\		 A to C	       	      
+		      D	Q B
+     	      	     / \  |\ 
+		    B 	C D Z
+TREES - Examples
+	       	  
+Tree or not tree:                 Tree or not tree:  A
+						    / 
+						   B 
+						    \
+not tree - no vertices				     C
+						      \
+Tree or not tree:				       D
+				                          Tree.
+           A			       	       	       	       
+	  / \			  Tree or not tree:	
+       	 B   C 	       	       	       	 	   	
+ 	  \ /			       	      A	   	
+       	   D 			  	     / 		
+	   			  	    B  	C	
+not tree - more than   	       	  	   / 	  
+ one path from A to D  	       	 	  D    	  
+				 	       	  
+Tree or not tree:       A	       not tree	- no path from
+       	       	       /|\	 	 A to C	       	      
+		      D	Q B	 
+     	      	     / \  |\ 	 
+		    B 	C D Z   Tree.
+TREES - More terminology
+      	       	  	
+ From the point of view of a node X:
+       	       	       	       	     If X has one or more children
+   X is either the root of the tree    	'X is an INTERNAL node'	  
+   or X has exactly one PARENT node    	'X is a NON-TERMINAL node'
+				     If X has zero children    	  
+   X is either a LEAF of the tree       'X is a TERMINAL node' 	  
+   or X has one or more CHILD nodes    	'X is an EXTERNAL node'
+	    
+   if X has a parent then X has
+   zero or more SIBLING nodes  
+	    
+ A node has some data and links to zero or more SUBTREEs.
+
+      Z           	       	    
+     / \    		
+    Y   W   		 
+   / \   \  		
+  T   U   V 		
+     / \    				       	  
+    Q   R   		
+
+
+TREES - More terminology
+      	       	  	
+In an ORDERED TREE the positions of the children are relevant
+  
+        Z			   Z
+       / \    <--same tree?-->    / \
+      G	  L			 L   G
+  				      
+  if an ORDERED tree, no
+  if an UNORDERED tree, yes.
+  
+We usually deal with ORDERED trees.
+  	    
+In a BINARY TREE each node has 0, 1, or 2 children.
+			       
+        H        J     	       U 
+		/ \    	      /|\
+	       K   M	     I O P
+		\
+		 L
+
+
+
+
+TREES -	Sample
+      	       	  	
+
+
+
+
+
+
+ 		     		       			       	  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+TREES -	Sample
+      	       	  	
+
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+
+};		     
+ 		     		       			       	  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+TREES -	Sample
+      	       	  	
+#include <iostream.h>
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+};		     
+ 		     		       			       	  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+TREES -	Sample
+      	       	  	
+#include <iostream.h>
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+};		     
+ 		     		       			       	  
+int main() {	     
+  Tree * root;	     
+  root = new Tree(12,NULL,NULL);
+  root->left = new Tree(6,NULL,NULL);
+  root->right = new Tree(9,NULL,NULL);
+  cout << root->label << endl;
+  cout << root->right->label << endl;
+  return 0;
+} 	   
+  
+
+
+
+
+
+TREES -	Sample
+      	       	  	
+#include <iostream.h>
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+};		     
+ 		     		       			       	  
+int main() {	     
+  Tree * root;	     
+  root = new Tree(12,NULL,NULL);
+  root->left = new Tree(6,NULL,NULL);
+  root->right = new Tree(9,NULL,NULL);
+  cout << root->label << endl;
+  cout << root->right->label << endl;
+  return 0;
+} 	   
+       	       	       	       	       	       	  12
+% ./foo						 /  \
+12     						6    9
+9      	       	       	       	       	   
+% 
+
+TREES -	Sample
+      	       	  	
+#include <iostream.h>
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print() { cout << label << endl;
+    if (left) left->Print();    if (right) right->Print();
+  }
+};		     
+ 		     		       			       	  
+int main() {	     
+  Tree * root;	     
+  root = new Tree(12,NULL,NULL);
+  root->left = new Tree(6,NULL,NULL);
+  root->right = new Tree(9,NULL,NULL);
+  root->Print();
+  return 0;
+} 	   
+
+
+
+
+TREES -	Sample
+      	       	  	
+#include <iostream.h>
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print() { cout << label << endl;
+    if (left) left->Print();    if (right) right->Print();
+  }
+};		     
+ 		     		       			       	  
+int main() {	     
+  Tree * root;	     
+  root = new Tree(12,NULL,NULL);
+  root->left = new Tree(6,NULL,NULL);
+  root->right = new Tree(9,NULL,NULL);
+  root->Print();
+  return 0;
+} 	   
+
+12
+6
+9
+TREES -	Sample
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+};		     
+
+
+
+
+
+
+
+
+
+
+
+TREES -	Sample
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+};		     
+int main() {	     
+  Tree * root = new Tree(12, new Tree(19,NULL,
+				      new Tree(22,NULL,NULL)),
+			 new Tree(7,NULL,NULL));
+  root->Print(0);
+  return 0;
+} 	   
+
+
+
+
+TREES -	Sample
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+    cout << setw(2*depth) << "X;
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+};		     
+int main() {	     
+  Tree * root = new Tree(12, new Tree(19,NULL,
+				      new Tree(22,NULL,NULL)),
+			 new Tree(7,NULL,NULL));
+  root->Print(0);
+  return 0;
+}      	       	       	       	       	  12
+12					 /  \
+  19				       19    7
+    22				       	 \    
+  7					  22
+TREES -	Traversal
+
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+
+						
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+TREES -	Traversal
+
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+Print is an example of a tree traversal routine.
+						
+
+
+
+
+			  
+
+
+
+
+
+
+
+
+
+TREES -	Traversal
+
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+Print is an example of a tree traversal routine.
+						
+visit the NODE
+visit the LEFT CHILD
+visit the RIGHT CHILD
+   ->   PREORDER TRAVERSAL
+			  
+
+
+
+
+
+
+
+
+
+TREES -	Traversal
+
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+Print is an example of a tree traversal routine.
+						
+visit the NODE
+visit the LEFT CHILD
+visit the RIGHT CHILD
+   ->   PREORDER TRAVERSAL
+			  
+visit the LEFT CHILD
+visit the RIGHT CHILD
+visit the NODE
+   ->   POSTORDER TRAVERSAL
+
+
+
+
+
+TREES -	Traversal
+
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+Print is an example of a tree traversal routine.
+						
+visit the NODE
+visit the LEFT CHILD
+visit the RIGHT CHILD
+   ->   PREORDER TRAVERSAL
+			  
+visit the LEFT CHILD
+visit the RIGHT CHILD
+visit the NODE
+   ->   POSTORDER TRAVERSAL
+
+visit the LEFT CHILD
+visit the NODE
+visit the RIGHT CHILD
+   ->   INORDER TRAVERSAL
+TREES -	Traversal
+
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+Print is an example of a tree traversal routine.
+						
+visit the NODE
+visit the LEFT CHILD
+visit the RIGHT CHILD
+   ->   PREORDER TRAVERSAL
+			  
+visit the LEFT CHILD   	       	       	The 'orders' of traversal
+visit the RIGHT CHILD			are always named with  	 
+visit the NODE				respect to the node. 
+   ->   POSTORDER TRAVERSAL
+
+visit the LEFT CHILD
+visit the NODE
+visit the RIGHT CHILD
+   ->   INORDER TRAVERSAL
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  Tree * Read(istream & in) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+
+
+
+
+
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = ???
+  root->Print(0);
+  return 0;
+} 	   
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = Read(cin);     /* Undefined function Read.. */
+  root->Print(0);
+  return 0;
+} 	   
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree wastoid;
+  Tree * root = wastoid.Read(in);  ???
+  root->Print(0);
+  return 0;
+} 	   
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+
+
+
+
+
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+
+
+
+
+
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = Tree::Read(cin);
+  root->Print(0);
+  return 0;
+} 	   
+
+
+

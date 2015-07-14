@@ -1,0 +1,1179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice/5.1 (Linux)">
+	<META NAME="AUTHOR" CONTENT=" ">
+	<META NAME="CREATED" CONTENT="20000414;16551100">
+	<META NAME="CHANGEDBY" CONTENT=" ">
+	<META NAME="CHANGED" CONTENT="20000414;16551100">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin-left: 1.25in; margin-right: 1.25in; margin-top: 1in; margin-bottom: 1in }
+		P { margin-bottom: 0.08in }
+		H1 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 16pt }
+		H2 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 14pt; font-style: italic }
+		H3 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif }
+		H4 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 11pt; font-style: italic }
+		TD P { margin-bottom: 0.08in }
+		TH P { margin-bottom: 0.08in; font-style: italic }
+	-->
+	</STYLE>
+</HEAD>
+<BODY>
+<H1>CS 251 Program 4 The <I>Dequer</I> template</H1>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=128*>
+	<COL WIDTH=128*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P><FONT FACE="helvetica, sans-serif"><B>Due: Mon Apr 24, 2000
+				1PM</B></FONT></P>
+			</TD>
+			<TD WIDTH=50%>
+				<P ALIGN=RIGHT><FONT FACE="helvetica, sans-serif"><B>Spec
+				version: 1.0</B></FONT></P>
+			</TD>
+		</TR>
+	</THEAD>
+</TABLE>
+<H1>The Dequer Template</H1>
+<P ALIGN=JUSTIFY>Our goals in the fourth program are twofold: To get
+experience developing and using C++ templates, and to gain additional
+experience writing classes using the heap while supporting value
+semantics.  We will do this by modifying the Dequer and Deque classes
+from program 2 to be templates, and then demonstrate two
+specializations, <FONT FACE="courier, monospace">Dequer&lt;char&gt;</FONT>
+(which will contain a <FONT FACE="courier, monospace">Deque&lt;char&gt;</FONT>)
+and <FONT FACE="courier, monospace">Dequer&lt;Label&gt; </FONT>(which
+will contain a <FONT FACE="courier, monospace">Deque&lt;Label&gt;</FONT>).</P>
+<P ALIGN=JUSTIFY>Our job is to implement <FONT FACE="courier, monospace">template
+&lt;class TYPE&gt;class Dequer</FONT>, <FONT FACE="courier, monospace">template
+&lt;class TYPE&gt;class Deque</FONT>, and also <FONT FACE="courier, monospace">class
+Label</FONT>.  Most of the behavior of <FONT FACE="courier, monospace">Dequer&lt;char&gt;</FONT>
+is identical to the program 2 engine, but there <I>are</I><SPAN STYLE="font-style: normal">
+differences and </SPAN><I>only this document</I><SPAN STYLE="font-style: normal">
+is authoritative for program 4!</SPAN>  <FONT FACE="courier, monospace">class
+Label</FONT> is new in this program and is discussed later in this
+document.</P>
+<P ALIGN=JUSTIFY>Throughout this document we will use <I>TYPE</I><SPAN STYLE="font-style: normal">
+to indicate the template parameter for the Dequer and Deque
+templates.  You may use <FONT FACE="courier, monospace">TYPE </FONT><FONT FACE="times, serif">as
+the template parameter in your code if you wish, or some other name.</FONT></SPAN></P>
+<H1>The Dequer Template Protocol</H1>
+<H4>General protocol issues: 
+</H4>
+<UL>
+	<LI><P>Note that some protocol details have <I>changed</I><SPAN STYLE="font-style: normal">
+	compared to program 2!  Read this spec closely!  Don't just assume
+	everything's the same as before!</SPAN></P>
+	<LI><P>As a template, Dequer will rely on the reading (istream,
+	operator&gt;&gt;) and printing (ostream, operator&lt;&lt;) methods
+	provided by <I>TYPE</I><SPAN STYLE="font-style: normal">. 
+	Consequently not all of the specific protocol details can be
+	specified in advance.</SPAN></P>
+	<LI><P>Each protocol message in either direction is terminated with
+	a single newline (i.e., the thing that '<FONT FACE="courier, monospace">endl</FONT>'
+	generates in C++).  The protocol consists of a series of
+	<I>interactions</I>.  Each interaction with the engine begins with a
+	command to the engine followed by zero or one responses from the
+	engine.</P>
+	<LI><P>The <I>only</I><SPAN STYLE="font-style: normal"> thing the
+	engine outputs is protocol responses.  That implies, specifically:</SPAN></P>
+</UL>
+<OL>
+	<LI><P STYLE="font-style: normal">Your program must output <B><I>nothing</I></B><SPAN STYLE="font-weight: medium">
+	when it first starts up.</SPAN></P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Your program
+	must <B><I>not</I></B> output any `debugging info' while it runs. 
+	If you put in any `debugging print statements' during development,
+	you <B><I>must</I></B> be sure to remove them all before turning in
+	your program, or it will fail testing and be marked down.</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Your program
+	must <B><I>not</I></B> output any `prompts' such as `Enter command:'
+	or anything of the sort, or it will fail testing and be marked down.</P>
+</OL>
+<UL>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Your program
+	<I>may</I>, but is not required to, accept lower-case forms of the
+	commands described below.  Your program <I>must</I> generate all
+	responses in upper-case as described below.  There is no grading
+	penalty for failing to accept lower-case commands, and no grading
+	bonus for doing so.</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">In general,
+	commands do not requires spaces between the command and the
+	arguments or between the arguments and each other (for commands with
+	more than one argument).</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">There is a
+	single newline ending each response.  (Note that in Dequer&lt;Label&gt;,
+	there may be newlines <I>inside</I> commands and responses as well).
+	 It is strongly advised that you use the C++ construct <FONT FACE="courier, monospace">endl</FONT><FONT FACE="times, serif">
+	to generate that final newline, rather than <FONT FACE="courier, monospace">&quot;\n&quot;</FONT>,
+	because <FONT FACE="courier, monospace">endl</FONT> also `flushes
+	the output buffer' - i.e., it forces any pending output to be sent. </FONT>
+	</P>
+	<LI><P STYLE="font-style: normal; font-weight: medium"><FONT FACE="times, serif">Note
+	that certain errors with certain commands - e.g., trying to remove
+	from an empty deque - generate a FAIL response, and the engine
+	continues operating.</FONT></P>
+	<LI><P STYLE="font-style: normal; font-weight: medium">Except for
+	the situations documented here that generate FAIL responses, the
+	engine may deal with illegal commands and/or illegal command
+	arguments in any way that it wants to provided that the program is
+	not at risk of crashing.  In particular, the engine <I>may</I>
+	simply exit if a command or command error occurs, or <I>may</I>
+	ignore the error and attempt to continue functioning, or <I>may</I>
+	give an error message and attempt to continue functioning.  It <I>must
+	not</I> continue functioning if further execution would be unsafe.</P>
+</UL>
+<H3>Commands the engine reads from cin</H3>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=73*>
+	<COL WIDTH=183*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">A</FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P>engine produces an <B>A</B>UTHOR response containing the name
+			of the author of the engine</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">D<I>milliseconds</I></FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P>engine produces a <B>D</B>ELAY <I>milliseconds</I><SPAN STYLE="font-style: normal">
+			(int &gt;=0)</SPAN><I> </I>response <SPAN STYLE="font-style: normal">(Note
+			the engine does <B><I>NOT</I></B> actually perform a delay or
+			waste time here! It just outputs the DELAY response!)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">S<I>size</I></FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P><SPAN STYLE="font-style: normal"><B>S</B>et up the internal
+			deque to have room to contain exactly <I>size</I> (int &gt;0)
+			chars, and generates a SIZE response</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">I<I>lrobj</I></FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P ALIGN=LEFT><B>I</B><SPAN STYLE="font-weight: medium">nsert <I>obj</I><SPAN STYLE="font-style: normal">
+			(<I>TYPE</I>) into the </SPAN><I>lr</I><SPAN STYLE="font-style: normal">
+			(char: 'L' for left or 'R' for right) side of the internal deque
+			if there is room to do so, and generate an INSERT response.  If
+			the internal deque is full, generate a FAIL response instead. 
+			There is no space after <I>lr</I> before </SPAN>obj<SPAN STYLE="font-style: normal">.</SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">R<I>lr</I></FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P><B><SPAN STYLE="font-style: normal"><FONT FACE="times, serif">R</FONT></SPAN></B><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal"><FONT FACE="times, serif">emove
+			a <I>TYPE</I> object from the <I>lr</I> (char: 'L' or 'R') side of
+			the internal deque if it is not empty and generate a REMOVE
+			response, or a FAIL response instead if the deque is empty.</FONT></SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">L<I>count objs</I></FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P><B>L</B><SPAN STYLE="font-weight: medium">oad <I>count </I><SPAN STYLE="font-style: normal">(int&gt;=0)
+			</SPAN>given <I>objs</I> of type <I>TYPE</I><SPAN STYLE="font-style: normal">
+			into the right side of the internal deque.  Generates a LOAD
+			response indicating how many the <I>objs</I>  fit - if some don't,
+			as many of the <I>objs</I> as do fit are inserted, and the rest of
+			the <I>objs</I> are discarded.</SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">U</FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P><B>U</B><SPAN STYLE="font-weight: medium">nload the internal
+			deque from the left and generate an UNLOAD response with zero or
+			more objects of type <I>TYPE</I><SPAN STYLE="font-style: normal">.</SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">C<I>lr</I></FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P ALIGN=LEFT><B>C</B><SPAN STYLE="font-weight: medium">irculate
+			one <I>TYPE</I> object from the <I>lr</I><SPAN STYLE="font-style: normal">
+			(char 'L' for left or 'R' for right) side to the other side. 
+			Generates a `<FONT FACE="courier, monospace">FAIL C</FONT>' if the
+			internal deque is empty, otherwise removes a <I>TYPE</I><SPAN STYLE="font-style: normal">
+			object</SPAN> <I>obj </I><SPAN STYLE="font-style: normal">from</SPAN>
+			the <I>lr</I><SPAN STYLE="font-style: normal"> side and inserts it
+			on the other side, and generates a `CIRCULATE <I>lrobj' </I>response,
+			showing the source side (</SPAN><I>lr</I><SPAN STYLE="font-style: normal">)</SPAN><I>
+			</I><SPAN STYLE="font-style: normal">and the <I>TYPE</I> object
+			</SPAN><I>obj</I><SPAN STYLE="font-style: normal"> that moved</SPAN>.</SPAN></SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=29%>
+			<P><FONT FACE="courier, monospace">Q</FONT></P>
+		</TD>
+		<TD WIDTH=71%>
+			<P>engine generates a QUIT response and then <B>Q</B>uits</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<H3>Responses the engine writes to cout</H3>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=73*>
+	<COL WIDTH=183*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace"><SPAN STYLE="font-style: normal">SIZE</SPAN><I>
+			size</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><SPAN STYLE="font-style: normal">Internal deque has been set to
+			<I>size</I><SPAN STYLE="font-style: normal"> (int &gt;0) and
+			emptied</SPAN>.</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">AUTHOR &quot;<I>name</I>&quot;</FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><SPAN STYLE="font-weight: medium">Author of the program is</SPAN><B>
+			</B> <I>name</I><SPAN STYLE="font-style: normal">. (The </SPAN><I>name</I><SPAN STYLE="font-style: normal">
+			can contain any characters except for newlines and double quotes,
+			and is surrounded by double quotes in the AUTHOR response.)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">DELAY <I>ms</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><SPAN STYLE="font-style: normal">A delay of </SPAN><I>ms</I><SPAN STYLE="font-style: normal">
+			(int &gt;=0) milliseconds should occur here. (Note the engine does
+			<B><I>NOT</I></B> actually <I>do</I> any delaying itself!)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P STYLE="font-style: normal"><FONT FACE="courier, monospace">INSERT
+			<I>lrobj</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><FONT FACE="times, serif"><I>obj</I> (<I>TYPE</I>) has been
+			inserted at the <I>lr</I> (char: 'L' for left or 'R' for right)
+			side of the internal deque<SPAN STYLE="font-style: normal">.</SPAN></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">REMOVE <I>lrobj</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><FONT FACE="times, serif"><I>obj</I><SPAN STYLE="font-style: normal">
+			(<I>TYPE</I>) has been removed from the <I>lr</I> (char: 'L' for
+			left  or 'R' for right) side of the internal deque.</SPAN></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">FAIL <I>cmd</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P>A command could not be completed (entirely).  <I>cmd</I><SPAN STYLE="font-style: normal">
+			(char: 'C' or 'I' or 'R') indicates what type of command failed.</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">LOAD <I>count</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><I>count </I><SPAN STYLE="font-style: normal">(int&gt;=0)
+			objects where successfully loaded.  (Note that </SPAN><I>count</I><SPAN STYLE="font-style: normal">
+			may be less than the number specified in the corresponding Load
+			command, if the deque ran out of room during the load.)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">UNLOAD <I>objs</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P>The internal deque has been completely unloaded from the left
+			side yielding <I>objs</I><SPAN STYLE="font-style: normal"> (0 or
+			more <I>TYPE</I><SPAN STYLE="font-style: normal"> objects</SPAN>),
+			in order.</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">CIRCULATE <I>lrobj</I></FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P><FONT FACE="times, serif"><I>obj</I><SPAN STYLE="font-style: normal">
+			(TYPE) has been removed from the <I>lr</I> (char: 'L' for left  or
+			'R' for right) side of the internal deque, and reinserted on the
+			opposite side.</SPAN></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=28%>
+			<P><FONT FACE="courier, monospace">QUIT</FONT></P>
+		</TD>
+		<TD WIDTH=72%>
+			<P>Engine is about to quit.</P>
+		</TD>
+	</TR>
+</TABLE>
+<H1>Deque Template semantics</H1>
+<P ALIGN=LEFT>The deque has a current size, which for purposes of
+this specification may be any positive number less than the largest
+number that fits in a 32 bit signed int.  Overall memory size limits
+in any particular computer may restrict the maximum usable size; the
+<SPAN STYLE="font-style: normal">Dequer program itself should not
+impose any additional limits.  The</SPAN> current size is established
+when a `S' command is processed, and may be changed by further `S'
+commands within a single run of the engine.  It is allowable for the
+program to abort if insufficient memory is available to satisfy a
+given `S' command.  At program startup it is as if an `S1' command
+had been processed.</P>
+<P ALIGN=LEFT>The Deque template contains elements of type <I><FONT FACE="courier, monospace">TYPE</FONT></I><FONT FACE="times, serif">
+where <I>TYPE</I> is a template parameter-in other words, the
+declaration `<FONT FACE="courier, monospace">Deque&lt;char&gt; f;</FONT>',
+indicates that `f' is a Deque containing elements each of which is a
+char.  Any class that provides value semantics and has a
+`self-delimiting' input/output format (see discussion in `class
+Label', below) should be usable as a template argument to the Deque
+template.  In addition,  specializations of the <SPAN STYLE="font-style: normal">Deque
+template must provide value semantics.</SPAN></FONT></P>
+<P ALIGN=LEFT><FONT FACE="times, serif">The two ends of the deque are
+referred to here as `left' and `right'; note that these are `logical'
+names and have no particular relationship to higher and lower memory
+addresses, or larger or smaller array indexes.  </FONT>
+</P>
+<P ALIGN=LEFT><FONT FACE="times, serif">The deque implementation must
+satisfy the following time and space limits, where <I>n</I><SPAN STYLE="font-style: normal">
+is current capacity of the deque as specified by the most recent
+`S'ize command:</SPAN></FONT></P>
+<UL>
+	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="times, serif">Time
+	to insert a <I>TYPE</I> object at the left or right: <I>O(1)</I></FONT></P>
+	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="times, serif">Time
+	to remove a <I>TYPE </I>object from the left or right: <I>O(1)</I></FONT></P>
+	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="times, serif">Space
+	needed for entire deque: <I>O(n)</I></FONT></P>
+</UL>
+<UL>
+	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in"><FONT FACE="times, serif"><SPAN STYLE="font-style: normal">Time
+	to pass a deque by value: </SPAN><I>O(n)</I></FONT></P>
+</UL>
+<P ALIGN=LEFT STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="times, serif">Note
+that since these time and space complexity limits are specified <I>in
+terms</I> of the number of <I>TYPE</I> objects that fit in the deque,
+for the purposes of these limits it basically doesn't matter how much
+time or space it takes to copy a <I>TYPE</I> object.</FONT></P>
+<H2>Deque template interface design</H2>
+<P>The specific public methods -their names, arguments, and return
+types - the <FONT FACE="courier, monospace">Deque</FONT> template
+provides are to be determined as part of your design.  You may reuse
+your program 2 interface (at least if it was reasonable), or use the
+interface presented in class, or develop a new one of your own.</P>
+<P>It is recommended that you adopt or at least stick close to the
+interface that was presented in class.  If you do choose to use your
+own interface design, note the following <I>requirements:</I></P>
+<UL>
+	<LI><P STYLE="font-style: normal">Neither Dequer.C,.h nor Deque.C,.h
+	may use any global variables.</P>
+	<LI><P STYLE="font-style: normal">class Dequer <I>must have</I> a
+	data member that is a Deque&lt;TYPE&gt;, and all references to the
+	`deque' or the `internal deque' in this document must refer to that
+	data member.</P>
+</UL>
+<H2>class Label</H2>
+<P><FONT FACE="times, serif">The essence of class Label is that it
+provides a name or label of arbitrary length, rather than just a
+single char.  Since the label may be any length from zero up to all
+available memory, it cannot be stored in a compile-time-sized array,
+and must instead be allocated on the heap.  </FONT>
+</P>
+<P><FONT FACE="times, serif">Class Label must possess value
+semantics.</FONT></P>
+<P>Here is a small but sufficient declaration for class Label:</P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">class
+Label {</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">
+public:</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace"> 
+Label() ;</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace"> 
+Label(int len) ;          // ctor w/label length len</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace"> 
+Label(const Label &amp;d) ;</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">  Label
+&amp; operator=(const Label &amp; d) ;</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace"> 
+~Label() ;</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace"> 
+friend ostream &amp; operator&lt;&lt;(ostream &amp; o,const Label &amp;
+d) ;</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace"> 
+friend istream &amp; operator&gt;&gt;(istream &amp; in,Label &amp; d)
+;</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">
+private:</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">  int
+_length;             // length of the label</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">  char
+* _label;           // ptr to the label, on the heap</FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">};</FONT></P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="times, serif">You may wish
+to add one or more private member functions to class Label, and you
+may add additional public member functions if you wish.  You are not
+required to use the given private data members if you do not wish to;
+however your class Label must support arbitrarily long labels. 
+Depending on your implementation, you may not need the
+Label<FONT FACE="courier, monospace">::Label(int len)</FONT>ctor.</FONT></P>
+<H4>`Self-delimiting' input/Output format for class Label</H4>
+<P>The <FONT FACE="courier, monospace">operator&lt;&lt;(ostream&amp;,Label&amp;)</FONT>
+method writes, and <FONT FACE="courier, monospace">operator&gt;&gt;(istream&amp;,Label&amp;)
+</FONT>method reads, labels in the following format:</P>
+<P><FONT FACE="courier, monospace"><I>	&lt;count&gt;</I>:<I>&lt;bytes&gt;</I></FONT></P>
+<P STYLE="font-style: normal"><FONT FACE="times, serif">Where <I>&lt;count&gt;</I>
+is an integer greater than equal to zero, and <I>&lt;bytes&gt;</I>is
+a sequence of any <I>&lt;count&gt;</I> characters.  In terms of the
+private data members mentioned above, <I>&lt;count&gt;</I> is
+associated with <FONT FACE="courier, monospace">_length</FONT> and
+the <I>&lt;bytes&gt;</I> are stored in heap memory pointed to by
+<FONT FACE="courier, monospace">_label</FONT>.  There are no
+restriction on what characters may appear in <I>&lt;bytes&gt;</I>. </FONT>
+</P>
+<P STYLE="font-style: normal"><FONT FACE="times, serif">Here are some
+examples of legal and illegal standard format labels:</FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=92*>
+	<COL WIDTH=37*>
+	<COL WIDTH=127*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=36%>
+			<P><FONT FACE="courier, monospace">5:Label</FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><I>Legal</I></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=36%>
+			<P><FONT FACE="courier, monospace">0:</FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><I>Legal</I></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>An `empty label' of length zero</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=36%>
+			<P><FONT FACE="courier, monospace">7:6:5:4:!</FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><I>Legal</I></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>The 7 &lt;bytes&gt; are <FONT FACE="courier, monospace">6<FONT FACE="times, serif">,
+			</FONT>:<FONT FACE="times, serif">, </FONT>5<FONT FACE="times, serif">,
+			</FONT>:<FONT FACE="times, serif">, </FONT>4,<FONT FACE="times, serif">
+			</FONT>:<FONT FACE="times, serif">, and </FONT>!</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=36%>
+			<P><FONT FACE="courier, monospace">:</FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><I>Illegal</I></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>Missing &lt;count&gt;</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=36%>
+			<P><FONT FACE="courier, monospace">-3:</FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><I>Illegal</I></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>Negative &lt;count&gt;</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=36%>
+			<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">5:*</FONT></P>
+			<P STYLE="margin-bottom: 0in"><FONT FACE="courier, monospace">@</FONT></P>
+			<P><FONT FACE="courier, monospace">#</FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><I>Legal</I></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>The 5 &lt;bytes&gt; are <FONT FACE="courier, monospace">*</FONT>,
+			<FONT FACE="courier, monospace">\n</FONT>, <FONT FACE="courier, monospace">@</FONT>,
+			<FONT FACE="courier, monospace">\n</FONT>, and <FONT FACE="courier, monospace">#</FONT>.</P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="font-style: normal"><BR><BR>
+</P>
+<P STYLE="font-style: normal"><FONT FACE="times, serif">Our Label
+format can be called `self-delimiting' because we know the count up
+front, so we know when we've read the whole Label, and we never have
+to read past the end of the format to tell when the object has been
+completely read.  By contrast, consider the standard way that, say,
+an <FONT FACE="courier, monospace">int</FONT> is written - this code</FONT></P>
+<P STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="courier, monospace">int
+i = 123; int j = 456;</FONT></P>
+<P STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="courier, monospace">cout
+&lt;&lt; i &lt;&lt; j;</FONT></P>
+<P STYLE="font-style: normal"><BR><BR>
+</P>
+<P STYLE="font-style: normal"><FONT FACE="times, serif">prints
+'123456', and there's no way to tell where the first int ended and
+the second one began.  The standard format for printing an <FONT FACE="courier, monospace">int</FONT>,
+in that sense, is not `self-delimiting', and we are forced to add
+some kind of delimiter ourself, writing code something like this:</FONT></P>
+<P STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="courier, monospace">int
+i = 123; int j = 456;</FONT></P>
+<P STYLE="margin-bottom: 0in; font-style: normal"><FONT FACE="courier, monospace">cout
+&lt;&lt; i &lt;&lt; ' '&lt;&lt; j;</FONT></P>
+<P STYLE="font-style: normal"><BR><BR>
+</P>
+<P ALIGN=LEFT STYLE="font-style: normal"><FONT FACE="times, serif">By
+requiring that the template argument classes provide a
+self-delimiting I/O format, we avoid having to deal with all sorts of
+such formatting problems.</FONT></P>
+<P ALIGN=LEFT STYLE="font-style: normal"><FONT FACE="times, serif"><FONT FACE="courier, monospace">class
+Label</FONT> is designed to be self-delimiting for the operator&lt;&lt;
+and operator&gt;&gt; methods.  So is a <FONT FACE="courier, monospace">char,</FONT>
+so long as there's no whitespace involved (since the standard method
+<FONT FACE="courier, monospace">operator&gt;&gt;(istream&amp;,char&amp;)</FONT>ignores
+whitespace characters.  So we'll rule out whitespace chars in our
+Dequer&lt;char&gt; semantics.</FONT></P>
+<H1>Sample interactions: Dequer&lt;char&gt;</H1>
+<P>In these examples, note that each command is a <I>single line</I><SPAN STYLE="font-style: normal">
+of input, even if it appears on multiple lines due to document
+formatting.  Since we are ruling out whitespace as legal chars in our
+Dequer&lt;char&gt;, and since newline is a whitespace char, no
+newlines can appear except at the end of a command or response.  Note
+that there is one response to each command.  Note, likewise, that</SPAN>
+each response is a <I>single line</I><SPAN STYLE="font-style: normal">
+even if it appears on multiple lines due to formatting in this
+document.</SPAN></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=10*>
+	<COL WIDTH=48*>
+	<COL WIDTH=91*>
+	<COL WIDTH=108*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=4%>
+				<P>#</P>
+			</TH>
+			<TH WIDTH=19%>
+				<P>Command</P>
+			</TH>
+			<TH WIDTH=35%>
+				<P>Response</P>
+			</TH>
+			<TH WIDTH=42%>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>1</P>
+			</TD>
+			<TD WIDTH=19%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>ILa</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>ILb</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>INSERT La</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>FAIL I</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=42%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>First insert
+				works</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>2<SUP>nd</SUP>
+				fails since </FONT></FONT>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>initial size is 1</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>2</P>
+			</TD>
+			<TD WIDTH=19%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>A</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>AUTHOR &quot;Dave
+				Ackley&quot;</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=42%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>3</P>
+			</TD>
+			<TD WIDTH=19%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L3 pqr</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 1</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD p</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD </FONT></FONT>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=42%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Not room for all</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>but one was
+				stored</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>nothing there now</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>4</P>
+			</TD>
+			<TD WIDTH=19%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S1000</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L4 foob</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RL</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>D1234</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RR</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 1000</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 4</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE Lf</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>DELAY 1234</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE Rb</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD oo</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=42%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 1000
+				chars</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>All four were
+				loaded</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>an 'f' was
+				removed</FONT></FONT></P>
+				<P><BR><BR>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>a 'b' was removed</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>rest is unloaded</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>5</P>
+			</TD>
+			<TD WIDTH=19%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L6 #!(&quot;;/</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RR</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RL</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 6</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE R/</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD </FONT></FONT>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>FAIL R</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=42%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 10 chars</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>6 were loaded</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>a '/' was removed</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 10 chars</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>nothing in it now</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>so remove fails</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>6</P>
+			</TD>
+			<TD WIDTH=19%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S5</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L4 oofa</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RR</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>CR</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>CL</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=35%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 5</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 4</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE Ra</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>CIRCULATE Rf</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD foo</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>FAIL C</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=42%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 5 chars</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>4 were loaded</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>an 'a' was
+				removed</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>'f' goes right to
+				left</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Deque is unloaded</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Nothing to
+				circulate</FONT></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P STYLE="font-style: normal"><BR><BR>
+</P>
+<P><SPAN STYLE="font-style: normal">You are encouraged to generate
+examples using the reference implementation.</SPAN></P>
+<H1>Sample interactions: Dequer&lt;Label&gt;</H1>
+<P>In these examples, by contrast, note that a single command may
+span <I>multiple lines </I>of input, and likewise for responses. 
+Since all chars are legal inside a label, including newline chars,
+and commands and responses may contain labels, therefore commands and
+responses may take more than one line to represent.  The final
+example, below, <SPAN STYLE="font-style: normal">demonstates such a
+situation.</SPAN></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=10*>
+	<COL WIDTH=75*>
+	<COL WIDTH=73*>
+	<COL WIDTH=98*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=4%>
+				<P>#</P>
+			</TH>
+			<TH WIDTH=29%>
+				<P>Command</P>
+			</TH>
+			<TH WIDTH=28%>
+				<P>Response</P>
+			</TH>
+			<TH WIDTH=38%>
+				<P>Notes</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>1</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>IL3:foo</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>IL3:bar</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>INSERT L3:foo</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>FAIL I</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>First insert
+				works</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>2<SUP>nd</SUP>
+				fails since </FONT></FONT>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>initial size is 1</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>2</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>A</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>AUTHOR &quot;Dave&quot;</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>3</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L2 1:A1:C</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 1</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD 1:A</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD </FONT></FONT>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Only one object
+				fit</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>One object
+				removed</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>nothing there now</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>4</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S1000</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L3 2:Hi1: 3:Bob</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>L1 0:</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RL</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RR</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>D1234</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 1000</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 3</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>LOAD 1</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE L2:Hi</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE R0:</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>DELAY 1234</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD 1: 3:Bob</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 1000
+				Label's</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Load worked</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Load worked</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>2:Hi Label
+				removed</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>0: Label removed</FONT></FONT></P>
+				<P><BR><BR>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>rest is unloaded</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=4%>
+				<P ALIGN=CENTER>5</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>IL4:Ga a</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RL</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>INSERT L4:Ga a</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 10</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD </FONT></FONT>
+				</P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>FAIL R</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 10
+				Labels</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Insert worked</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 10
+				Labels</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>nothing in it now</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>so remove fails</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD ROWSPAN=10 WIDTH=4%>
+				<P ALIGN=CENTER>6</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>S5</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>SIZE 5</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Room for 5 Labels</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>IR1:H</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>INSERT R1:H</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Insert worked</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>IR3:E</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Z</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>INSERT R3:E</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Z</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Insert of length
+				3..</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>..label
+				'E','\n','Z'</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>IR1:$</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>INSERT R1:$</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Insert worked</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>RR</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>REMOVE R1:$</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>a 1:$ was removed</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>CR</FONT></FONT></P>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>CIRCULATE R3:E</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Z</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>3:E</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Z goes right to
+				left</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>U</FONT></FONT></P>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>UNLOAD 3:E</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Z1:H</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Deque is
+				unloaded..</FONT></FONT></P>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>..two labels come
+				out</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>CL</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>FAIL C</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace"><FONT SIZE=3>Nothing
+				to circulate</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>Q</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><FONT FACE="courier, monospace"><FONT SIZE=3>QUIT</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=38%>
+				<P ALIGN=LEFT><FONT FACE="courier, monospace"><FONT SIZE=3>Engine
+				quits</FONT></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=29%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=28%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=38%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H3>Program structure</H3>
+<P>Program 4 provides two main line programs to drive your code,
+CharMain and LabelMain.  The two programs are identical except for
+the template parameter they supply to instantiate the Dequer
+template.</P>
+<P>The following files are available for your use as-is:</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=114*>
+	<COL WIDTH=142*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=45%>
+			<P><FONT FACE="courier, monospace">CharMain.C, CharMain.h</FONT></P>
+		</TD>
+		<TD WIDTH=55%>
+			<P>main program instantiating <FONT FACE="courier, monospace">Dequer&lt;int&gt;</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=45%>
+			<P><FONT FACE="courier, monospace">LabelMain.C, LabelMain.h</FONT></P>
+		</TD>
+		<TD WIDTH=55%>
+			<P>main program instantiating <FONT FACE="courier, monospace">Dequer&lt;Label&gt;</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=45%>
+			<P><FONT FACE="courier, monospace">Makefile</FONT></P>
+		</TD>
+		<TD WIDTH=55%>
+			<P>Makefile building CharDequer and LabelDequer</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<P>Your task is to produce the following files:</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=101*>
+	<COL WIDTH=155*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=40%>
+			<P>Dequer.h, Dequer.template</P>
+		</TD>
+		<TD WIDTH=60%>
+			<P><FONT FACE="times, serif">declaration and implementation of</FONT><FONT FACE="courier, monospace">
+			template &lt;class TYPE&gt;class Dequer</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=40%>
+			<P>Deque.h, Deque.template</P>
+		</TD>
+		<TD WIDTH=60%>
+			<P><FONT FACE="courier, monospace"><FONT FACE="times, serif">declaration
+			and implementation of </FONT>template &lt;class TYPE&gt;class
+			Deque</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=40%>
+			<P><FONT FACE="times, serif">Label.h, Label.C</FONT></P>
+		</TD>
+		<TD WIDTH=60%>
+			<P><FONT FACE="courier, monospace"><FONT FACE="times, serif">declaration
+			and implementation of </FONT>class Label</FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P> 
+</P>
+<P>You may modify your own Dequer and Deque files that you wrote for
+program 2, or you may extract and modify the code presented in the
+class lecture notes, or any combination thereof.  See requirements
+above under `Deque template interface design' if you design or reuse
+your own interface.  You may not use any code written or extracted by
+anybody except yourself or Professor Ackley. 
+</P>
+<H3>Revision History</H3>
+<UL>
+	<LI><P>Version 0.9, first released version, 4/12/00. Based on p2-12.</P>
+	<LI><P>Version 1.0, commenced 4/13/00: Add the 'U'nload command
+	which had mysteriously vanished (tx: pk0984).  Update the 'L'oad
+	description to indicate that Load generates a LOAD response (tx:
+	croatoan).</P>
+</UL>
+</BODY>
+</HTML>

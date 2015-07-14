@@ -1,0 +1,7 @@
+clear
+echo "g++ -g -Wall -pedantic -c -Werror Bignum.C"
+g++ -g -Wall -pedantic -c -Werror Bignum.C 
+echo "g++ -g -Wall -pedantic -c -Werror kbnd.C"
+g++ -g -Wall -pedantic -c -Werror kbnd.C
+echo "g++ Bignum.o kbnd.o -o kbnd"
+g++ Bignum.o kbnd.o -o kbnd 

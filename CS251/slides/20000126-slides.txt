@@ -1,0 +1,1561 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Emacs tips
+ - How source becomes executable / #include file trees
+
+TODAY:
+ - Program 1 overview, demo, & questions
+ - #include file trees: Exposing the lie	 
+
+HOMEWORK: PC++P Ch 4-7, esp. 7
+
+    PROGRAM 1 due THU 2/10/00 5PM : 15 days 3 hours remaining 
+  
+    NO AUDITS - Last day to change
+     grading option is FRI 2/11/00 : 16 days remaining      
+
+
+
+
+
+
+
+PROGRAM 1 OVERVIEW, DEMO, & QUESTIONS
+
+ Notes about file formats, comments, style, etc --
+
+ 0 - You MUST include YOUR FULL NAME and YOUR EMAIL ADDRESS
+     at the top of EVERY FILE YOU WRITE!
+	      
+ 1 - You are not required to use any SPECIFIC set of rules
+     for indenting, white space, comment headers, etc, BUT
+	      
+ 2 - You MUST indent your code to reflect its actual 
+     block structure! 	The specifics are up to you as long
+     as you are consistent!  (emacs will do indenting for you
+     automatically!  Just type <TAB>!)
+    Code like:
+    
+int main() {  
+cout << "hey bud"; if (1>0) {
+cout << "indentation is for wimps"; 
+}}  
+     WILL lose credit.
+    
+
+
+PROGRAM 1 OVERVIEW, DEMO, & QUESTIONS
+ Overview:    
+  WARNING: THESE NOTES ARE NOT AUTHORITATIVE!  ONLY
+    http://www.cs.unm.edu/~ackley/cs251/projects/1/
+    CONTAINS THE AUTHORITATIVE SPECIFICATION
+	      
+ 'blocks' reads commands in a specified format from cin and
+ generates responses in a (different) specified format on cout.
+	      
+ It's got a 'board', which can contain some 'blocks'.  A block
+ knows where it is on the board, whether it's movable or not,
+ and if it's movable what direction, if any, it's moving.
+	      
+ Commands exist to specify how big the board is and how many 
+ blocks there are (within limits), to place blocks on the board
+ and specify whether they are movable, to push blocks around,
+ and so forth.						     
+
+
+
+
+
+
+
+PROGRAM 1 OVERVIEW, DEMO, & QUESTIONS
+ Overview:    
+  WARNING: THESE NOTES ARE NOT AUTHORITATIVE!  ONLY
+    http://www.cs.unm.edu/~ackley/cs251/projects/1/
+    CONTAINS THE AUTHORITATIVE SPECIFICATION
+	      
+ 'blocks' reads commands in a specified format from cin and
+ generates responses in a (different) specified format on cout.
+	      
+ It's got a 'board', which can contain some 'blocks'.  A block
+ knows where it is on the board, whether it's movable or not,
+ and if it's movable what direction, if any, it's moving.
+	      
+ Commands exist to specify how big the board is and how many 
+ blocks there are (within limits), to place blocks on the board
+ and specify whether they are movable, to push blocks around,
+ and so forth.						     
+
+
+
+   ( demo )
+
+
+
+PROGRAM 1 OVERVIEW, DEMO, & QUESTIONS
+ Overview:    
+  WARNING: THESE NOTES ARE NOT AUTHORITATIVE!  ONLY
+    http://www.cs.unm.edu/~ackley/cs251/projects/1/
+    CONTAINS THE AUTHORITATIVE SPECIFICATION
+	      
+ 'blocks' reads commands in a specified format from cin and
+ generates responses in a (different) specified format on cout.
+	      
+ It's got a 'board', which can contain some 'blocks'.  A block
+ knows where it is on the board, whether it's movable or not,
+ and if it's movable what direction, if any, it's moving.
+	      
+ Commands exist to specify how big the board is and how many 
+ blocks there are (within limits), to place blocks on the board
+ and specify whether they are movable, to push blocks around,
+ and so forth.						     
+
+Main tasks:
+ - Read and sanity check input commands
+ - Store board info 
+ - Store block(s) info	
+ - Update block(s) info as blocks move/push
+ - Generate responses as needed
+PROGRAM 1 OVERVIEW, DEMO, & QUESTIONS
+ Overview:    
+  WARNING: THESE NOTES ARE NOT AUTHORITATIVE!  ONLY
+    http://www.cs.unm.edu/~ackley/cs251/projects/1/
+    CONTAINS THE AUTHORITATIVE SPECIFICATION
+
+---Main.C---   	   ---Main.h---	     
+#include "Main.h"  #ifndef MAIN_H    
+   	    	   #define MAIN_H    
+int main()  	                     
+{  	    	   #include "Board.h"
+  Board b;  	                     
+  b.Run();  	   #endif            
+  return 0; 	   --- 	       
+}  	    		       
+---	    		       
+   
+
+
+
+
+  
+ ( other questions )
+
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+
+
+
+
+
+
+
+
+
+
+
+
+
+      	      	     	    
+   	      	     	    
+                     	    
+                       	    
+                     	    
+                            
+                    	    
+   			    
+   			    
+			    
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+               	       	      ---Mouse.h---    
+                 	      #ifndef MOUSE_H  
+                 	      #define MOUSE_H  
+                  	      class Mouse {                   
+   	     	  	      public:                            
+              	  	        Mouse();                         
+             	  	        void Cut();                      
+                  	      private:                           
+                                bool _blind;                     
+                     	        bool _hastail;                   
+                       	      };                                 
+   	      	     	      #endif                             
+              	     	      ---                                
+      	      	     	    
+   	      	     	    
+                     	    
+                       	    
+                     	    
+                            
+                    	    
+   			    
+   			    
+			    
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+                       	      ---Mouse.h---    
+                	      #ifndef MOUSE_H  
+               		      #define MOUSE_H  
+                  	      class Mouse {                   
+   	     	  	      public:                            
+               	  	        Mouse();                         
+             	  	        void Cut();                      
+                  	      private:                           
+                                bool _blind;                     
+                   	        bool _hastail;                   
+                              };                                 
+   	      	     	      #endif                             
+              	     	      ---                                
+   	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+                     	      
+                     	      Mouse::Mouse() {                   
+                       	        _blind = true;  _hastail = true; 
+                              }                                  
+                    	      void Mouse::Cut() {
+   			        _hastail = false;
+   			      }                                  
+			      ---
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+---Farm.h---   	       	      ---Mouse.h---    
+#ifndef FARM_H		      #ifndef MOUSE_H  
+#define FARM_H		      #define MOUSE_H  
+#include "Mouse.h"	      class Mouse {                   
+   	     	  	      public:                            
+class Farm { 	  	        Mouse();                         
+public:	     	  	        void Cut();                      
+  void DoIt();	  	      private:                           
+private:                        bool _blind;                     
+  enum {_MEESES=3};	        bool _hastail;                   
+  Mouse _mice[_MEESES];	      };                                 
+};     	       	       	      #endif                             
+#endif	      	     	      ---                                
+---	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+               	     	      
+                     	      Mouse::Mouse() {                   
+                      	        _blind = true;  _hastail = true; 
+                              }                                  
+                     	      void Mouse::Cut() {                
+   			        _hastail = false;
+   			      }                                  
+			      ---
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+---Farm.h---   	       	      ---Mouse.h---    
+#ifndef FARM_H		      #ifndef MOUSE_H  
+#define FARM_H		      #define MOUSE_H  
+#include "Mouse.h"	      class Mouse {                   
+   	     	  	      public:                            
+class Farm { 	  	        Mouse();                         
+public:	     	  	        void Cut();                      
+  void DoIt();	  	      private:                           
+private:                        bool _blind;                     
+ +--------------------+	        bool _hastail;                   
+ |Mouse _mice[_MEESES]|	      };                                 
+}+--------------------+	      #endif                             
+#endif	      	     	      ---                                
+---	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+               	     	      
+                     	      Mouse::Mouse() {                   
+                      	        _blind = true;  _hastail = true; 
+                              }                                  
+                     	      void Mouse::Cut() {                
+   			        _hastail = false;
+   			      }                                  
+			      ---
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+---Farm.h---   	       	      ---Mouse.h---    
+#ifndef FARM_H		      #ifndef MOUSE_H  
+#define FARM_H		      #define MOUSE_H  
+#include "Mouse.h"	      class Mouse {                   
+   	     	  	      public:                            
+class Farm { 	  	        Mouse();                         
+public:	     	  	        void Cut();                      
+  void DoIt();	  	      private:                           
+private:                        bool _blind;                     
+  enum {_MEESES=3};	        bool _hastail;                   
+  Mouse _mice[_MEESES];	      };                                 
+};     	       	       	      #endif                             
+#endif	      	     	      ---                                
+---	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+               	     	      
+                     	      Mouse::Mouse() {                   
+                      	        _blind = true;  _hastail = true; 
+                              }                                  
+                     	      void Mouse::Cut() {                
+   			        _hastail = false;
+   			      }                                  
+			      ---
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+---Farm.h---   	       	      ---Mouse.h---    
+#ifndef FARM_H		      #ifndef MOUSE_H  
+#define FARM_H		      #define MOUSE_H  
+#include "Mouse.h"	      class Mouse {                   
+   	     	  	      public:                            
+class Farm { 	  	        Mouse();                         
+public:	     	  	        void Cut();                      
+  void DoIt();	  	      private:                           
+private:                        bool _blind;                     
+  enum {_MEESES=3};	        bool _hastail;                   
+  Mouse _mice[_MEESES];	      };                                 
+}; 	      	     	      #endif                             
+#endif	      	     	      ---                                
+---	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+---Farm.C---  	     	      
+#include "Farm.h"    	      Mouse::Mouse() {                   
+void Farm::DoIt() {	        _blind = true;  _hastail = true; 
+  for (int i=0;i<_MEESES;++i) }                                  
+    _mice[i].Cut(); 	      void Mouse::Cut() {                
+}  			        _hastail = false;
+---			      }                                  
+			      ---
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+---Farm.h---   	       	      ---Mouse.h---    
+#ifndef FARM_H		      #ifndef MOUSE_H  
+#define FARM_H		      #define MOUSE_H  
+#include "Mouse.h"	      class Mouse {                   
+   	     	  	      public:                            
+class Farm { 	  	        Mouse();                         
+public:	     	  	        void Cut();                      
+  void DoIt();	  	      private:                           
+private:                        bool _blind;                     
+  enum {_MEESES=3};	        bool _hastail;                   
+  Mouse _mice[_MEESES];	      };                                 
+}; 	      	     	      #endif                             
+#endif	      	     	      ---                                
+---	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+---Farm.C---  	     	      
+#include "Farm.h"    	      Mouse::Mouse() {                   
+void Farm::DoIt() {	        _blind = true;  _hastail = true; 
+  f+--------------+EESES;++i) }                                  
+   |_mice[i].Cut()| 	      void Mouse::Cut() {                
+}  +--------------+	        _hastail = false;
+---			      }                                  
+			      ---
+ONE EXAMPLE IN THE MANNER OF A HINT ABOUT DATA STRUCTURES
+---Farm.h---   	       	      ---Mouse.h---    
+#ifndef FARM_H		      #ifndef MOUSE_H  
+#define FARM_H		      #define MOUSE_H  
+#include "Mouse.h"	      class Mouse {                   
+   	     	  	      public:                            
+class Farm { 	  	        Mouse();                         
+public:	     	  	        void Cut();                      
+  void DoIt();	  	      private:                           
+private:                        bool _blind;                     
+  enum {_MEESES=3};	        bool _hastail;                   
+  Mouse _mice[_MEESES];	      };                                 
+}; 	      	     	      #endif                             
+#endif	      	     	      ---                                
+---	      	     	      ---Mouse.C---                      
+   	      	     	      #include "Mouse.h"                 
+---Farm.C---  	     	      
+#include "Farm.h"    	      Mouse::Mouse() {                   
+void Farm::DoIt() {	        _blind = true;  _hastail = true; 
+  for (int i=0;i<_MEESES;++i) }                                  
+    _mice[i].Cut(); 	      void Mouse::Cut() {                
+}  			        _hastail = false;
+---			      }                                  
+			      ---
+C++ - #include FILE TREE 
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		    
+
+
+C++ - #include FILE TREE 
+			
+In computer science,   	     (etc)    <---- So, up here somewhere
+trees are almost always        ^  	    is the ROOT of the   
+drawn upside-down.             |       	    tree              
+		           <iostream.h>	      	
+        		       ^           Branches, or LINKS,
+       	       	       	       |       <-- connect the pieces    
+  As we move UP            "Hello.h"       of the tree together. 
+  the picture toward          ^ ^          Arrowheads on branches
+  the ROOT, the branches     /   \    <--- might point toward or 
+  all join up and flow      /     \    	   away from the ROOT   
+  together.                /       \          			
+                      "main.h"   Hello.C  <-- And down here 	
+  As we move DOWN         ^   		      towards the bottom
+  the picture away  	  |	              of the picture are
+  from the ROOT,          |		      the LEAVES of the 
+  the branches split   main.C     <---------- tree             	
+  apart from each       					
+  other and end at
+  LEAVES.         
+		    
+
+
+C++ - LINKING OBJECT FILES TO CREATE AN EXECUTABLE
+			
+       	       	       	     (etc)
+	    	    	       ^  
+ Have to do a 'g++ -c'         |       	      
+ for EACH LEAF of the      <iostream.h>	      And you end up
+ tree..                        ^              with a '.o' for  
+       	       	       	       |	      each leaf of the 
+        		   "Hello.h"	      tree.	       
+        		      ^ ^       		       
+        		     /   \			       
+                    	    /     \			       
+        		   /       \			       
+        	      "main.h"   Hello.C		       
+        		  ^     (Hello.o)       	       
+                          |   
+        		  |   
+        	       main.C       			       
+       	              (main.o)      		      	       
+
+Finally, you do a 'g++ -o' to 'link' all the .o's together 
+and make a complete program:
+	        g++ main.o Hello.o -o myhelloworld
+creating 'myhelloworld'.
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+				       
+--main.C--     	 
+#include "main.h"
+		 
+int main() {	 
+  Foo f;	 
+  f.DoIt();	 
+  return 0;	 
+}		 
+----------     	 
+		 
+
+
+
+
+
+
+
+
+
+
+		    
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+        			       
+--main.C--     	  
+#include "main.h" 
+		  
+int main() {	  
+  Foo f;	  
+  f.DoIt();	  
+  return 0;	  
+}		  
+----------     	  
+		  
+--main.h--        
+#ifndef MAIN_H	  
+#define MAIN_H	  
+		  
+#include "Foo.h"  
+#endif		  
+----------	  
+		  
+		  
+		  
+		    
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+				       
+--main.C--     	    --Foo.h--  	    
+#include "main.h"   #ifndef FOO_H   
+		    #define FOO_H   
+int main() {	    #include "Bar.h"
+  Foo f;	    class Foo {     
+  f.DoIt();	    public:    	    
+  return 0;	      void DoIt();  
+}		    private:        
+----------     	      Bar _b;       
+		    };              
+--main.h--          #endif              	                
+#ifndef MAIN_H	    ----------      
+#define MAIN_H	                    
+		  
+#include "Foo.h"  
+#endif		  
+----------	  
+		  
+		  
+		  
+		    
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+				       
+--main.C--     	    --Foo.h--  	       
+#include "main.h"   #ifndef FOO_H      
+		    #define FOO_H      
+int main() {	    #include "Bar.h"   
+  Foo f;	    class Foo {        
+  f.DoIt();	    public:    	       
+  return 0;	      void DoIt();     
+}		    private:           
+----------     	      Bar _b;          
+		    };                 
+--main.h--          #endif              	                
+#ifndef MAIN_H	    ----------         
+#define MAIN_H	    		       
+		                       
+#include "Foo.h"    --Foo.C--          
+#endif		    #include "Foo.h"   
+----------	    void Foo::DoIt() { 
+		       _b.ReallyDoIt();
+		    }                  
+		    ---------           
+		    		       
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+				       
+--main.C--     	    --Foo.h--  	       	 --Bar.h--
+#include "main.h"   #ifndef FOO_H      	 #ifndef BAR_H
+		    #define FOO_H      	 #define BAR_H
+int main() {	    #include "Bar.h"   	 #include <iostream.h>
+  Foo f;	    class Foo {        	 class Bar {          
+  f.DoIt();	    public:    	       	   public:  
+  return 0;	      void DoIt();	     void ReallyDoIt();
+}		    private:             };                    
+----------     	      Bar _b;   	 #endif
+		    };                   -----------	
+--main.h--          #endif              	                
+#ifndef MAIN_H	    ----------         
+#define MAIN_H	    		       
+		                       
+#include "Foo.h"    --Foo.C--          
+#endif		    #include "Foo.h"   
+----------	    void Foo::DoIt() { 
+		       _b.ReallyDoIt();
+		    }                  
+		    ---------           
+		    
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+				       
+--main.C--     	    --Foo.h--  	       	 --Bar.h--
+#include "main.h"   #ifndef FOO_H      	 #ifndef BAR_H
+		    #define FOO_H      	 #define BAR_H
+int main() {	    #include "Bar.h"   	 #include <iostream.h>
+  Foo f;	    class Foo {        	 class Bar {          
+  f.DoIt();	    public:    	       	   public:  
+  return 0;	      void DoIt();	     void ReallyDoIt();
+}		    private:             };                    
+----------     	      Bar _b;   	 #endif
+		    };                   -----------	
+--main.h--          #endif              	                
+#ifndef MAIN_H	    ----------           --Bar.C--          
+#define MAIN_H	    			 #include "Bar.h"
+		                         void Bar::ReallyDoIt() {
+#include "Foo.h"    --Foo.C--              cout 
+#endif		    #include "Foo.h"         << "Bar bar fo far"
+----------	    void Foo::DoIt() {       << endl;           
+		       _b.ReallyDoIt();  }           
+		    }                    ----------
+		    ---------           
+		    
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+                     
+        (etc)     
+          ^        	          	        	      
+          |       
+     <iostream.h> 
+          ^       
+          |       
+       "Bar.h"     	           			      
+         ^  ^     
+        /    \    
+     "Foo.h"  \   
+       ^  ^  Bar.C
+      /    \      
+  "main.h"  \     
+     ^     Foo.C   	           
+    /             
+ main.C           
+                  
+		  
+                  
+		  
+		  
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+                     
+        (etc)          Commands to (re)build:                 
+          ^        	          	        	      
+          |            g++ -Wall -pedantic -c Bar.C	      
+     <iostream.h>      g++ -Wall -pedantic -c Foo.C	      
+          ^            g++ -Wall -pedantic -c main.C	      
+          |            
+       "Bar.h"                     			      
+         ^  ^          
+        /    \         
+     "Foo.h"  \        
+       ^  ^  Bar.C     
+      /    \           
+  "main.h"  \          
+     ^     Foo.C                   
+    /                  
+ main.C                
+                       
+		       
+                       
+		       
+		       
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+                     
+        (etc)          Commands to (re)build:                 
+          ^        	          	        	      
+          |            g++ -Wall -pedantic -c Bar.C	      
+     <iostream.h>      g++ -Wall -pedantic -c Foo.C	      
+          ^            g++ -Wall -pedantic -c main.C	      
+          |            g++ Bar.o Foo.o main.o -o SecondExample 
+       "Bar.h"     	           			      
+         ^  ^         
+        /    \        
+     "Foo.h"  \       
+       ^  ^  Bar.C    
+      /    \          
+  "main.h"  \         
+     ^     Foo.C                   
+    /                 
+ main.C               
+                      
+		      
+                      
+		      
+		      
+
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+                     
+        (etc)          Commands to (re)build:                 
+          ^        	          	        	      
+          |            g++ -Wall -pedantic -c Bar.C	      
+     <iostream.h>      g++ -Wall -pedantic -c Foo.C	      
+          ^            g++ -Wall -pedantic -c main.C	      
+          |            g++ Bar.o Foo.o main.o -o SecondExample 
+       "Bar.h"     	           			      
+         ^  ^          Note:       			      
+        /    \          g++ -Wall -pedantic -c Foo.C
+     "Foo.h"  \         g++ -Wall -pedantic -c main.C
+       ^  ^  Bar.C      g++ -Wall -pedantic -c Bar.C
+      /    \       	g++ main.o Bar.o Foo.o -o SecondExample
+  "main.h"  \          is fine too
+     ^     Foo.C                   
+    /               
+ main.C             
+                    
+		    
+                    
+		    
+		    
+		    
+MULTIPLE FILE PROGRAMS - SECOND EXAMPLE
+                     
+        (etc)          Commands to (re)build:                 
+          ^        	          	        	      
+          |            g++ -Wall -pedantic -c Bar.C	      
+     <iostream.h>      g++ -Wall -pedantic -c Foo.C	      
+          ^            g++ -Wall -pedantic -c main.C	      
+          |            g++ Bar.o Foo.o main.o -o SecondExample 
+       "Bar.h"     	           			      
+         ^  ^          Note:       			      
+        /    \          g++ -Wall -pedantic -c Foo.C
+     "Foo.h"  \         g++ -Wall -pedantic -c main.C
+       ^  ^  Bar.C      g++ -Wall -pedantic -c Bar.C
+      /    \            g++ main.o Bar.o Foo.o -o SecondExample
+  "main.h"  \          is fine too
+     ^     Foo.C   	           
+    /                  But       	   
+ main.C                 g++ -Wall -pedantic -c Bar.C
+                   	g++ -Wall -pedantic -c main.C           
+			g++ Bar.o Foo.o main.o -o SecondExample
+                        g++ -Wall -pedantic -c Foo.C
+		       is wrong because it might get an old
+		       copy of Foo.o.                      
+
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+			               
+--main.C--     	  
+#include "main.h" 
+		  
+int main() {	  
+  Foo f;	  
+  f.DoIt();	  
+           	  
+  Bar b;           // This main() is really too complicated,
+  b.ReallyDoIt();  // We're just doing this for an example  
+  return 0;       
+}                 
+---------         
+
+
+
+
+
+
+
+
+		    
+
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+			               
+--main.C--     	  
+#include "main.h" 
+		  
+int main() {	  
+  Foo f;	  
+  f.DoIt();	  
+           	  
+  Bar b;	  
+  b.ReallyDoIt(); 
+  return 0;       
+}                 
+---------         
+                  
+--main.h--        
+#ifndef MAIN_H    
+#define MAIN_H    
+#include "Bar.h"  
+#include "Foo.h"  
+#endif            
+----------        
+		    
+
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                        (same as before)     (same as before)
+--main.C--     	    --Foo.h--  	       	 --Bar.h--	     
+#include "main.h"   #ifndef FOO_H      	 #ifndef BAR_H	     
+		    #define FOO_H      	 #define BAR_H	     
+int main() {	    #include "Bar.h"   	 #include <iostream.h>
+  Foo f;	    class Foo {        	 class Bar {          
+  f.DoIt();	    public:    	       	   public:  	     
+           	      void DoIt();	     void ReallyDoIt();
+  Bar b;	    private:             };                    
+  b.ReallyDoIt();     Bar _b;   	 #endif		     
+  return 0;         };                   -----------           	
+}                   #endif                    (same as before)
+---------           ----------           --Bar.C--            
+                        		 #include "Bar.h"
+--main.h--             (same as before)  void Bar::ReallyDoIt() {
+#ifndef MAIN_H      --Foo.C--              cout 
+#define MAIN_H      #include "Foo.h"         << "Bar bar fo far"
+#include "Bar.h"    void Foo::DoIt() {       << endl;           
+#include "Foo.h"       _b.ReallyDoIt();  }           
+#endif              }                    ----------
+----------          ---------           
+		    
+
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)       
+          ^                 
+          |                 
+     <iostream.h>   	    
+          ^         	    
+          |                 
+       "Bar.h"     	           		              
+        ^ ^^          	    
+     /-/ /  \		    
+    /   /    \              
+   | "Foo.h"  \       	
+   |   ^  ^  Bar.C    	     			      
+   |  /    \          	
+  "main.h"  \         	
+     ^     Foo.C        
+    /                 	
+ main.C               	        		      
+                      	
+                        
+                      	
+		      	                      
+		      	
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 
+          |                 
+     <iostream.h>   	    
+          ^         	    
+          |                 
+       "Bar.h"     	           		              
+        ^ ^^          	    
+     /-/ /  \		    
+    /   /    \              
+   | "Foo.h"  \       	
+   |   ^  ^  Bar.C    	     			      
+   |  /    \          	
+  "main.h"  \         	
+     ^     Foo.C        
+    /                 	
+ main.C               	        		      
+                      	
+                        
+                      	
+		      	                      
+		      	
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |                 that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    
+     /-/ /  \               
+    /   /    \              
+   | "Foo.h"  \         
+   |   ^  ^  Bar.C    	     			      
+   |  /    \          	
+  "main.h"  \         	
+     ^     Foo.C        
+    /                 	
+ main.C               	        		      
+                      	
+                        
+                      	
+		      	                      
+		      	
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |                 that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \       	
+   |   ^  ^  Bar.C    	     			      
+   |  /    \          	
+  "main.h"  \         	
+     ^     Foo.C        
+    /                 	
+ main.C               	        		      
+                      	
+                        
+                      	
+		      	                      
+		      	
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |         	    that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \              A:It's called a DAG.          
+   |   ^  ^  Bar.C                      	      
+   |  /    \             
+  "main.h"  \         	 
+     ^     Foo.C             
+    /                 	     
+ main.C               	        		      
+                      	     
+                             
+                      	     
+		      	                      
+		      	     
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |         	    that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \              A:It's called a DAG.          
+   |   ^  ^  Bar.C                      	      
+   |  /    \          	     Q:Why is it called a DAG?
+  "main.h"  \         	       Short for DAGGER or something?
+     ^     Foo.C             
+    /                 	     
+ main.C               	        		      
+                      	     
+                             
+                      	     
+		      	                      
+		      	     
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |         	    that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \       	     A:It's called a DAG.          
+   |   ^  ^  Bar.C                      	      
+   |  /    \          	     Q:Why is it called a DAG?
+  "main.h"  \         	       Short for DAGGER or something?
+     ^     Foo.C             A:No, it's an acronym for
+    /                 	       DIRECTED-ACYCLIC GRAPH.
+ main.C                         		      
+                      	     
+                             
+                      	     
+		      	                      
+		      	     
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |         	    that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \       	     A:It's called a DAG.          
+   |   ^  ^  Bar.C                      	      
+   |  /    \          	     Q:Why is it called a DAG?
+  "main.h"  \         	       Short for DAGGER or something?
+     ^     Foo.C             A:No, it's an acronym for
+    /                          DIRECTED-ACYCLIC GRAPH.
+ main.C               	        		      
+                      	     Q:I wish I hadn't asked. 
+                          
+                      	  
+		      	                      
+		      	  
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |         	    that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \       	     A:It's called a DAG.          
+   |   ^  ^  Bar.C                      	      
+   |  /    \          	     Q:Why is it called a DAG?
+  "main.h"  \         	       Short for DAGGER or something?
+     ^     Foo.C             A:No, it's an acronym for
+    /                 	       DIRECTED-ACYCLIC GRAPH.
+ main.C               	        		      
+                      	     Q:I wish I hadn't asked. 
+                             A:For our purposes, 'DAG' just means
+                      	       'HAS NO LOOPS'.
+		      	                      
+
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          	    Oh No!  It's not a tree anymore!
+          ^                 Trees always split apart as you   
+          |                 move down away from the root, but 
+     <iostream.h>   	    we've got TWO branches joining up 
+          ^         	    at main.h!  Trees just don't DO   
+          |         	    that!                             
+       "Bar.h"     	           		              
+        ^ ^^          	    (Computer Science jargon moment:  
+     /-/ /  \		     Q:Well, if it's not a TREE, then
+    /   /    \                 WHAT IS IT?                     
+   | "Foo.h"  \       	     A:It's called a DAG.          
+   |   ^  ^  Bar.C                      	      
+   |  /    \          	     Q:Why is it called a DAG?
+  "main.h"  \         	       Short for DAGGER or something?
+     ^     Foo.C             A:No, it's an acronym for
+    /                 	       DIRECTED-ACYCLIC GRAPH.
+ main.C               	        		      
+                      	     Q:I wish I hadn't asked. 
+                             A:For our purposes, 'DAG' just means
+                      	       'HAS NO LOOPS'.
+		      	                      
+		      	     Q:I still wish I hadn't asked.)
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          OK, it's a 'DAG', not a tree.  But what
+          ^            happens during compilation?            
+          |            				  
+     <iostream.h>      				  
+          ^            				  
+          |            				  
+       "Bar.h"     	           		              
+        ^ ^^          	      			  
+     /-/ /  \					  
+    /   /    \                			  
+   | "Foo.h"  \       	      			  
+   |   ^  ^  Bar.C                                
+   |  /    \     
+  "main.h"  \                                     
+     ^     Foo.C                   
+    /                 
+ main.C               
+                      
+		      
+                      
+		      
+		      
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)          Commands to (re)build:                 
+          ^        	          	        	      
+          |            g++ -Wall -pedantic -c Bar.C	      
+     <iostream.h>      g++ -Wall -pedantic -c Foo.C	      
+          ^            g++ -Wall -pedantic -c main.C	      
+          |            g++ Bar.o Foo.o main.o -o SecondExample 
+       "Bar.h"     	           			      
+        ^ ^^          	      
+     /-/ /  \
+    /   /    \                
+   | "Foo.h"  \       	      
+   |   ^  ^  Bar.C    	      
+   |  /    \          
+  "main.h"  \         
+     ^     Foo.C                   
+    /                 
+ main.C               
+                      
+		      
+                      
+		      
+		      
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)       
+          ^^        
+          ||           				  
+     <iostream.h>      				  
+          ^^           				  
+          ||           				  
+       "Bar.h"                     		              
+        ^ ^^^         	      			  
+     /-/ /  \\          			  
+    /   /    \\               			  
+   | "Foo.h"  \\      	      			  
+   |   ^  ^  Bar.C                                
+   |  /    \       g++ -Wall -pedantic -c Bar.C   
+  "main.h"  \             (writes Bar.o)         
+     ^     Foo.C                   
+    /                 
+ main.C               
+                      
+		      
+                      
+		      
+		      
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)       
+         ^^                       	        	      
+         ||         
+     <iostream.h>   
+         ^^         
+         ||         
+       "Bar.h"                     			      
+        ^^^^          	      
+     /-///  \	    
+    /  //    \                
+   | "Foo.h"  \       	      
+   |   ^ ^^  Bar.C    	      
+   |  /   \\(Bar.o)        
+  "main.h" \\         	   
+     ^     Foo.C                           
+    /          g++ -Wall -pedantic -c Foo.C
+ main.C              (writes Foo.o)        
+                      
+		      
+                      
+		      
+		      
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^       
+          |       
+     <iostream.h> 
+          ^       
+          |       
+       "Bar.h"    
+        ^ ^^      
+     /-/ /  \	  
+    /   /    \    
+   | "Foo.h"  \     
+   |   ^  ^  Bar.C  
+   |  /    \(Bar.o) 
+  "main.h"  \       
+     ^     Foo.C    
+    /     (Foo.o)   
+ main.C             
+                       	       	  
+   g++ -Wall -pedantic -c main.C  
+                      		  
+		      		  
+		      		  
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |           #ifndef BAR_H          #ifndef MAIN_H  
+     <iostream.h>     #define BAR_H          #define MAIN_H  
+          ^           #include <iostream.h>  #include "Bar.h"
+          |           class Bar {            #include "Foo.h"
+       "Bar.h"          public:              #endif    
+        ^ ^^              void ReallyDoIt(); ----------      
+     /-/ /  \	      };                     
+    /   /    \        #endif                         
+   | "Foo.h"  \       -----------       --Foo.h--        
+   |   ^  ^  Bar.C    	      		#ifndef FOO_H    
+   |  /    \(Bar.o)   			#define FOO_H    
+  "main.h"  \         			#include "Bar.h" 
+     ^     Foo.C                   	class Foo {      
+    /     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |           #ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>     #define BAR_H          #define MAIN_H  <do 
+          ^           #include <iostream.h>  #include "Bar.h"<do 
+          |           class Bar {            #include "Foo.h"
+       "Bar.h"          public:              #endif    	    
+        ^ ^^              void ReallyDoIt(); ----------      
+     /-/ /  \	      };                     
+    /   /    \        #endif                         
+   | "Foo.h"  \       -----------       --Foo.h--        
+   |   ^  ^  Bar.C    	      		#ifndef FOO_H    
+   |  /    \(Bar.o)   			#define FOO_H    
+  "main.h"  \         			#include "Bar.h" 
+    ^^     Foo.C                   	class Foo {      
+   //     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |       yes>#ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>  do>#define BAR_H          #define MAIN_H  <do 
+          ^        do>#include <iostream.h>  #include "Bar.h"<do
+          |           class Bar {            #include "Foo.h"
+       "Bar.h"          public:              #endif    
+     --^^ ^^              void ReallyDoIt(); ----------      
+    //-/ /  \	      };                     
+   //   /    \        #endif                         
+  || "Foo.h"  \       -----------       --Foo.h--        
+  ||   ^  ^  Bar.C    	      		#ifndef FOO_H    
+  ||  /    \(Bar.o)   			#define FOO_H    
+  "main.h"  \         			#include "Bar.h" 
+    ^^     Foo.C                   	class Foo {      
+   //     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+         ^^           --Bar.h--              --main.h--
+         ||       yes>#ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>  do>#define BAR_H          #define MAIN_H  <do 
+         ^^        do>#include <iostream.h>  #include "Bar.h"<do
+         ||        do>class Bar {            #include "Foo.h"
+       "Bar.h"     do>  public:              #endif    
+     --^^ ^^       do>    void ReallyDoIt(); ----------      
+    //-/ /  \	   do>};                     
+   //   /    \     do>#endif                         
+  || "Foo.h"  \       -----------       --Foo.h--        
+  ||   ^  ^  Bar.C    	      		#ifndef FOO_H    
+  ||  /    \(Bar.o)   			#define FOO_H    
+  "main.h"  \         			#include "Bar.h" 
+    ^^     Foo.C                   	class Foo {      
+   //     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE 
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |           #ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>     #define BAR_H          #define MAIN_H  <do 
+          ^           #include <iostream.h>  #include "Bar.h"<do
+          |           class Bar {            #include "Foo.h"<do
+       "Bar.h"          public:              #endif    		
+        ^ ^^              void ReallyDoIt(); ----------      	
+     /-/ /  \	      };                     			
+    /   /    \        #endif                         		
+   | "Foo.h"  \       -----------       --Foo.h--        	
+   |  ^^  ^  Bar.C    	      		#ifndef FOO_H 
+   | //    \(Bar.o)   			#define FOO_H  
+  "main.h"  \         			#include "Bar.h"
+    ^^     Foo.C                   	class Foo {      
+   //     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE 
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |           #ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>     #define BAR_H          #define MAIN_H  <do 
+          ^           #include <iostream.h>  #include "Bar.h"<do
+          |           class Bar {            #include "Foo.h"<do
+       "Bar.h"          public:              #endif    		
+        ^ ^^              void ReallyDoIt(); ----------      	
+     /-/ /  \	      };                     			
+    /   /    \        #endif                         		
+   | "Foo.h"  \       -----------       --Foo.h--        	
+   |  ^^  ^  Bar.C    	      		#ifndef FOO_H   <yes    
+   | //    \(Bar.o)   			#define FOO_H   <do 
+  "main.h"  \         			#include "Bar.h"<do
+    ^^     Foo.C                   	class Foo {      
+   //     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |       no!>#ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>skip>#define BAR_H          #define MAIN_H  <do 
+          ^      skip>#include <iostream.h>  #include "Bar.h"<do
+          |      skip>class Bar {            #include "Foo.h"<do
+       "Bar.h"   skip>  public:              #endif    		
+        ^^^^     skip>    void ReallyDoIt(); ----------      	
+     /-///  \	 skip>};                     			
+    /  //    \     do>#endif                         		
+   | "Foo.h"  \       -----------       --Foo.h--        	
+   |  ^^  ^  Bar.C    	      		#ifndef FOO_H   <yes    
+   | //    \(Bar.o)   			#define FOO_H   <do     
+  "main.h"  \         			#include "Bar.h"<do     
+    ^^     Foo.C                   	class Foo {      	
+   //     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+                      			private:         
+   g++ -Wall -pedantic -c main.C	  Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |       no!>#ifndef BAR_H          #ifndef MAIN_H  <yes
+     <iostream.h>skip>#define BAR_H          #define MAIN_H  <do 
+          ^      skip>#include <iostream.h>  #include "Bar.h"<do
+          |      skip>class Bar {            #include "Foo.h"<do
+       "Bar.h"   skip>  public:              #endif    	     <do
+        ^^^^     skip>    void ReallyDoIt(); ----------      	
+     /-///  \	 skip>};                     		        
+    /  //    \     do>#endif                         	        
+   | "Foo.h"  \       -----------       --Foo.h--               
+   |  ^^  ^  Bar.C    	      		#ifndef FOO_H   <yes    
+   | //    \(Bar.o)   			#define FOO_H   <do     
+  "main.h"  \         			#include "Bar.h"<do     
+    ^^     Foo.C                   	class Foo {     <do     
+   //     (Foo.o)     			public:         <do
+ main.C               			  void DoIt();  <do
+                      			private:        <do
+   g++ -Wall -pedantic -c main.C	  Bar _b;       <do
+                      			};              <do
+		      			#endif          <do
+		      			----------       
+MULTIPLE FILE PROGRAMS - THIRD EXAMPLE
+                     	      
+        (etc)  	     				  
+          ^           --Bar.h--              --main.h--
+          |           #ifndef BAR_H          #ifndef MAIN_H  
+     <iostream.h>     #define BAR_H          #define MAIN_H  
+          ^           #include <iostream.h>  #include "Bar.h"
+          |           class Bar {            #include "Foo.h"
+       "Bar.h"          public:              #endif    
+        ^ ^^              void ReallyDoIt(); ----------      
+     /-/ /  \	      };                     
+    /   /    \        #endif                         
+   | "Foo.h"  \       -----------       --Foo.h--        
+   |   ^  ^  Bar.C    	      		#ifndef FOO_H    
+   |  /    \(Bar.o)   			#define FOO_H    
+  "main.h"  \         			#include "Bar.h" 
+     ^     Foo.C                   	class Foo {      
+    /     (Foo.o)     			public:          
+ main.C               			  void DoIt();   
+(main.o)              			private:         
+                                          Bar _b;        
+                      			};               
+		      			#endif           
+		      			----------       
+UPSHOT 2 - MULTIPLE FILE PROGRAMS 
+        		       	  
+ - .h files might #include multiple other .h files -
+    they will #include everything they really need
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 2 - MULTIPLE FILE PROGRAMS 
+        		       	  
+ - .h files might #include multiple other .h files -
+    they will #include everything they really need
+ - #ifndef/#define/#endif ensures that even if a .h
+    file is #include'd more than once in a single
+    compilation, the compiler will only 'read' the
+    guts of the .h once.  (Because the second and
+    subsequent times, the FOO_H symbol will already
+    be defined, so the compiler skips to the matching
+    #endif.
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOT 2 - MULTIPLE FILE PROGRAMS 
+        		       	  
+ - .h files might #include multiple other .h files -
+    they will #include everything they really need
+ - #ifndef/#define/#endif ensures that even if a .h
+    file is #include'd more than once in a single
+    compilation, the compiler will only 'read' the
+    guts of the .h once.  (Because the second and
+    subsequent times, the FOO_H symbol will already
+    be defined, so the compiler skips to the matching
+    #endif.
+ - Sets of #include's sometimes form TREEs, but in general
+    they form DAGs: Sets of #includes should NEVER have
+    any LOOPs.
+
+
+
+
+
+
+
+
+
+
+WHERE DO YOU DO THE #INCLUDE?
+        		       	  
+  Rule of thumb:
+		
+              Put #include's in .C's if you can.
+       	      Put #include's in .h's if you must.
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WHERE DO YOU DO THE #INCLUDE?
+        		       	  
+  Rule of thumb:
+		
+              Put #include's in .C's if you can.
+       	      Put #include's in .h's if you must.
+		
+		
+  Reasoning:
+       	      We want to design our classes on
+	      a `need-to-know' basis, only exposing
+	      what we must to let people use our class.
+
+              This keeps things simpler, and allows us
+	      more flexibility to change our minds later on.
+
+              Everything in a class .h is 'visible'
+       	      everybody that uses that class, whereas
+       	      stuff in a class .C is (or can be) more
+       	      hidden.				     
+
+         ->   Put everything you can into the .C 
+       	 ->   Put into the .h only what you must 
+
+WHERE DO YOU DO THE #INCLUDE?
+        		       	  
+Which is better?       	       	       	       	       	   
+       	       	       	                                    
+   ---Foo.h---            -or-            ---Foo.h---     
+   #ifndef FOO_H          	          #ifndef FOO_H   
+   #define FOO_H          	          #define FOO_H   
+                               	                          
+   #include <iostream.h>  	          class Foo {     
+                          	          public:        
+   class Foo {            	            void DoIt(); 
+   public:                	          };             
+     void DoIt();         	          #endif         
+   };                     	          ---            
+   #endif                      	          ---Foo.C---      
+   ---                    	          #include "Foo.h"     	
+   ---Foo.C---            	          #include <iostream.h> 
+   #include "Foo.h"       	                            
+                          	          void Foo::DoIt() { 
+   void Foo::DoIt() {     	            for (int i=0;i<3;++i)
+     for (int i=0;i<3;++i)	              cout << "doing it";
+       cout << "doing it";	          }                    
+   }                      	          ---                  
+   ---                    	       
+WHERE DO YOU DO THE #INCLUDE?
+               	       	       	   iostream.h does not HAVE to be
+Which is better?       	       	   included in the .h, so it isn't
+       	       	       	               +-------------------------+
+   ---Foo.h---            -or-         |  ---Foo.h---     	 |
+   #ifndef FOO_H          	       |  #ifndef FOO_H   	 |
+   #define FOO_H          	       |  #define FOO_H   	 |
+                               	       |                  	 |
+   #include <iostream.h>  	       |  class Foo {     	 |
+                          	       |  public:        	 |
+   class Foo {            	       |    void DoIt(); 	 |
+   public:                	       |  };             	 |
+     void DoIt();         	       |  #endif         	 |
+   };                     	       |  ---            	 |
+   #endif                      	       |  ---Foo.C---      	 |
+   ---                    	       |  #include "Foo.h"     	 |
+   ---Foo.C---            	       |  #include <iostream.h>  |
+   #include "Foo.h"       	       |                    	 |
+                          	       |  void Foo::DoIt() { 	 |
+   void Foo::DoIt() {     	       |    for (int i=0;i<3;++i)|
+     for (int i=0;i<3;++i)	       |      cout << "doing it";|
+       cout << "doing it";	       |  }                    	 |
+   }                      	       |  ---                  	 |
+   ---                    	       +-------------------------+
+WHERE DO YOU DO THE #INCLUDE?
+        		       	  
+Which is better?       	       	       	       	       	   
+       	       	       	                                    
+   ---Foo.h---            -or-            ---Foo.h---     
+   #ifndef FOO_H          	          #ifndef FOO_H   
+   #define FOO_H          	          #define FOO_H   
+                               	                          
+   #include "Bar.h"       	          class Foo {     
+                          	          public:        
+   class Foo {            	            void DoIt(Bar b);
+   public:                	          };                 
+     void DoIt(Bar b);    	          #endif             
+   };                     	          ---                
+   #endif                      	          ---Foo.C---        
+   ---                    	          #include "Foo.h"     	
+   ---Foo.C---            	          #include "Bar.h"
+   #include "Foo.h"       	                            
+                          	          void Foo::DoIt(Bar b) {
+   void Foo::DoIt(Bar b)  	            b.GoNuts();
+     b.GoNuts();               	          }
+   }                        	          ---                  
+   ---                    	          
+
+WHERE DO YOU DO THE #INCLUDE?  	   
+        		       this doesn't even compile, because
+Which is better?       	       'Bar' is undefined at the time the
+ +----------------------+      compiler sees the 'void DoIt(Bar b)
+ | ---Foo.h---          | -or-     \      ---Foo.h---     
+ | #ifndef FOO_H        | 	    \     #ifndef FOO_H   
+ | #define FOO_H        | 	     \    #define FOO_H   
+ |                      |      	      \                   
+ | #include "Bar.h"     | 	       \  class Foo {     
+ |                      | 	        \ public:        
+ | class Foo {          | 	         \->void DoIt(Bar b);
+ | public:              | 	          };                 
+ |   void DoIt(Bar b);  | 	          #endif             
+ | };                   | 	          ---                
+ | #endif               |      	          ---Foo.C---        
+ | ---                  | 	          #include "Foo.h"     	
+ | ---Foo.C---          | 	          #include "Bar.h"
+ | #include "Foo.h"     | 	                            
+ |                      | 	          void Foo::DoIt(Bar b) {
+ | void Foo::DoIt(Bar b)| 	            b.GoNuts();
+ |   b.GoNuts();        |      	          }
+ | }                    |   	          ---                  
+ | ---                  | 	          
+ +----------------------+ 
+

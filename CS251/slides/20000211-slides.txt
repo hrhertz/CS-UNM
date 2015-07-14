@@ -1,0 +1,1896 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia: The Undeclared, GOING..., GOING...
+ - Administrivia: Program 1, late days, etc
+ - Container classes and efficiency, arrays, stacks, sizeof
+
+TODAY:
+ - Administrivia: The Undeclared, GOING..., GOING..., GOING...
+ - How fast is fast?  Big-O
+ - Class design: Stack	   
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : NOW AT 15% TIME PENALTY
+
+
+
+
+
+
+
+
+
+ADMINISTRIVIA - THE UNDECLARED
+   No recorded student declarations from:
+
+Arzate,Tiffany C       	       	Macy,Robert John          
+Bach, Jonathan A		Peer,Jennifer Fraser      
+                    		Perez,Gregory A R         
+Benjamin, Matthew Jaco		Putze,Mark Jay            
+Chung, Doil    	    		Romero,Lawrence Aaron     
+Cordova, Patricia Ann	                                  
+                    	      	Smith,Cal                 
+               	       	      	Sweeney,Jenelle C         
+Espinoza, Everett A		Uncapher,Mark D           
+Fuller,Michael McNair  	       	                          
+                       	       	                          
+Long,Xiangcun             			      	
+     						      
+      -> Remaining on this list leaves you 	      
+      	 liable to be 'instructor-dropped'            
+       	 this week!                       	      
+      						      
+      -> Opening day handout (with declaration) available at:
+	     http://www.cs.unm.edu/~ackley/cs251      
+						      
+      -> FINAL WARNING!    Going....   Going....    Going....
+ADMINISTRIVIA - TURNING IN PROGRAM 1 LATE
+
+                                                      
+ 	  >>>LAST TURN-IN TIME IS 2PM Mon 2/14/00<<<  
+	       
+	       
+late        Time penalty if turned in on or before:
+days            5pmFri2/11 5pmSat2/12 5pmSun2/13 2pmMon2/14  later
+used   	       	       	       	       	       	     
+ 0                 15%         30%       45%        60%      100%
+   	       			       	  
+ 1                  0%         15%       30%        45%      100%
+ 	       							 
+ 2                  0%          0%       15%        30%      100%
+    	       
+ 3                  0%          0%        0%        15%      100%
+
+	  LAST DAY TO APPLY FREE LATE DAYS TO PROGRAM 1
+			 IS THU 2/24/00.
+
+ The specific mechanism to use late days is now under 
+ construction.  More info to follow...
+
+
+CONTAINER CLASSES AND EFFICIENCY
+	      
+class Board {
+..     	       	       	  
+  Block _blks[_MAXBLOCKS];
+
+};
+
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+ ATTACK    
+ - we have to know how big the array will ever need to be at
+   the time we make the array
+ - without doing some kind of additional arranging of the
+   objects, we have to search the whole array to find out if
+   a given object is stored in it or not		    
+
+CONTAINER CLASSES AND EFFICIENCY	    
+					    
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+				   
+ Technique: 
+   	    
+ - An array plus a count of objects currently on the stack
+			      			    	  
+ E.g., stack of ints				    	  
+ int main() {       				    	  
+   int stack[50];        			    
+   int count = 0;        // Stack initially empty
+   stack[count] = 1; count++;   // 'push' a 1
+   stack[count] = 2; count++;   // 'push' a 2
+   count--; cout << stack[count] << endl;  // 'pop' and print
+   count--; cout << stack[count] << endl;  // 'pop' and print
+   return 0;
+ }
+CONTAINER CLASSES AND EFFICIENCY
+				
+ The STACK    (e.g., example in PC++P ch 13)
+
+ Main goals:
+
+ - Fast insert                         (a.k.a.  'Push')
+   						       
+ - Fast remove-most-recently-inserted  (a.k.a.  'Pop')
+        			   
+Take a crack at it...
+// A stack of ints        bool Stack::Insert(int num) {       
+class Stack {                if (_count>=_SIZE) return false; 
+ public:            	     ...                              
+  Stack();	             return true;                     
+  ~Stack();	    	  } 
+  bool Insert(int);   // true if was room to insert
+  bool Remove(int&);  // true if stack wasn't empty
+ private:
+  enum { _SIZE = 100 };
+  int _stack[_SIZE];    			   
+  int _count;	    
+};  		    
+                       	       ..and off we go..
+HOW FAST IS FAST?
+					    
+Q: Which is faster?
+
+               A                                B
+						 
+         i = 3;                         i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+
+
+				        		
+       	 			        		
+
+
+
+         			       
+
+
+
+   	    
+HOW FAST IS FAST?
+					    
+Q: Which is faster?
+
+               A                                B
+						 
+         i = 3; 	                i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+
+
+
+         			       
+
+
+
+   	    
+HOW FAST IS FAST?
+					    
+Q: Which is faster?
+
+               A                                B
+						 
+         i = 3;                         i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				        
+         			       
+
+
+
+   	    
+HOW FAST IS FAST?
+					    
+Q: Which is faster?
+
+               A                                B
+						 
+         i = 3;                         i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster on a supercooled Athlon running at 1.6GHz?
+
+               A                                B
+						 
+         i = 3;                         i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster on pencil and paper?
+
+               A                                B
+						 
+         i = 3;                         i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster on a Gazoop 9 (Mark II) from the Clurg Nebula?
+
+               A                                B
+						 
+         i = 3;                         i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+       	     			        
+			      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+    					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+			                	 
+         i = 3; 	                i = 3;          	 
+         foo[3] = 7;                    foo[3] = 7;    
+         cout << foo[2];                cout << foo[2];
+                		        i = 12;        
+
+        		      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+						 
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+       	            SAME	   	
+        		      	        		         
+         for (int i = 0;i<10;++i)       for (int i = 0;i<3;++i)
+            bar += foo[i];                bar += foo[i];
+				        		
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+						 
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+
+			      	        		         
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+				       	
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+						 
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+
+			      	        		         
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+       	            SAME	       
+       	 			        		
+         for (int i = 0;i<100000;++i)   for (int i = 0;i<n;++i)
+            woof += bletch[i-1];          woof += bletch[i-1]; 
+				       	
+				       	
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+				       	
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+						       
+               A                                B      
+						       
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+       	     			   		       
+			      	        	                 
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+				        	        
+       	 			        	        
+O(1) /   for (int i = 0;i<100000;++i)  /for (int i = 0;i<n;++i)
+     \      woof += bletch[i-1];      /\  woof += bletch[i-1]; 
+				   O(n)		       
+				       	
+         for (int i = 0;i<n;++i)        for (int i = 0;i<n;++i)
+            cout << i;			  for (int j = 0;j<n;++j)
+					     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+						       
+               A                                B      
+						       
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+       	     			   		       
+			      	        	                 
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+				        	        
+       	 			        	        
+O(1) /   for (int i = 0;i<100000;++i)  /for (int i = 0;i<n;++i)
+     \      woof += bletch[i-1];      /\  woof += bletch[i-1]; 
+				   O(n)		       
+   O(1) < O(n)    `A is faster than B' 	      
+
+
+
+   	    
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+						 
+     /   i = 3; 	             /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+       	     			   	
+			      	        		         
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+				        		
+       	 			        		
+O(1) /   for (int i = 0;i<100000;++i)  /for (int i = 0;i<n;++i)
+     \      woof += bletch[i-1];      /\  woof += bletch[i-1]; 
+				   O(n)	
+         			       
+     /   for (int i = 0;i<n;++i)    2  /for (int i = 0;i<n;++i)
+O(n) \      cout << i;		 O(n ) |  for (int j = 0;j<n;++j)
+				       \     cout << i;          
+
+HOW FAST IS FAST?
+					    
+Q: Which is faster, in general, as 'n' gets bigger and bigger?
+
+               A                                B
+						 
+     /   i = 3;                      /  i = 3;          	 
+O(1) |   foo[3] = 7;                 |  foo[3] = 7;    
+     \   cout << foo[2];       O(1)  |  cout << foo[2];
+                		     \  i = 12;        
+       	     			   	
+			      	        		         
+O(1) /   for (int i = 0;i<10;++i)     / for (int i = 0;i<3;++i)
+     \      bar += foo[i];        O(1)\   bar += foo[i];
+		        	        		
+       	 	        	        		
+O(1) /   for (int i = 0;i<100000;++i)  /for (int i = 0;i<n;++i)
+     \      woof += bletch[i-1];      /\  woof += bletch[i-1]; 	
+				   O(n)	
+         			       
+     /   for (int i = 0;i<n;++i)    2  /for (int i = 0;i<n;++i)
+O(n) \      cout << i;		 O(n ) |  for (int j = 0;j<n;++j)
+				       \     cout << i;          
+        O(n) < O(n^2) : A is faster than B
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+
+
+
+
+
+
+       			  
+
+
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A does not depend on n at all 
+   e.g. A: for (int i = 0;i<10;++i)
+              bar += foo[i];       
+           
+       			  
+
+
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A does not depend on n at all:
+   e.g. A: for (int i = 0;i<10;++i)
+              bar += foo[i];       
+           
+       			  
+    then: O(1)   `A is big-oh of 1'       
+       	         `A runs in constant time'         
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A does not depend on n at all:
+   e.g. A: for (int i = 0;i<10;++i)
+              bar += foo[i];       
+           
+       			  
+    then: O(1)   `A is big-oh of 1'       
+       	         `A runs in constant time'         
+
+ - if the running time of A increases by a constant amount
+   each time n increases by 1 
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A does not depend on n at all:
+   e.g. A: for (int i = 0;i<10;++i)
+              bar += foo[i];       
+           			   
+       			  	   
+    then: O(1)   `A is big-oh of 1'       
+       	         `A runs in constant time'         
+				   
+ - if the running time of A increases by a constant amount
+   each time n increases by 1:	   
+   e.g. A: for (int i = 0;i<n;++i) 
+              bar += foo[i];       
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A does not depend on n at all:
+   e.g. A: for (int i = 0;i<10;++i)
+              bar += foo[i];       
+           
+       			  
+    then: O(1)   `A is big-oh of 1'       
+       	         `A runs in constant time'         
+
+ - if the running time of A increases by a constant amount
+   each time n increases by 1:
+   e.g. A: for (int i = 0;i<n;++i)
+              bar += foo[i];       
+
+    then: O(n)    `A is big-oh of n'                   
+		  `A runs in linear time'   	       
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A increases by a constant TIMES n
+   each time n increases by 1:				   
+   e.g. A: for (int i = 0;i<n;++i)			   
+             for (int j = 0;j<n;++j)			     
+               woof += bletch[i-1];                          
+							     
+
+							     
+
+
+
+       	 			        		
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A increases by a constant TIMES n
+   each time n increases by 1:				   
+   e.g. A: for (int i = 0;i<n;++i)			   
+             for (int j = 0;j<n;++j)			     
+               woof += bletch[i-1];                          
+							     
+    then: O(n^2)  `A runs in big-oh n-squared time'          
+		  `A runs in quadratic time'	           
+
+
+
+       	       	       	      
+
+
+
+       	 			        		
+
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A increases by a constant TIMES n
+   each time n increases by 1:				   
+   e.g. A: for (int i = 0;i<n;++i)			   
+             for (int j = 0;j<n;++j)			     
+               woof += bletch[i-1];                          
+							     
+    then: O(n^2)  `A runs in big-oh n-squared time'          
+	          `A runs in quadratic time'	           
+	   
+    etc..  if THREE nested loops all going up to 'n':
+          O(n^3):  `A runs in big-oh n-cubed time'           
+		   `A runs in cubic time'	             
+       	       	       	      
+
+
+
+       	 			        		
+HOW FAST IS FAST?  'Big-O' NOTATION
+
+ You have some code or function or algorithm A you want to
+ describe.  You have something being 'n', 
+ something that you can crank up bigger and bigger.  
+ Then:					       
+
+ - if the running time of A increases by a constant TIMES n
+   each time n increases by 1:				   
+   e.g. A: for (int i = 0;i<n;++i)			   
+             for (int j = 0;j<n;++j)			     
+               woof += bletch[i-1];                          
+							     
+    then: O(n^2)  `A runs in big-oh n-squared time'          
+		  `A runs in quadratic time'	           
+
+    etc..  if THREE nested loops all going up to 'n':
+          O(n^3):  `A runs in big-oh n-cubed time'           
+                   `A runs in cubic time'	             
+    
+    etc.. if 'k' nested loops all going up to 'n':
+          O(n^k) for any given k: 
+       	    `A runs in big-oh n-to-the-k time'
+            `A runs in polynomial time'
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+
+
+
+
+
+	       	     		      
+
+
+
+
+
+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+
+
+       
+	       	     		      
+
+
+
+
+
+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;
+ j = 9;
+       
+	       	     		      
+
+
+
+
+
+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+
+
+
+
+
+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+
+
+
+
+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+
+
+
+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+				       
+  cout << "Hi";        	       	       
+  for (int i = 0;i<n;++i) cout << "!"; 
+				       
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+
+  cout << "Hi";        	       	       	\___+------------------+
+  for (int i = 0;i<n;++i) cout << "!";  /   |O(1) + O(n) = O(n)|
+					    +------------------+
+							     
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+
+  cout << "Hi";        	       	       	\___+------------------+
+  for (int i = 0;i<n;++i) cout << "!";  /   |O(1) + O(n) = O(n)|
+					    +------------------+
+							     
+for (int i = 0; i<n; ++i)  for (int j = 0; j<n; ++j)
+  cout << "(";		     cout << ")";      	    
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+
+  cout << "Hi";        	       	       	\___+------------------+
+  for (int i = 0;i<n;++i) cout << "!";  /   |O(1) + O(n) = O(n)|
+					    +------------------+
+							     
+for (int i = 0; i<n; ++i)  for (int j = 0; j<n; ++j)
+  cout << "(";		     cout << ")";      	    
+     O(n)                       O(n)
+       	       	       	       	       
+for (int i = 0; i<n; ++i) cout << "(";
+for (int j = 0; j<n; ++j) cout << ")";
+    				      
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+  i = 3;             j = 9;    	       	 
+  O(1)               O(1)             	 
+
+ i = 3;   \   +------------------+
+ j = 9;   /---|O(1) + O(1) = O(1)|		         	
+	      +------------------+    
+	       	     		      
+  cout << "Hi";      for (int i = 0;i<n;++i) cout << "!";
+      O(1)                         O(n)	
+
+  cout << "Hi";        	       	       	\___+------------------+
+  for (int i = 0;i<n;++i) cout << "!";  /   |O(1) + O(n) = O(n)|
+					    +------------------+
+					 		     
+for (int i = 0; i<n; ++i)  for (int j = 0; j<n; ++j)
+  cout << "(";		     cout << ")";      	    
+     O(n)                       O(n)	 
+					 
+for (int i = 0; i<n; ++i) cout << "(";\__+------------------+
+for (int j = 0; j<n; ++j) cout << ")";/  |O(n) + O(n) = O(n)|
+    				      	 +------------------+
+       	       	       	       	      
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+                               	       	     O(1)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/      	       	     O(1)    
+    O(n)                    	  		     
+
+
+
+
+
+
+
+
+
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+
+
+
+
+
+
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		      
+for (int i = 0; i<n; ++i) cout << "$";
+\-----------------------/ \---------/ 
+	O(n)   	       	     O(1)     
+
+
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)    
+
+
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)    
+
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+
+
+
+
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)    
+
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+                               	  \-------------------/	\-------/
+               	       	  		 O(n)  	       	   O(1)	 
+	       
+ 	       
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)    
+
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+                               	  \-------------------/	\-------/
+               	       	  		 O(n)  	       	   O(1)	 
+				  \-----------------------------/
+ 				     O(n) * O(1) = O(n)	       	 
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)    
+
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+\------------------------/     	  \-------------------/	\-------/
+	O(1)   	       	  		 O(n)  	       	   O(1)	 
+				  \-----------------------------/
+ 				     O(n) * O(1) = O(n)	       	 
+       	       	       	    
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)    
+
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+\------------------------/     	  \-------------------/	\-------/
+	O(1)   	       	  		 O(n)  	       	   O(1)	 
+				  \-----------------------------/
+       	       	       	       	     O(n) * O(1) = O(n)	       	 
+       	       	       	    	  
+for (int i=0;i<10000; ++i)     	  
+  for (int j=0;j<n;++j) cout<<".";
+				  
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+
+for (int i = 0; i<n; ++i) .. ;            cout << "$";
+\-----------------------/ \/   	       	     O(1)    
+    O(n) (barring weird   / 	  		     
+	  stuff in here	-- 	  		     
+	  like 'break;'	  	  		     
+	  etc).	       		  		     
+	       	     		       	  +------------------+
+for (int i = 0; i<n; ++i) cout << "$";----|O(n) * O(1) = O(n)|
+\-----------------------/ \---------/  	  +------------------+
+	O(n)   	       	     O(1)     
+				      
+for (int i=0;i<10000; ++i) .. ;   for (int j=0;j<n;++j) cout<<".";
+\------------------------/     	  \-------------------/	\-------/
+	O(1)   	       	  	      	 O(n)  	       	   O(1)	 
+				  \-----------------------------/
+ 				     O(n) * O(1) = O(n)	       	 
+       	       	       	    	      
+for (int i=0;i<10000; ++i)     	  \___+------------------+
+  for (int j=0;j<n;++j) cout<<".";/   |O(1) * O(n) = O(n)|
+				      +------------------+
+       	       	       	       	    
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+
+
+
+
+
+	       	     	 
+       	       	       	       	  
+
+
+				  
+
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+       	       	       	       	  
+       	       	       	       	  
+for (int i = 0; i<n; ++i)	  
+  for (int j=0;j<n;++j) cout<<".";
+				  
+
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+				       +-------------------+
+
+
+
+
+
+
+
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+				       +-------------------+
+       	       	       	 
+for (int i = 0; i<n; ++i) 
+  for (int j = 0; j<n; ++j)    	
+    for (int k = 0; k<100; ++k)	
+      for (int l = 0; l<n; ++l)  
+       	for (int m = 0; m<n; ++m)
+	   cout << "woah"; 
+       	       	       	       	 
+			   
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+			  	       +-------------------+
+			  
+for (int i = 0; i<n; ++i) -------- O(n) *
+  for (int j = 0; j<n; ++j)    	
+    for (int k = 0; k<100; ++k)	
+      for (int l = 0; l<n; ++l)  
+       	for (int m = 0; m<n; ++m)
+	   cout << "woah"; 
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+       	       	       	       	       +-------------------+
+				
+for (int i = 0; i<n; ++i) -------- O(n) *
+  for (int j = 0; j<n; ++j) ---------- O(n) *
+    for (int k = 0; k<100; ++k)	
+      for (int l = 0; l<n; ++l)  
+       	for (int m = 0; m<n; ++m)
+	   cout << "woah"; 
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)    	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+			     	       +-------------------+
+			     
+for (int i = 0; i<n; ++i) -------- O(n) *
+  for (int j = 0; j<n; ++j) ---------- O(n) *
+    for (int k = 0; k<100; ++k)	---------- O(1) *
+      for (int l = 0; l<n; ++l)  
+       	for (int m = 0; m<n; ++m)
+	   cout << "woah";
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+				       +-------------------+
+
+for (int i = 0; i<n; ++i) -------- O(n) *
+  for (int j = 0; j<n; ++j) ---------- O(n) *
+    for (int k = 0; k<100; ++k)	---------- O(1) *
+      for (int l = 0; l<n; ++l) -------------- O(n) *
+       	for (int m = 0; m<n; ++m) ---------------- O(n)	*
+	   cout << "woah";
+			  
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+				       +-------------------+
+
+for (int i = 0; i<n; ++i) -------- O(n) *
+  for (int j = 0; j<n; ++j) ---------- O(n) *
+    for (int k = 0; k<100; ++k)	---------- O(1) *
+      for (int l = 0; l<n; ++l) -------------- O(n) *
+       	for (int m = 0; m<n; ++m) ---------------- O(n)	*
+	   cout << "woah"; ----------------------------- O(1) =
+
+
+
+
+HOW FAST IS FAST?  'Big-O' "ARITHMETIC"
+			       	      
+for (int i = 0; i<n; ++i) .. ;    for (int j=0;j<n;++j) cout<<".";
+\-----------------------/ \/   	  \-------------------/ \-------/
+    O(n) (barring weird   /    	         O(n)              O(1)  
+	  stuff in here	--     	  \-----------------------------/
+       	  like 'break;'	       	     O(n) * O(1) = O(n)          
+	  etc).	       	 	   	    	     
+	       	     	 
+       	       	       	       	       +-------------------+
+for (int i = 0; i<n; ++i)	  \____|	 	 2 |
+  for (int j=0;j<n;++j) cout<<".";/    |O(n) * O(n) = O(n )|
+				       +-------------------+
+
+for (int i = 0; i<n; ++i) -------- O(n) *
+  for (int j = 0; j<n; ++j) ---------- O(n) *
+    for (int k = 0; k<100; ++k)	---------- O(1) *
+      for (int l = 0; l<n; ++l) -------------- O(n) *
+       	for (int m = 0; m<n; ++m) ---------------- O(n)	*
+	   cout << "woah"; ----------------------------- O(1) =
+						       4      
+						    O(n	)     
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+
+
+
+							  
+
+							  
+
+ 								
+
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+
+							  
+
+							  
+
+ 								
+
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+
+							  
+
+ 								
+
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+
+ 								
+
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+		
+   // we are given Stack s...  	 
+   Stack tmp;          	       	  
+   int num;  			  
+   while (s.Remove(num))          
+     tmp.Insert(num);    	  
+   tmp.Remove(num);		  
+   while (tmp.Remove(num))
+     s.Insert(num);       
+   // s has lost its oldest element..
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+		
+   // we are given Stack s...  	  
+   Stack tmp;                    // Need a whole temporary stack
+   int num;  			 // a buffer for one element
+   while (s.Remove(num))         // flush out s, while
+     tmp.Insert(num);    	 //  stashing everything in tmp
+   tmp.Remove(num);		 // 1st in tmp was last in stack..
+   while (tmp.Remove(num))	 // now move everything left in 
+     s.Insert(num);            	 //  tmp back in to s
+   // s has lost its oldest element but is otherwise unchanged
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+       	       	       	       	    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    
+   int num;  			 
+   while (s.Remove(num))         
+     tmp.Insert(num);    	 
+   tmp.Remove(num);		 
+   while (tmp.Remove(num))	 
+     s.Insert(num);            	 
+   // s has lost its oldest element but is otherwise unchanged
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+				    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    // O(1) 
+   int num;    	       	       	 // O(1)
+   while (s.Remove(num))         
+     tmp.Insert(num);    	 
+   tmp.Remove(num);		 
+   while (tmp.Remove(num))	 
+     s.Insert(num);            	 
+   // s has lost its oldest element but is otherwise unchanged
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+				    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    // O(1) 
+   int num;  		     	 // O(1)
+   while (s.Remove(num))         // n*(Remove (which costs O(1))+
+     tmp.Insert(num);          	 //    Insert (also O(1))) = O(n)
+   tmp.Remove(num);		 
+   while (tmp.Remove(num))	 
+     s.Insert(num);            	 
+   // s has lost its oldest element but is otherwise unchanged
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+				    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    // O(1) 
+   int num;  			 // O(1)
+   while (s.Remove(num))         // n*(Remove (which costs O(1))+
+     tmp.Insert(num);    	 //    Insert (also O(1))) = O(n)
+   tmp.Remove(num);		 // O(1)			 
+   while (tmp.Remove(num))	 
+     s.Insert(num);            	 
+   // s has lost its oldest element but is otherwise unchanged
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+				    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    // O(1) 
+   int num;  			 // O(1)
+   while (s.Remove(num))         // n*(Remove (which costs O(1))+
+     tmp.Insert(num);          	 //    Insert (also O(1))) = O(n)
+   tmp.Remove(num);		 // O(1)  			 
+   while (tmp.Remove(num))	 // (n-1)*
+     s.Insert(num);            	 
+   // s has lost its oldest element but is otherwise unchanged
+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+				    
+   // we are given Stack s...  	 // assume 's' contains 'n' ints
+   Stack tmp;                    // O(1) 
+   int num;  			 // O(1)
+   while (s.Remove(num))         // n*(Remove (which costs O(1))+
+     tmp.Insert(num);    	 //    Insert (also O(1))) = O(n)
+   tmp.Remove(num);		 // O(1)			 
+   while (tmp.Remove(num))	 // (n-1)*(O(1) + O(1)) =      	 
+     s.Insert(num);            	 //   O(n)*O(1) = O(n)
+   // s has lost its oldest element but is otherwise unchanged
+

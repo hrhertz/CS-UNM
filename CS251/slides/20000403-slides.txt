@@ -1,0 +1,889 @@
+QUESTIONS	 
+
+LAST TIME:
+ - Administrivia: Bignum, Dequer
+ - Pointers & subscripts, multidimensional arrays
+ - Debugging demo II
+
+TODAY:
+ - Review
+
+WEDNESDAY		    
+ - Pieces of Dave's Bignum  
+	     		    
+FRIDAY	     		    
+ - Second in-class quiz (cumulative)
+	     		    
+HOMEWORK: Review PC++P Ch 1,2,3,4,5,6,7,8,9,13,15,18,20 
+	     		    
+   Program 3:    Full credit deadline passed. Now at:      -33%
+    Absolute final deadline, regardless of late days:  47 hours,
+       	                                             1PM WED APR 5
+
+   Another Ackley office-hour gap 3:45-4:30 today 
+
+ADMINISTRIVIA
+   On CIRT AIX:   ~ackley/public/TurnInBignum   
+       	       	       	       	       	       	      Bignum n;
+Program 3 full credit deadline is passed       	n += Bignum(123);
+       	       	       	       	 vvv 
+  Deadline for -33% in 23 hours: 1PM Tue Apr 4, 2000
+       	       	       	       	 ^^^   	       	  class Foo {
+					   explicit Foo(int i) { }
+
+  NO CREDIT FOR PROGRAM 3 AFTER CLASS STARTS ON WED APR 5, 2000.
+
+
+Free                 TIME PENALTIES FOR PROGRAM 3
+Late           	     Last turned in BEFORE 1PM on:
+DaysTHU3/30 FRI3/31 SAT4/1 SUN4/2  MON4/3 TUE4/4 WED4/5 LATER
++------------------------------------------------------------+
+| 0 | past | past  | past | past  | past | -33% | -66% |-100%|
++------------------------------------------------------------+
+| 1 | past | past  | past | past  | past |   0% | -33% |-100%|
++------------------------------------------------------------+
+| 2 | past | past  | past | past  | past |   0% |   0% |-100%|
++------------------------------------------------------------+
+| 3 | past | past  | past | past  | past |   0% |   0% |-100%|
++------------------------------------------------------------+
+HOW FAST IS A STACK?
+	           
+Given a stack, with 'n' being the number of items in the stack:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+
+
+
+
+
+							     
+
+
+
+
+
+HOW FAST IS A QUEUE?
+	            
+Given a queue, with 'n' being the number of items in the queue:
+	   
+ How fast is it to insert an item?
+
+ How fast is it to remove the most-recently-inserted item?
+							  
+ How fast is it to insert n more items?      	          
+							  
+ How fast is it to remove the third-most-recently-inserted item?
+ 								
+ How fast is it to remove the least-recently-inserted item?
+
+
+
+       Bignum a,b,c;
+	a = b+c;    
+							     
+
+
+
+
+
+HOW FAST IS A LIST?
+	           
+Given a list, with 'n' being the number of items in the list:
+	   						    
+ How fast is it to insert an item at the front?
+					       
+ How fast is it to remove the most-recently-inserted item?
+					       		  
+ How fast is it to insert n more items?        	          
+					       		  
+ How fast is it to remove the third-most-recently-inserted item?
+ 					       			
+ How fast is it to remove the least-recently-inserted item?
+
+
+
+
+
+							     
+
+
+
+
+
+REVIEW: Big-O
+
+
+   O(1)+O(n) =
+
+	      
+      2	    17 	
+   O(n )+O(n  ) =
+
+		 
+   O(n)*O(1) =	 
+
+		 
+   O(n)*O(n) =	 
+
+       	       	 
+      2	    17
+   O(n )*O(n  ) =
+
+
+
+
+
+
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+ cout << (4/3);	 
+ cout << (4%3);	 	   				   
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+ cout << (4/3);	 
+ cout << (4%3);	 	   				   
+ int i = 0; cout << 9%i;
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+ cout << (4/3);	 
+ cout << (4%3);	 	   				   
+ int i = 0; cout << 9%i;
+ for (int i = 0; i < 2; i++) cout << i;
+ for (int i = 0; i < 2; ++i) cout << i;
+
+
+
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+ cout << (4/3);	 
+ cout << (4%3);	 	   				   
+ int i = 0; cout << 9%i;
+ for (int i = 0; i < 2; i++) cout << i;
+ for (int i = 0; i < 2; ++i) cout << i;
+ int i = 7; cout << (i++)/4;   Bignum::operator++()     pre-inc
+ int i = 7; cout << ++i/4;     Bignum::operator++(int)	post-inc
+
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+ cout << (4/3);	 
+ cout << (4%3);	 	   				   
+ int i = 0; cout << 9%i;
+ for (int i = 0; i < 2; i++) cout << i;
+ for (int i = 0; i < 2; ++i) cout << i;
+ int i = 7; cout << i++/4;
+ int i = 7; cout << ++i/4;
+ cout << new int;
+
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+QUICKIES:			      #include <iostream.h>
+ (1) compile okay? 		      int main() {     	   
+ (2) output what if stuck right HERE>>>>	  
+ (3) any problems with the code?        return 0; 
+		 		      }
+ cout << (3/4);	 		      
+ cout << (3%4);       	       
+ cout << (4/3);	 
+ cout << (4%3);	 	   				   
+ int i = 0; cout << 9%i;
+ for (int i = 0; i < 2; i++) cout << i;
+ for (int i = 0; i < 2; ++i) cout << i;
+ int i = 7; cout << i++/4;
+ int i = 7; cout << ++i/4;
+ cout << new int;
+ cout << (9==3);
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+WHAT'S WRONG WITH THIS CODE
+ 			   
+int main() { int * p;	   
+  if (rand()%2==0) { int i; i = 7; p = &i; }
+  else { int j; j = 9; p = &j; }
+  cout << *p;
+  return 0; }	      	     		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WHAT'S WRONG WITH THIS CODE
+ 			   
+int main() { int * p;	   
+  if (rand()%2==0) { int i; i = 7; p = &i; }
+  else { int j; j = 9; p = &j; }
+  cout << *p;
+  return 0; }	      	     		 
+------
+#ifndef FOO_H
+#define FOO_H
+class Foo {  
+public:	     
+  Foo() { _data = NULL; }
+  ~Foo() { delete _data; }
+private:     
+  int * _data;
+};    	     
+#endif
+------      
+
+
+
+
+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+                             	  \	 	    \	       	 
+                      		   \---->+--------+  ->+--------+
+                      			 |num:??3 | /  |num:??5 |
+                     			 |--------| |  |--------|
+                               		 |p1:   ---/   |p1: NULL|
+                      	    		 |--------|    |--------|
+                                 	 |p2: NULL|    |p2: NULL|
+    					 |--------|    |--------|
+					 |p3: NULL|    |p3: NULL|
+					 +--------+    +--------+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+Write single statements that:	  \	 	    \	       	 
+(1) Print ??1 to cout		   \---->+--------+  ->+--------+
+                      			 |num:??3 | /  |num:??5 |
+(2) Print ??4 to cout			 |--------| |  |--------|
+                             		 |p1:   ---/   |p1: NULL|
+(3) Sets ??3 to ??2  	    		 |--------|    |--------|
+                                  	 |p2: NULL|    |p2: NULL|
+    					 |--------|    |--------|
+					 |p3: NULL|    |p3: NULL|
+					 +--------+    +--------+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+Write single statements that:	  \	 	    \	       	 
+(1) Print ??1 to cout		   \---->+--------+  ->+--------+
+   cout << head->num;			 |num:??3 | /  |num:??5 |
+(2) Print ??4 to cout			 |--------| |  |--------|
+                              		 |p1:   ---/   |p1: NULL|
+(3) Sets ??3 to ??2  	    		 |--------|    |--------|
+                                  	 |p2: NULL|    |p2: NULL|
+    					 |--------|    |--------|
+					 |p3: NULL|    |p3: NULL|
+					 +--------+    +--------+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+Write single statements that:	  \	 	    \	       	 
+(1) Print ??1 to cout		   \---->+--------+  ->+--------+
+   cout << head->num;			 |num:??3 | /  |num:??5 |
+(2) Print ??4 to cout			 |--------| |  |--------|
+   cout << head->p2->p1->num;		 |p1:   ---/   |p1: NULL|
+(3) Sets ??3 to ??2  	    		 |--------|    |--------|
+                                 	 |p2: NULL|    |p2: NULL|
+    					 |--------|    |--------|
+					 |p3: NULL|    |p3: NULL|
+					 +--------+    +--------+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+Write single statements that:	  \	 	    \	       	 
+(1) Print ??1 to cout		   \---->+--------+  ->+--------+
+   cout << head->num;			 |num:??3 | /  |num:??5 |
+(2) Print ??4 to cout			 |--------| |  |--------|
+   cout << head->p2->p1->num;		 |p1:   ---/   |p1: NULL|
+(3) Sets ??3 to ??2  	     		 |--------|    |--------|
+   head->p3->num = head->p2->num;	 |p2: NULL|    |p2: NULL|
+                     			 |--------|    |--------|
+					 |p3: NULL|    |p3: NULL|
+					 +--------+    +--------+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+Write single statements that:	  \	 	    \	       	 
+(1) Print ??1 to cout		   \---->+--------+  ->+--------+
+   cout << head->num;			 |num:??3 | /  |num:??5 |
+(2) Print ??4 to cout			 |--------| |  |--------|
+   cout << head->p2->p1->num;		 |p1:   ---/   |p1: NULL|
+(3) Sets ??3 to ??2  	     		 |--------|    |--------|
+   head->p3->num = head->p2->num;	 |p2: NULL|    |p2: NULL|
+(4) Increments ??5			 |--------|    |--------|
+					 |p3: NULL|    |p3: NULL|
+					 +--------+    +--------+
+BOXES AND ARROWS  head 	
+Given  	       	 +------+				/------\
+ struct Woof {	 |    	|	 		       /       	\
+   int num;   	 +|-----+      	    --->+--------+     v 	 |
+   Woof * p1;  	  |    	       	   /	|num:??2 |  -->+--------+|
+   Woof * p2;  	  \-->+--------+   |   	|--------| /   |num:??4 ||
+   Woof * p3;  	      |num:??1 |   |   	|p1:    --/    |--------||
+ };    	       	      |--------|   /	|--------|     |p1:    --/
+	       	      |p1: NULL|  /	|p2: NULL|     |--------|
+and	       	      |--------| /	|--------|     |p2: NULL|
+ Woof * head;  	      |p2:   ---/      	|p3:    --\    |--------|
+ ..    	       	      |--------|	+--------+ \   |p3: NULL|
+where ??n represent   |p3:   ---\	       	    |  +--------+
+unknown integers      +--------+ \     	 	    |  	       	 
+Write single statements that:	  \	 	    \	       	 
+(1) Print ??1 to cout		   \---->+--------+  ->+--------+
+   cout << head->num;			 |num:??3 | /  |num:??5 |
+(2) Print ??4 to cout			 |--------| |  |--------|
+   cout << head->p2->p1->num;		 |p1:   ---/   |p1: NULL|
+(3) Sets ??3 to ??2  	     		 |--------|    |--------|
+   head->p3->num = head->p2->num;	 |p2: NULL|    |p2: NULL|
+(4) Increments ??5			 |--------|    |--------|
+   ++head->p3->p1->num;			 |p3: NULL|    |p3: NULL|
+   					 +--------+    +--------+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+
+
+
+
+	       
+
+
+
+
+					 
+
+
+
+
+
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  When do they die?
+
+  Global space (AKA 'permanent')
+  Local  space (AKA 'on the stack' AKA 'temporary')
+  Heap   space 
+
+  Global objects are born before main() begins
+  Local objects are born when their definitions are encountered    
+
+  Global objects die after main() returns (or exit())
+  Local objects die when leaving the block they're declared in
+
+
+					 
+
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  What do the die?
+
+ What methods should every class that uses the heap at
+ least declare?
+	       
+
+
+
+
+					 
+
+
+
+
+
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  What do the die?
+
+ What methods should every class that uses the heap at
+ least declare?
+	       
+ How do you 'declare away' a method?  When might you do so?
+
+
+
+class FOo {				 
+public:
+  Foo() { cout << "hi"; }
+private:
+  Foo(Foo&);  //declare away
+};
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  What do the die?
+
+ What methods should every class that uses the heap at
+ least declare?
+	       
+ How do you 'declare away' a method?  When might you do so?
+
+ How many bits in a byte?
+ Current computer memory is addressed per what?
+					 
+
+
+
+
+
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  What do the die?
+
+ What methods should every class that uses the heap at
+ least declare?
+	       
+ How do you 'declare away' a method?  When might you do so?
+
+ How many bits in a byte?
+ Current computer memory is addressed per what?
+					 
+ What's a good thing about an array?  What's a bad thing?
+
+
+
+
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  What do the die?
+
+ What methods should every class that uses the heap at
+ least declare?
+	       
+ How do you 'declare away' a method?  When might you do so?
+
+ How many bits in a byte?
+ Current computer memory is addressed per what?
+					 
+ What's a good thing about an array?  What's a bad thing?
+
+ What's a memory leak?  Write some code that has one.
+
+
+
+
+
+
+
+
+MORE QUESTIONS
+  
+ Where are the three places that objects can live?
+ In each place, when are objects born?  What do the die?
+
+ What methods should every class that uses the heap at
+ least declare?
+	       
+ How do you 'declare away' a method?  When might you do so?
+
+ How many bits in a byte?
+ Current computer memory is addressed per what?
+					 
+ What's a good thing about an array?  What's a bad thing?
+
+ What's a memory leak?  Write some code that has one.
+
+ What is the type of 'this'?  Where does 'this' exist?
+
+
+
+
+
+
+POINTERS III: Dynamic objects: `Segfaults' and memory leaks
+  			     				 
+int main() {
+  int * pi;
+  *pi = 7;
+  cout << *pi << endl;
+  return 0;
+} 					   
+  					   
+( ) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+  	       					       
+
+int main() {
+  int * pi = new int;
+  *pi = 7;
+  cout << *pi << endl;
+  return 0;
+} 					   
+  					   
+( ) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+
+
+
+POINTERS III: Dynamic objects: `Segfaults' and memory leaks
+
+int main() {   
+  int * pi = new int;
+  *pi = 7;     
+  delete pi;
+  cout << *pi << endl;
+  return 0;    
+}   	       				   
+  					   
+( ) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+  						       
+int main() {					       
+  int * pi, * pj;				       
+  pi = new int;	 				       
+  pj = pi;     					       
+  *pj = 9;					       
+  cout << *pi << endl;				       
+  delete pj;					       
+  return 0;					       
+}						       
+
+( ) `Segfault'? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+POINTERS III: Dynamic objects: `Segfaults' and memory leaks
+  			     				 
+int main() {
+  int * pi = new int;
+  *pi = 7;
+  cout << *pi << endl;
+  delete pi;
+  return 0;
+} 					   
+  					   
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+  						       
+
+int main() {					       
+  int * pi, * pj;				       
+  pi = new int;	 				       
+  *pj = 9;					       
+  cout << *pi << endl;				       
+  delete pj;					       
+  return 0;					       
+}						       
+
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+POINTERS III: Dynamic objects and ctors
+#include <iostream.h>
+class Foo {
+public:	   
+  Foo();
+  Foo(int);
+  ~Foo();
+};	 
+Foo::Foo() { cout << "default"; }
+Foo::Foo(int a) { cout << "int" << a; }
+Foo::~Foo() { cout << "die"; }
+	       		  
+int main() {   		  
+  cout << "hi";		  
+  Foo * pf = new Foo;	  
+  delete pf;   		  
+  pf = new Foo(72);	  
+  delete pf;   	   	  
+  return 0;    		  
+}	       		  
+
+hidefaultdieint72die
+
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+POINTERS III: Dynamic objects and ctors
+#include <iostream.h>
+class Foo {
+public:	   
+  Foo();
+  Foo(int);
+  ~Foo();
+};	 
+Foo::Foo() { cout << "default"; }
+Foo::Foo(int a) { cout << "int" << a; }
+Foo::~Foo() { cout << "die"; }
+	       		  
+int main() {   		  
+  cout << "hi";		  
+  Foo * pf = new Foo;	  
+  pf = new Foo(72);	  
+  delete pf;   	   	  
+  return 0;    		  
+}	       		  
+
+hidefaultint72die
+	 
+( ) Segfault? ( ) Memory leak?  ( ) Neither?  ( ) Both?
+
+GDB BASICS
+
+What could you type to:
+
+Run gdb on program foo 	       	       	    (gdb)   
+					            
+Run the program (with no cmd line args)	    (gdb)    	    
+					            
+Break at start of main()		    (gdb)     	    
+					            
+Break in file Foo.C at line number 123	    (gdb)      	    
+ 
+Print the stack              		    (gdb)   
+  						    
+Show the current value of variable 'bar'    (gdb)
+    					            
+Continue from a breakpoint		    (gdb)   	    
+    					            
+Single step (go into function calls)	    (gdb)   	    
+    					            
+Finish the current function then stop	    (gdb)   	    
+    					            
+Next statement (skip over function calls)   (gdb)   	    
+    					            
+

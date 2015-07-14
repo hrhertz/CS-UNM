@@ -1,0 +1,1320 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Expressions, types, and pointers
+
+
+TODAY:
+ - Expressions, types, and pointers
+ - Dave's dequer
+		      
+
+HOMEWORK: PC++P Ch 15 
+
+ Program 2 due 0.5 hours ago -- NO MORE TURN-INS for program 2
+
+ Program 3 out by class FRIDAY.		   
+
+
+
+
+
+
+
+DEEP APPROXIMATELY TRUTHS
+		     
+  In a C++ program, it's the EXPRESSIONS that `DO THE WORK'.
+							    
+and
+   
+  Every EXPRESSION has a TYPE.		     
+     			      
+but			      
+
+  Only some EXPRESSIONS have ADDRESSES.
+					
+
+	 		     
+
+    			      
+
+       	 		      
+
+      	  		     
+
+	   
+
+    			      
+EXPRESSIONS HAVE TYPES 	       	 
+       	       	       	       	   Given all this,             
+class Foo {    	       	         What is the type of:          
+public:	       	       	       	                          
+  void Func1();			        i              int     
+  int Func2(int);		       ia[1]           int     
+private: 			        ia            int[2]   
+  int _data;			        ca            char[3]  
+};	      	   		        ba            bool[7]  
+void Foo::Func1() { cout << "1";}      ba[3]           bool    
+int Foo::Func2(int a) {	       	        f              Foo     
+  return a*3;  	       	       	      f._data          int
+}				     f.Func1()         void
+int main ()			     f.Func2(7)        int     
+{		       	       	   i = f.Func2(7)      int     
+  int i; int ia[2];    	       	        fa            Foo[4]   
+  bool b; bool ba[7];	       	       fa[2]           Foo     
+  char c; char ca[3];        	   fa[2].Func2(0)      int     
+  Foo f; Foo fa[4]; 		 ba[fa[2].Func2(0)]    bool    
+  f.Func1();	    		      main()           
+  i = f.Func2(7);   	   	
+  ba[fa[2].Func2(0)] = true; 	    	 
+  return 0;			 
+}	   			 
+ONLY SOME EXPRESSIONS HAVE ADDRESSES
+				 
+  int i;    	       
+  int ia[3];	       
+
+Which of these expressions are legal?
+       	       	       
+   i   	       	  legal	       
+		  	       
+   i+3		  legal	       
+		       	       
+   i = 9   	  legal	       
+	   	       	       
+   i+3 = 9 	  error          Only expressions with addresses
+	   	       		 can appear on the left side of	
+   ia	   	  legal		 an assignment.     	
+		       		 'i' has an address, 'i+3' doesn't
+   ia[2]	  legal
+       	       	       	      
+   ia[2]+0 = 10   error	       	'ia[2]' has an address,
+		       			 'ia[2]+0' doesn't
+   ia[i+3] = 9	  legal
+
+      
+POINTERS
+				 
+  We can point at anything that has an address.
+
+  A pointer to a thing is a different type than the thing!
+
+	Pointer types are denoted by '*'s.
+
+	int           an integer
+       	int*          a pointer to an integer 
+        int**         a pointer to a pointer to integer
+					      
+  &, the 'address of' operator, gives us a pointer to an
+  expression (or an error if the expression has no address).
+					      
+					      
+  int i; int * pi; int ** ppi;		      
+		       _______      _______             
+  i = 2;       	     i/       \  pi/       \  ppi       
+  pi = &i;  	     v-------- \ -v-------  \ --------- 
+  ppi = &pi;   	     |     2 |  -----    |   ------   | 
+	    	     ---------   ---------    --------- 
+
+	    
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100:(        108)(pi) 	     int * pi; int ** ppi; int i;
+ 104: -- -- -- -- (ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120: -- -- -- --      	 	   
+ 124: -- -- -- --      	     	   
+ 128: -- -- -- -- 	     i = 2;
+	     	       	     pi = &i;
+       	       	       	     
+
+
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100:(        108)(pi) 	     int * pi; int ** ppi; int i;
+ 104:(        100)(ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120: -- -- -- --      	       	       			     
+ 124: -- -- -- --      	     	   			     
+ 128: -- -- -- -- 	     i = 2;			     
+	       	       	     pi = &i;	
+       	       	       	     ppi = &pi;	    
+       	       	       	    
+		  
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 
+ 100:(        108)(pi) 	     int * pi; int ** ppi; int i;
+ 104:(        100)(ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120:(          7)(j)  	       	       			     
+ 124: -- -- -- --      	     	   			     
+ 128: -- -- -- -- 	     i = 2;			     
+	       	       	     pi = &i;	
+       	       	       	     ppi = &pi;	    
+       	       	       	    
+			     int j = 7;  // suppose j gets 120
+ 
+
+
+
+
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 		     
+ 100:(        108)(pi) 	     int * pi; int ** ppi; int i;
+ 104:(        100)(ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120:(          7)(j) 	 	     
+ 124: -- -- -- --      	     	     
+ 128: -- -- -- -- 	     i = 2;  
+ 	       	       	     pi = &i;
+ i     	 j     	       	     ppi = &pi;
+ ----- 	 ----- 	       	     	     
+ |  2|	 |  7|		     int j = 7;  // suppose j gets 120
+ --^-- 	 ----- 	       	     
+    \	       	pi	ppi
+     \ 	       	-----  	-----
+      \------------ |<----  |
+         	-----	-----
+POINTERS
+				 
+  Boxes and arrows...  
+   vs...real memory
+   	
+Address            		   	
+      +0 +1 +2 +3 		     
+ 100:(        120)(pi) 	     int * pi; int ** ppi; int i;
+ 104:(        100)(ppi)	       	       		       	 
+ 108:(          2)(i)  	     Suppose i gets address 108, and
+ 112: -- -- -- --     	     pi gets address 100 and ppi gets
+ 116: -- -- -- --    	     address 104       	       	     
+ 120:(          7)(j) 	 	     
+ 124: -- -- -- --      	     	     
+ 128: -- -- -- -- 	     i = 2;  
+ 	       	       	     pi = &i;
+ i     	 j     	       	     ppi = &pi;
+ ----- 	 ----- 	       	    	     
+ |  2|	 |  7|		     int j = 7;  // suppose j gets 120
+ ----- 	 --^-- 	       	     pi = &j;
+     	    \  	pi	ppi
+       	     \ 	-----  	-----
+       	      \---- |<----  |
+         	-----	-----
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+int x;   // a global
+      
+int * GetIt() { 
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;
+  x = 10;
+  pi = GetIt();
+  cout << pi << endl;
+  return 0;	     
+}
+
+
+
+
+	      			     		  
+
+		       	       	 
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+int x;   // a global
+      
+int * GetIt() { 
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;
+  x = 10;
+  pi = GetIt();
+  cout << pi << endl;
+  return 0;	     
+}
+
+$ g++ -Wall -pedantic foo.C -o foo
+$ ./foo
+0x8049a7c
+$ 
+	      			     		  
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+int x;   // a global
+      
+int * GetIt() { 
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;
+  x = 10;
+  pi = GetIt();
+  cout << *pi << endl;
+  return 0; 	     
+}	    	  
+	    	  
+
+
+
+
+
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+int x;   // a global
+      
+int * GetIt() { 
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;		  /--'*' 'dereferences' a pointer (once)
+  x = 10;		 /   and gives us what it's pointing at	
+  pi = GetIt();	       	/
+  cout << *pi << endl; /
+  return 0;\----------/
+}	    	  
+	    	  
+$ g++ -Wall -pedantic foo.C -o foo
+$ ./foo
+10
+$ 
+
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int * GetIt() { 
+  int x;  // a local 
+  x = 10;
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;
+  pi = GetIt();
+  cout << "Here it comes: ";
+  cout << *pi << endl;
+  return 0; 	     
+}	    	  
+
+
+
+
+
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int * GetIt() { 
+  int x;  // a local 
+  x = 10;
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;
+  pi = GetIt();
+  cout << "Here it comes: ";
+  cout << *pi << endl;
+  return 0; 	     
+}	    	  
+
+
+
+$ ./foo
+Here it comes: 134514871
+$ 
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int * GetIt() { 
+  int x;  // a local  
+  x = 10;
+  return &x;	
+}	      
+ 
+int main() {
+  int * pi;
+  pi = GetIt();
+  cout << "Here it comes: ";
+  cout << *pi << endl;
+  return 0; 	     
+}	    	  
+$ g++ -Wall -pedantic foo.C -o foo
+foo.C: In function `int * GetIt()':
+foo.C:4: warning: address of local variable `x' returned
+$ ./foo
+Here it comes: 134514871
+$ 
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int * GetIt() { 
+  int x;  // a local  
+  x = 10;
+  return &x;	
+}	      
+ /---------------------pi is a `dangling pointer' as of here
+|nt main() {
+\ int * pi;
+ >pi = GetIt();
+  cout << "Here it comes: ";
+  cout << *pi << endl;
+  return 0; 	     
+}	    	  
+$ g++ -Wall -pedantic foo.C -o foo
+foo.C: In function `int * GetIt()':
+foo.C:4: warning: address of local variable `x' returned
+$ ./foo
+Here it comes: 134514871
+$ 
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int main() {
+  int *pi;
+  {
+    int i = 9;
+    pi = &i;  
+  }
+  cout << *pi << endl;
+  return 0;
+}
+ 
+
+
+
+
+
+
+
+
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int main() {
+  int *pi;
+  {
+    int i = 9;
+    pi = &i;   	    
+  }<--------------------'i' dies right here!
+  cout << *pi << endl;		       	    
+  return 0; \---------but 'pi' is still pointing at it here! ono!
+}      	       	       pi is a DANGLING POINTER!
+ 				     
+$ ./foo				     
+
+
+
+
+
+
+
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int main() {
+  int *pi;
+  {
+    int i = 9;
+    pi = &i;  
+  }<--------------------'i' dies right here!
+  cout << *pi << endl;		       	    
+  return 0; \---------but 'pi' is still pointing at it here! ono!
+}      	       	       pi is a dangling pointer!
+ 				     
+$ ./foo				     
+9				     
+$             ..it worked 'by luck'..rats..bad luck..
+
+
+
+
+
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int main() {
+  int *pi;
+  {
+    int i = 9;
+    pi = &i;  
+  }    	      
+  {
+    int j = 12;
+    ++j;
+  }
+  cout << *pi << endl;
+  return 0;
+}  
+   
+
+
+
+      
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int main() {
+  int *pi;
+  {
+    int i = 9;<------------'i' is born here
+    pi = &i;  				   
+  }<-----------------------'i' dies here   
+  {		       	       	       	   
+    int j = 12;<-----------'j' is born here
+    ++j;		       	       	   
+  }<-----------------------'j' dies here
+  cout << *pi << endl;			
+  return 0; \--------'pi' is still pointing to 'i' down here! ono!
+}  
+   
+$ ./foo
+
+
+      
+
+POINTERS: WHERE ARE OBJECTS?
+What does this program print?
+
+#include <iostream.h>			   
+      
+int main() {
+  int *pi;
+  {
+    int i = 9;<------------'i' is born here
+    pi = &i;  				   
+  }<-----------------------'i' dies here   
+  {		       	       	       	   
+    int j = 12;<-----------'j' is born here
+    ++j;		       	       	   
+  }<-----------------------'j' dies here
+  cout << *pi << endl;			
+  return 0; \--------'pi' is still pointing to 'i' down here! ono!
+}  
+   
+$ ./foo
+13
+$ 
+      
+
+POINTERS: WHERE ARE OBJECTS?
+
+Memory and addresses.
+
+Address      
+  100:  --
+  101:  --   
+  102:  --   
+  103:  --   
+  104:  --   
+  105:  --  	    
+  106:  --  	    
+ etc   	  
+
+
+
+
+
+
+
+
+	  
+
+
+POINTERS: WHERE ARE OBJECTS?
+
+Memory and addresses.
+   	    
+Address     
+  100:  --   
+  101:  --   
+  102:  --   
+  103:  --   
+  104:  --   
+  105:  --   
+  106:  --   
+ ..    	     
+  378:  --   
+  379:  --   
+  380:  --   
+  381:  --   
+ ..	     
+  998:  --   
+  999:  --   
+             
+       	     
+
+
+POINTERS: WHERE ARE OBJECTS?
+
+Memory and addresses.
+   		  ------
+Address        	 0|    |
+  100:  --	  |    |
+  101:  --   	  |    |
+  102:  --   	  |    |
+  103:  --   	  |    |     	
+  104:  --   	  |    |     	
+  105:  --  	  |    |  
+  106:  --  	  |    |  
+ ..    	  	  |    |
+  378:  --	  |    |
+  379:  --	  |    |
+  380:  --	  |    |
+  381:  --	  |    |
+ ..	  	  |    |
+  998:  --	  |    |
+  999:  --	  |    |
+            	  |    |
+    2,147,483,648 |    |
+	       	  ------
+
+POINTERS: WHERE ARE OBJECTS?
+
+Memory and addresses.
+   		  ------
+Address        	 0|xxxx|
+  100:  --	  |xxxx|		      
+  101:  --     	  |----|		      
+  102:  --   	  |    |global space   	      
+  103:  --     	  |xxxx|     	    	      
+  104:  --   	  |----|     	    	      
+  105:  --  	  |    |  	    	      
+  106:  --  	  |    |  	    	      
+ ..    	  	  |    |heap space  	      
+  378:  --	  |xxxx|	    	      
+  379:  --	  |xxxx|	    	      
+  380:  --	  |xxxx|	    	  (This is just a sample;
+  381:  --     	  |----|	    	   different machines and
+ ..	  	  |    |	   	   operating systems can  
+  998:  --	  |    |	   	   lay out memory in   	
+  999:  --	  |    |stack space	   different ways.)    	
+            	  |    |
+    2,147,483,648 |    |
+	       	  ------
+
+DAVE'S DEQUER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+  - Need to be able to resize deque over huge range of sizes
+
+
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+  - Need to be able to resize deque over huge range of sizes
+    -> Use a dynamic array allocated on the heap, and have
+       a Deque method to initialize to a new size	  
+
+
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+  Deque
+  +-------------+
+  |char * _data	|
+  |int _max    	|
+  |int _left	|
+  |int _right	|
+  +-------------+
+       
+       	       	   
+  Deque d; d.Init(4);  	       	       	      
+	     	       /--->+-------+
+  d    	       	      /	   0|  	?   |
+  +-------------+    /	    |-------|
+  |_data:  ---------/      1|	?   |
+  |-------------|      	    |-------|
+  |_max: 4  	|	   2|	?   |
+  |-------------|	    |-------|
+  |_left: 0     |	   3|	?   |
+  |-------------|	    +-------+
+  |_right: 0   	|	  
+  +-------------+	  
+
+DAVE'S DEQUER
+
+  Deque
+  +-------------+
+  |char * _data	|
+  |int _max    	|	       	
+  |int _left	|	      	
+  |int _right	|	      	  
+  +-------------+      	      	  
+       				  
+       	       	       	       	  
+  Deque d; d.Init(4);  	       	       	      
+	     	       /--->+-------+
+  d    	       	      /	   0|  	?   |
+  +-------------+    /	    |-------|
+  |_data:  ---------/      1|	?   |
+  |-------------|      	    |-------|
+  |_max: 4  	|	   2|	?   |
+  |-------------|	    |-------|
+  |_left: 0     |	   3|	?   |
+  |-------------|	    +-------+
+  |_right: 0   	|	  
+  +-------------+	  
+
+DAVE'S DEQUER
+
+  Deque
+  +-------------+
+  |char * _data	|
+  |int _max    	|
+  |int _left	|
+  |int _right	|
+  +-------------+
+       					   insert left 'a'
+       	       	   			       
+  Deque d; d.Init(4);  	       	       	       
+       	       	       /--->+-------+  	       
+  d    	       	      /	   0|  'a'  |
+  +-------------+    /	    |-------|
+  |_data:  ---------/      1|	?   |
+  |-------------|      	    |-------|
+  |_max: 4  	|	   2|	?   |
+  |-------------|	    |-------|
+  |_left: 1     |	   3|	?   |
+  |-------------|	    +-------+
+  |_right: 0   	|      	       	  
+  +-------------+	  
+
+DAVE'S DEQUER
+
+  Deque
+  +-------------+
+  |char * _data	|
+  |int _max    	|
+  |int _left	|
+  |int _right	|
+  +-------------+
+       					   insert left 'a'
+       	       	   			   insert left 'b'
+  Deque d; d.Init(4);  	       	       	       		  
+       	       	       /--->+-------+  	       		  
+  d    	       	      /	   0|  'a'  |			  
+  +-------------+    /	    |-------|			  
+  |_data:  ---------/      1|  'b'  |  	       	       	  
+  |-------------|      	    |-------|			  
+  |_max: 4  	|	   2|	?   |			  
+  |-------------|	    |-------|			  
+  |_left: 2     |	   3|	?   |			  
+  |-------------|	    +-------+			  
+  |_right: 0   	|      	       	  
+  +-------------+	  
+
+DAVE'S DEQUER
+
+  Deque
+  +-------------+
+  |char * _data	|
+  |int _max    	|
+  |int _left	|
+  |int _right	|
+  +-------------+
+       					   insert left 'a'
+       	       	   			   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  	       		   
+  d    	       	      /	   0|  'a'  |			   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|			   
+  |_max: 4  	|	   2|	?   |			   
+  |-------------|	    |-------|  	       	       	   
+  |_left: 2     |	   3|  'c'  |			  
+  |-------------|      	    +-------+			  
+  |_right: 3   	|      	       	  
+  +-------------+	  
+
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+      	       	
+  |char * _data	|	     
+  |int _max    	|	     
+  |int _left	|	     
+  |int _right	|	     				 
+  +-------------+	     				 
+       			     		   insert left 'a'
+       	       	   	     		   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  	   insert right 'd'
+  d    	       	      /	   0|  'a'  |			   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|		       	   
+  |_max: 4  	|	   2|  'd'  |  	
+  |-------------|      	    |-------|  	
+  |_left: 2     |      	   3|  'c'  |  	
+  |-------------|      	    +-------+      		  
+  |_right: 2   	|		      
+  +-------------+      	       	      
+
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+	       	
+  |char * _data	|		bool Deque::IsEmpty() {  
+  |int _max    	|		  return _left == _right;
+  |int _left	|		}                        
+  |int _right	|					 
+  +-------------+					 
+       					   insert left 'a'
+       	       	   			   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  	   insert right 'd'
+  d    	       	      /	   0|  'a'  |			   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|		       	   
+  |_max: 4  	|	   2|  'd'  |  	  -Uh oh.  d.IsEmpty()
+  |-------------|      	    |-------|  	 / is true again!     
+  |_left: 2     |<-\   	   3|  'c'  |  	/  What to do? What to do?
+  |-------------|   \  	    +-------+  /   		  
+  |_right: 2   	|<---\ 	       	      /
+  +-------------+     ---------------/
+
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+	       	
+  |char * _data	|		bool Deque::IsEmpty() {  
+  |int _max    	|		  return _left == _right;
+  |int _left	|		}                        
+  |int _right	|					 
+  +-------------+					 
+       					   insert left 'a'
+       	       	   			   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  	   insert right 'd'
+  d    	       	      /	   0|  'a'  |			   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|		       	   
+  |_max: 4  	|	   2|  'd'  |  	  -Uh oh.  d.IsEmpty()
+  |-------------|      	    |-------|  	 / is true again!     
+  |_left: 2     |<-\   	   3|  'c'  |  	/  What to do? What to do?
+  |-------------|   \  	    +-------+  /   		  	  
+  |_right: 2   	|<---\ 	       	      /	    ->Let's burn one extra
+  +-------------+     ---------------/	      char.  If size is 3,
+					      allocate 4, etc...  
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+	       	
+  |char * _data	|	      	bool Deque::IsEmpty() {  
+  |int _max    	|	      	  return _left == _right;
+  |int _left	|	      	}                        
+  |int _right	|	      				 
+  +-------------+	       	   			 
+       			      	   	   insert left 'a'
+       	       	   	      	   	   insert left 'b'
+  Deque d; d.Init(4);  	       	       	
+       	       	       /--->+-------+  	
+  d    	       	      /	   0|  'a'  |			   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|		       	   
+  |_max: 5     	|      	   2|   ?   |  	
+  |-------------|      	    |-------|  
+  |_left: 2     |      	   3|   ?   |  
+  |-------------|      	    |-------|  
+  |_right: 0   	|      	   4|	?   |
+  +-------------+	    +-------+
+				       
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+	       	
+  |char * _data	|	      	bool Deque::IsEmpty() {  
+  |int _max    	|	      	  return _left == _right;
+  |int _left	|	      	}                        
+  |int _right	|	      				 
+  +-------------+	       	   			 
+       			      	   	   insert left 'a'
+       	       	       	       	       	   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  			   
+  d    	       	      /	   0|  'a'  |			   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|		       	   
+  |_max: 5     	|      	   2|   ?   |  	
+  |-------------|      	    |-------|  
+  |_left: 2     |      	   3|   ?   |  
+  |-------------|      	    |-------|  
+  |_right: 4   	|      	   4|  'c'  |
+  +-------------+	    +-------+
+				       
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+	       	
+  |char * _data	|	      	bool Deque::IsEmpty() {  
+  |int _max    	|	      	  return _left == _right;
+  |int _left	|	      	}                        
+  |int _right	|	      				 
+  +-------------+	       	   			 
+       			      	   	   insert left 'a'
+       	       	       	       	       	   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  	   insert right 'd'
+  d    	       	      /	   0|  'a'  |  	    		   
+  +-------------+    /	    |-------|			   
+  |_data:  ---------/      1|  'b'  |  	       	       	   
+  |-------------|      	    |-------|		       	   
+  |_max: 5     	|      	   2|   ?   |  	
+  |-------------|      	    |-------|  
+  |_left: 2     |      	   3|  'd'  |  
+  |-------------|      	    |-------|  
+  |_right: 3   	|      	   4|  'c'  |
+  +-------------+	    +-------+
+				       
+DAVE'S DEQUER  	       	       
+			       
+  Deque			       
+  +-------------+	       	
+  |char * _data	|	      	bool Deque::IsEmpty() {  
+  |int _max    	|	      	  return _left == _right;
+  |int _left	|	      	}                        
+  |int _right	|	      				 
+  +-------------+	       	   			 
+       			      	   	   insert left 'a'
+       	       	       	       	       	   insert left 'b'
+  Deque d; d.Init(4);  	       	       	   insert right 'c'
+       	       	       /--->+-------+  	   insert right 'd'
+  d    	       	      /	   0|  'a'  |  	    		   
+  +-------------+    /	    |-------| bool Deque::IsFull() {
+  |_data:  ---------/      1|  'b'  |  	return ((_left+1) % _max)
+  |-------------|      	    |-------| 	       == right ;      
+  |_max: 5     	|      	   2|   ?   | }	
+  |-------------|      	    |-------|  
+  |_left: 2     |      	   3|  'd'  |  
+  |-------------|      	    |-------|  
+  |_right: 3   	|      	   4|  'c'  |
+  +-------------+	    +-------+
+				       
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+  - Need to be able to resize deque over huge range of sizes
+    -> Use a dynamic array allocated on the heap, and have
+       a Deque method to initialize to a new size	  
+       -> Deque will need deep-copying copy ctor and op=
+  
+
+
+
+
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+  - Need to be able to resize deque over huge range of sizes
+    -> Use a dynamic array allocated on the heap, and have
+       a Deque method to initialize to a new size	  
+       -> Deque will need deep-copying copy ctor and op=
+  
+  - Need to distinguish IsFull from IsEmpty in wraparoundland.
+    -> Reserve one extra spot				      
+    -> (Alternative: Extra data member for the element count.)
+     -> (also: bool flags for full and empty)..
+
+
+
+
+DAVE'S DEQUER
+
+ Design issues:
+
+  - Need fast deque algorithm.  Lots of O(1) methods.
+    -> Extend the 'non-strawman' wrap-around queue to a deque
+
+  - Need all combinations of insert and remove, left and right.
+    -> Maintain two indices, '_left' and '_right', to keep
+       track of ends
+    
+  - Need to be able to resize deque over huge range of sizes
+    -> Use a dynamic array allocated on the heap, and have
+       a Deque method to initialize to a new size	  
+       -> Deque will need deep-copying copy ctor and op=
+  
+  - Need to distinguish IsFull from IsEmpty in wraparoundland.
+    -> Reserve one extra spot				      
+    -> (Alternative: Extra data member for the element count.)
+
+  - Need to output 'dequer protocol responses' in various places
+    -> Do all dequer stuff in class Dequer.  Don't pollute 
+       beautiful clean general class Deque with foul iostream.h
+       business..					       
+DAVE'S DEQUER - Deque.h
+
+#ifndef DEQUE_H        /* -*- C++ -*- */
+#define DEQUE_H
+
+class Deque {
+ public:
+  Deque(int size=1);               // Default and given-size ctors
+  Deque(const Deque &);            // Deep copying
+  Deque & operator=(const Deque &);// Deep copying
+  ~Deque();					  
+
+
+
+
+
+
+ private:						 
+  char * _data;			   // Ptr to dynamic array 
+  int _max;			   // Current size of _data
+  int _left, _right;		   // Indices of deque endpoints
+};
+
+#endif
+DAVE'S DEQUER - Deque.h
+
+#ifndef DEQUE_H        /* -*- C++ -*- */
+#define DEQUE_H
+
+class Deque {
+ public:
+  Deque(int size=1);               // Default and given-size ctors
+  Deque(const Deque &);            // Deep copying
+  Deque & operator=(const Deque &);// Deep copying
+  ~Deque();					  
+
+
+
+  bool IsEmpty() const;		   // True iff deque is empty  	 
+  bool IsFull() const;		   // True iff deque is full 
+
+ private:						 
+  char * _data;			   // Ptr to dynamic array 
+  int _max;			   // Current size of _data
+  int _left, _right;		   // Indices of deque endpoints
+};
+
+#endif
+DAVE'S DEQUER - Deque.h
+
+#ifndef DEQUE_H        /* -*- C++ -*- */
+#define DEQUE_H
+
+class Deque {
+ public:
+  Deque(int size=1);               // Default and given-size ctors
+  Deque(const Deque &);            // Deep copying
+  Deque & operator=(const Deque &);// Deep copying
+  ~Deque();					  
+
+  bool Insert(const char c,bool left=true); // Only insert method
+  bool Remove(char & c,bool left=true);	    // Only remove method 
+  bool IsEmpty() const;		   // True iff deque is empty  	 
+  bool IsFull() const;		   // True iff deque is full 
+
+ private:						 
+  char * _data;			   // Ptr to dynamic array 
+  int _max;			   // Current size of _data
+  int _left, _right;		   // Indices of deque endpoints
+};
+
+#endif
+DAVE'S DEQUER - Deque.h
+
+#ifndef DEQUE_H        /* -*- C++ -*- */
+#define DEQUE_H
+
+class Deque {
+ public:
+  Deque(int size=1);               // Default and given-size ctors
+  Deque(const Deque &);            // Deep copying
+  Deque & operator=(const Deque &);// Deep copying
+  ~Deque();					  
+
+  bool Insert(const char c,bool left=true); // Only insert method
+  bool Remove(char & c,bool left=true);	    // Only remove method 
+  bool IsEmpty() const;		   // True iff deque is empty  	 
+  bool IsFull() const;		   // True iff deque is full 
+  void Empty();			   // Empty out the deque
+ private:						 
+  char * _data;			   // Ptr to dynamic array 
+  int _max;			   // Current size of _data
+  int _left, _right;		   // Indices of deque endpoints
+};
+
+#endif
+DAVE'S DEQUER - Deque.h
+
+#ifndef DEQUE_H        /* -*- C++ -*- */
+#define DEQUE_H
+
+class Deque {
+ public:
+  Deque(int size=1);               // Default and given-size ctors
+  Deque(const Deque &);            // Deep copying
+  Deque & operator=(const Deque &);// Deep copying
+  ~Deque();					  
+  void Init(int size);		   // Reinitialize to given size
+  bool Insert(const char c,bool left=true); // Only insert method
+  bool Remove(char & c,bool left=true);	    // Only remove method 
+  bool IsEmpty() const;		   // True iff deque is empty  	 
+  bool IsFull() const;		   // True iff deque is full 
+  void Empty();			   // Empty out the deque
+ private:						 
+  char * _data;			   // Ptr to dynamic array 
+  int _max;			   // Current size of _data
+  int _left, _right;		   // Indices of deque endpoints
+};
+
+#endif

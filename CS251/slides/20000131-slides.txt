@@ -1,0 +1,1320 @@
+QUESTIONS
+
+LAST TIME:
+ - Administrivia
+ - Program 1 questions
+ - Private data, public function
+ - Finding the objects example 	       	    
+
+TODAY:
+ - Finding the objects example, concluded   
+ - Declarations and definitions..
+ - Ctors
+
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : 10 days 3 hours remaining 
+
+ROTARY DEBUGGER n.  Essential equipment for those late-night or
+early-morning debugging sessions. Mainly used as sustenance for
+ the hacker. Comes in many decorator colors, such as Sausage,
+       Pepperoni, and Garbage. See pizza, ANSI standard.
+
+
+ADMINISTRIVIA
+	     	   
+ - `CS251 student resources' web operation is UP (Beta warning!)
+		 				    
+   - You can only register at the site if you were on
+     the original enrollment list, or if I processed your
+     student declaration
+
+   - When you get to confirming your registration, your
+     password will be EMAILED to your @unm.edu address!
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+		   
+
+
+                 	    
+
+
+          
+
+
+
+		          	     
+
+
+
+
+
+
+
+
+
+
+
+
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+
+
+
+
+
+
+
+
+
+
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            
+  int k = 12;			    
+  class Bar {public: void Hi();};   
+       	       	       	       	    
+  bool MyFunc(int);	       	    
+  bool JFunc(int j) {return j>3;}   
+  class Foo;   	       	       	    
+				    
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;  	       	       	    
+  class Bar {public: void Hi();};   
+       	       	       	       	    
+  bool MyFunc(int);	       	    
+  bool JFunc(int j) {return j>3;}   
+  class Foo;   	       	       	    
+				    
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;			    - decl. and def. of 'k'
+  class Bar {public: void Hi();};   
+       	       	       	       	    
+  bool MyFunc(int);	       	    
+  bool JFunc(int j) {return j>3;}   
+  class Foo;   	       	       	    
+				    
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;  	       	       	    - decl. and def. of 'k'
+  class Bar {public: void Hi();};   - declaration of 'Bar'
+       	       	       	       	      (also decl. of Bar::Hi)
+  bool MyFunc(int);	       	    
+  bool JFunc(int j) {return j>3;}   
+  class Foo;   	       	       	    
+				    
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;			    - decl. and def. of 'k'
+  class Bar {public: void Hi();};   - declaration of 'Bar'
+       	       	       	       	      (also decl. of Bar::Hi)
+  bool MyFunc(int);	       	    - declaration of 'MyFunc'   
+  bool JFunc(int j) {return j>3;}   
+  class Foo;   	       	       	    
+				    
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;			    - decl. and def. of 'k'
+  class Bar {public: void Hi();};   - declaration of 'Bar'
+       	       	       	       	      (also decl. of Bar::Hi)
+  bool MyFunc(int);	       	    - declaration of 'MyFunc'   
+  bool JFunc(int j) {return j>3;}   - decl. and def. of 'JFunc'
+  class Foo;   	       	       	    
+				    
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;			    - decl. and def. of 'k'
+  class Bar {public: void Hi();};   - declaration of 'Bar'
+       	       	       	       	      (also decl. of Bar::Hi)
+  bool MyFunc(int);	       	    - declaration of 'MyFunc'   
+  bool JFunc(int j) {return j>3;}   - decl. and def. of 'JFunc'
+  class Foo;   	       	       	    - (incomplete) declaration
+       	       	       	       	      of 'Foo' 	       	      
+  Bar honk;			    
+  				    
+DECLARATION AND DEFINITION
+		   
+As a general principle:
+
+   Every `name' used in a program has to have a declaration
+   and a definition.  The declaration and definition may   
+   appear close together or may be widely separated, but
+   the (first) declaration of a name cannot occur AFTER
+   the definition of a name.			       
+
+   Things get a little complicated with classes and objects,
+    but as a rule:
+         A declaration gives a TYPE to a NAME.	    
+       	 A definition gives a VALUE to a NAME.      
+  int j;                            - declaration of 'j'
+  int k = 12;			    - decl. and def. of 'k'
+  class Bar {public: void Hi();};   - declaration of 'Bar'
+       	       	       	       	      (also decl. of Bar::Hi)
+  bool MyFunc(int);	       	    - declaration of 'MyFunc'   
+  bool JFunc(int j) {return j>3;}   - decl. and def. of 'JFunc'
+  class Foo;   	       	       	    - (incomplete) declaration
+				      of 'Foo' 	       	      
+  Bar honk;			    - declaration (and maybe   
+  				      definition) of 'honk'.
+CLASSES, DECLARATIONS, DEFINITIONS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+       	--Foo.h--
+	#ifndef FOO_H
+       	#define FOO_H  
+	#include "Bar.h"
+	class Foo {    
+	 public:       
+           void DoIt();
+         private:      
+           Bar _b;     
+         };            
+	 #endif
+	 ----------
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+       	--Foo.h--
+	#ifndef FOO_H
+	#define FOO_H
+       	#include "Bar.h"
+	class Foo {	
+	 public:       <from here til changed, 'interface' stuff
+           void DoIt();
+         private:      
+           Bar _b;     
+         };            
+	 #endif
+	 ----------
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+       	--Foo.h--
+	#ifndef FOO_H
+	#define FOO_H
+	#include "Bar.h"
+       	class Foo {   
+	 public:       <from here til changed, 'interface' stuff
+           void DoIt();<so, this is interface
+         private:      <from here til changed,secret hidden stuff
+           Bar _b;     
+         };            
+	 #endif
+	 ----------
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+       	--Foo.h--
+	#ifndef FOO_H
+	#define FOO_H
+	#include "Bar.h"
+	class Foo {
+	 public:       <from here til changed, 'interface' stuff
+           void DoIt();<so, this is interface
+         private:      <from here til changed,secret hidden stuff
+           Bar _b;     <I've got a Bar, but you can't use it
+         };         
+	 #endif
+	 ----------
+CLASSES, DECLARATIONS, DEFINITIONS
+
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS
+				  
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+ - Informally speaking, the public members of a class are
+   called its `interface'.
+
+
+
+
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS
+
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+ - Informally speaking, the public members of a class are
+   called its `interface'.
+
+ - When one class (or function) uses the interface of another
+   class, a DEPENDENCY is created.  C++ represents the use
+   of an interface by #include-ing the corresponding .h file.
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS, DEPENDENCIES
+
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+ - Informally speaking, the public members of a class are
+   called its `interface'.
+
+ - When one class (or function) uses the interface of another
+   class, a DEPENDENCY is created.  C++ represents the use
+   of an interface by #include-ing the corresponding .h file.
+
+
+
+
+
+
+CLASSES, DECLARATIONS, DEFINITIONS, DEPENDENCIES
+
+ - Classes have declarations and (their member functions) have
+   definitions.  By and large, the declarations go in the .h file
+   -- so other objects can know about them, and the definitions	 
+   go in the .C file, where nobody except for the class itself	 
+   gets to see it.						 
+								 
+ - C++ classes can have public and private members. In principle,
+   really, only the public members ought to be in the .h, but
+   (unfortunately) that's not the way C++ was designed.
+
+ - Informally speaking, the public members of a class are
+   called its `interface'.
+
+ - When one class (or function) uses the interface of another
+   class, a DEPENDENCY is created.  C++ represents the use
+   of an interface by #include-ing the corresponding .h file.
+
+ - 'make' (and other `project management' tools) work by
+   tracing the dependencies among project files and watching
+   for modifications to project files.
+
+
+FINDING THE OBJECTS - Example
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H	       	 void Booth::Election() {
+#include "Person.h"         while (_ReadVote()) ; // empty loop
+class Booth {          	    _ReportVote();
+public:                	 }     	       	       	       	       	 
+  void Election();     	 
+private:                 bool Booth::_ReadVote() {
+  void _Error();       	   char c;                              
+  bool _ReadVote();    	   cin >> c;                             
+  void _ReportVote();  	   if (!cin) _Error();                   
+  enum {_MAXV=100};    	   if (c=='V') {                  
+  Person _voters[_MAXV];     int vnum, vote;                     
+};     	       	   	     cin >> vnum >> vote;if(!cin)_Error();
+#endif	     		     if (vnum<0 || vnum>=_MAXV) _Error();
+---    	       	       	     if (vote!=0 && vote!=1) _Error();   
+			     _voters[vnum].SetVote(vote==1);     
+			     return true;
+			    }  	       	 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	 bool Booth::_ReadVote() {                
+#include "Person.h"        char c;                                
+class Booth {          	   cin >> c;                              
+public:                	   if (!cin) _Error();                    
+  void Election();     	   if (c=='V') {                          
+private:                     int vnum, vote;                      
+  void _Error();       	     cin >> vnum >> vote;                 
+  bool _ReadVote();    	     if (vnum<0 || vnum>=_MAXV) _Error(); 
+  void _ReportVote();  	     if (vote!=0 && vote!=1) _Error();    
+  enum {_MAXV=100};    	     _voters[vnum].SetVote(vote==1);      
+  Person _voters[_MAXV];     return true;                         
+};     	       	   	    }                                     
+#endif	     		 
+---    	       	       	 
+			 
+			 
+			 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	 bool Booth::_ReadVote() {                
+#include "Person.h"        char c;                                
+class Booth {          	   cin >> c;                              
+public:                	   if (!cin) _Error();                    
+  void Election();     	   if (c=='V') {                          
+private:                     int vnum, vote;                      
+  void _Error();       	     cin >> vnum >> vote;                 
+  bool _ReadVote();    	     if (vnum<0 || vnum>=_MAXV) _Error(); 
+  void _ReportVote();  	     if (vote!=0 && vote!=1) _Error();    
+  enum {_MAXV=100};    	     _voters[vnum].SetVote(vote==1);      
+  Person _voters[_MAXV];     return true;                         
+};     	       	   	    }                                     
+#endif 	       	       	    if (c=='C') { return false; }
+---    	       	       	    _Error();
+			    return false;  // not reached
+			  }    	       	       	       	       	 
+			 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	     return true;                   
+#include "Person.h"         }                               
+class Booth {          	    if (c=='C') { return false; }   
+public:                	    _Error();                            
+  void Election();     	    return false;  // not reached        
+private:                  }                                      
+  void _Error();       	      				    
+  bool _ReadVote();    	  
+  void _ReportVote();  	  
+  enum {_MAXV=100};    	  
+  Person _voters[_MAXV];  
+};     	       	   	  
+#endif 	       	       	  
+---    	       	       	  
+			  
+			  
+			 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	     return true;                   
+#include "Person.h"         }                               
+class Booth {          	    if (c=='C') { return false; }   
+public:                	    _Error();                            
+  void Election();     	    return false;  // not reached        
+private:                  }                                      
+  void _Error();       	      				    
+  bool _ReadVote();    	  void Booth::_ReportVote()    	    
+  void _ReportVote();  	  {    	       	       	   
+  enum {_MAXV=100};    	 
+  Person _voters[_MAXV]; 
+};     	       	   	 
+#endif 	       	       	 
+---    	       	       	 
+			 
+			 
+			 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	     return true;                   
+#include "Person.h"         }                               
+class Booth {          	    if (c=='C') { return false; }   
+public:                	    _Error();                            
+  void Election();     	    return false;  // not reached        
+private:                  }                                      
+  void _Error();       	      				    
+  bool _ReadVote();    	  void Booth::_ReportVote()    	    
+  void _ReportVote();  	  {    	       	       	   
+  enum {_MAXV=100};    	    int yes = 0, no = 0;
+  Person _voters[_MAXV];    for (int i = 0; i<_MAXV; ++i) 
+};     	       	   	      if (_voters[i].GetVote()) ++yes;
+#endif 	       	       	      else ++no;       	       	      
+---    	       	       	   
+
+
+			 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H	       	  ...
+#define BOOTH_H	       	  void Booth::_ReportVote()            
+#include "Person.h"       {                                    
+class Booth {          	    int yes = 0, no = 0;               
+public:                	    for (int i = 0; i<_MAXV; ++i)      
+  void Election();     	      if (_voters[i].GetVote()) ++yes; 
+private:                      else ++no;                       
+  void _Error();       	    cout << "In favor: " << yes        
+  bool _ReadVote();    	         << " Opposed: " << no << endl;
+  void _ReportVote();  	  }                                    	 
+  enum {_MAXV=100};    	   				       
+  Person _voters[_MAXV];  void Booth::_Error() 		       
+};     	       	   	  {    	       	       
+#endif 	       	       	    cout << "Error during vote!" << endl;
+---    	       	       	    exit(1);        // quit now..
+			  }    	       	       	       	       	 
+			  
+			 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Main.h---
+#ifndef MAIN_H
+#define MAIN_H
+#include "Booth.h"
+#endif
+---
+
+---Main.C---
+#include "Main.h"
+int main()
+{
+  Booth b;	
+  b.Election();
+  return 0;
+}
+---
+
+
+
+FINDING THE OBJECTS - Example
+
+ (demo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+ what happened?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GDB
+	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       	       
+
+
+
+
+
+
+
+CONSTRUCTORS
+	    
+
+
+
+
+
+
+
+
+
+       
+
+
+
+
+                       	       
+
+
+
+
+
+
+
+CONSTRUCTORS
+	    
+What does this program print?
+
+//foo.C
+#include <iostream.h>
+int main() { 
+  bool b = true; 
+  cout << b << endl;
+  return 0;      
+}                
+       
+
+
+
+
+                       	       
+
+
+
+
+
+
+
+CONSTRUCTORS
+	    
+What does this program print?
+
+//foo.C
+#include <iostream.h>
+int main() { 
+  bool b = true; 
+  cout << b << endl;
+  return 0;      
+}                
+       
+% g++ -Wall -pedantic foo.C -o foo
+% ./foo
+1
+% 
+                       	       
+
+
+
+
+
+
+
+CONSTRUCTORS - default constructor
+	    
+What does this program print?
+
+class Player { 	       	       
+ public:      		       
+   void SetType(bool robot);   
+   bool GetType(){return _robot;}
+   void SetSide(bool playx);   	    
+   bool GetSide(){return _playx;}
+       	       	 
+ private:      	 	       
+   bool _robot;		       
+   bool _playx;		           
+};            		       
+			       
+int main()                     
+{                              
+  Player p;                   
+  cout << p.GetType() << endl;
+  return 0;                   
+}                             
+                              
+ 
+CONSTRUCTORS - default constructor
+	    
+What does this program print?
+
+class Player { 	       	       	class Player2 {
+ public:      			 public:       
+   void SetType(bool robot);	   Player2();
+   bool GetType(){return _robot;}  void SetType(bool robot);
+   void SetSide(bool playx);      ...                       
+   bool GetSide(){return _playx;}private:             
+                             	   bool _robot;
+ private:			  ...          
+   bool _robot;	                 };  
+   bool _playx;			   
+};            			 
+				 
+int main()                    	 
+{                             	 
+  Player p;                   	 
+  cout << p.GetType() << endl;
+  return 0;                   
+}                             
+                              
+
+CONSTRUCTORS - default constructor
+	    
+What does this program print?
+
+class Player { 	       	       	class Player2 {
+ public:      			 public:       
+   void SetType(bool robot);	   Player2();
+   bool GetType(){return _robot;}  void SetType(bool robot);
+   void SetSide(bool playx);      ...                       
+   bool GetSide(){return _playx;}private:             
+                                   bool _robot;
+ private:			  ...          
+   bool _robot;			 };  
+   bool _playx;			   
+};            			 Player2::Player2()
+				 {                 
+int main()                    	    _robot = false;
+{                             	    _playx = false;
+  Player p;                   	 }                 
+  cout << p.GetType() << endl;
+  return 0;                   
+}                             
+                              
+
+CONSTRUCTORS - default constructor
+	    
+What does this program print?
+  
+                       	       	class Player2 {
+                		 public:       
+                                   Player2();
+                        	   void SetType(bool robot);
+                                  ...                       
+                            	 private:             
+                             	   bool _robot;
+                		  ...          
+                        	 };  
+                        	   
+              			 Player2::Player2()
+        			 {                 
+int main()                    	    _robot = false;
+{                             	    _playx = false;
+  Player2 p;                   	 }                 
+  cout << p.GetType() << endl;
+  return 0;                   
+}                             
+                              
+
+CONSTRUCTORS - default constructor
+	    
+What does this program print?
+  
+                       	       	class Player2 {
+                		 public:       
+                                   Player2();
+                        	   void SetType(bool robot);
+                                  ...                       
+                            	 private:             
+                             	   bool _robot;
+                		  ...          
+                        	 };  
+                        	   
+              			 Player2::Player2()
+        			 {                 
+int main()                    	    _robot = false;
+{                             	    _playx = false;
+  Player2 p;                   	 }                 
+  cout << p.GetType() << endl;
+  return 0;   Player2 foo[1234040];
+}                             
+$ ./foo                       
+0     
+CONSTRUCTORS - default constructor
+     
+//foo2.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo(); 
+};      
+Foo::Foo() { cout << "Foo!" << endl; }
+        			      
+int main()
+{         
+  Foo f;
+  cout << "Starting" << endl;
+  return 0;     	     
+}    
+     
+
+
+
+
+
+
+
+CONSTRUCTORS - default constructor
+     
+//foo2.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo(); 
+};      
+Foo::Foo() { cout << "Foo!" << endl; }
+        			      
+int main()
+{         
+  Foo f;
+  cout << "Starting" << endl;
+  return 0;     	     
+}    
+     
+% g++ -Wall -pedantic foo2.C -o foo2
+foo2.C: In function `int main()':  
+foo2.C:12: warning: unused variable `class Foo f'
+% 
+
+
+
+CONSTRUCTORS - default constructor
+     
+//foo2.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo(); 
+};      
+Foo::Foo() { cout << "Foo!" << endl; }
+        			      
+int main()
+{         
+  Foo f;
+  cout << "Starting" << endl;
+  return 0;     	     
+}    
+     
+% g++ -Wall -pedantic foo2.C -o foo2
+foo2.C: In function `int main()':   
+foo2.C:12: warning: unused variable `class Foo f'
+% ./foo2                            
+Foo!
+Starting
+% 
+CONSTRUCTORS - default constructor
+     
+//foo3.C
+#include <iostream.h>
+class Foo { public: Foo(); };      
+Foo::Foo() { cout << "Foo!" << endl; }
+        			      
+int main()
+{         
+  cout << "Starting" << endl;
+  if (0) { cout << "No" << endl; }
+  else { Foo f; cout << "Yes" << endl; }
+  return 0;
+}    	   
+     
+% ./foo3
+Starting
+Foo!
+Yes
+%  
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+	    			  	   
+
+
+
+
+
+
+
+
+
+	  
+
+
+
+
+
+
+
+ 
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+	    			  	   
+ - A constructor is called when an object comes into
+   existence    				    
+
+
+
+
+
+
+
+	  
+
+
+
+
+
+
+
+ 
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+	    			  	   
+ - A constructor is called when an object comes into
+   existence    				    
+
+ - The default constructor is used unless another 
+   constructor is explicitly called for 	  
+
+
+
+
+	  
+
+
+
+
+
+
+
+ 
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+	    			  	   
+ - A constructor is called when an object comes into
+   existence    				    
+
+ - The default constructor is used unless another 
+   constructor is explicitly called for 	  
+
+ - A constructor CAN do anything it wants (essentially)
+   but it SHOULD initialize ALL DATA MEMBERS to sensible
+   values.
+	  
+
+
+
+
+
+
+
+ 
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+	    			  	   
+ - A constructor is called when an object comes into
+   existence    				    
+
+ - The default constructor is used unless another 
+   constructor is explicitly called for 	  
+
+ - A constructor CAN do anything it wants (essentially)
+   but it SHOULD initialize ALL DATA MEMBERS to sensible
+   values.
+	  
+ - If a class definition doesn't explicitly declare
+   a default constructor, the compiler will declare
+   and define one AUTOMATICALLY.
+
+
+
+
+ 
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+	    			  	   
+ - A constructor is called when an object comes into
+   existence    				    
+
+ - The default constructor is used unless another 
+   constructor is explicitly called for 	  
+
+ - A constructor CAN do anything it wants (essentially)
+   but it SHOULD initialize ALL DATA MEMBERS to sensible
+   values.
+	  
+ - If a class definition doesn't explicitly declare
+   a default constructor, the compiler will declare
+   and define one AUTOMATICALLY.
+			   (be afraid, be very afraid.)
+
+
+
+ 
+
+
+
+

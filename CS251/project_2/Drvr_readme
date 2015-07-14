@@ -1,0 +1,5 @@
+Once you do that, you can run them at least three ways, in combination with your ./dequer program:
+       1.Just display responses to commands you type: ./dequer | ./showdequer 
+       2.Use a graphical interface to feed commands into your program: ./cmddequer | ./dequer 
+       3.Make a `dequer sandwich' with commands from a graphical interface and results to a graphical display: ./cmddequer | ./dequer
+         | ./showdequer 

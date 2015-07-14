@@ -1,0 +1,1440 @@
+QUESTIONS
+LAST TIME:
+ - Administrivia
+ - Trees IV
+ - Trees, other uses
+ - Parsing I
+TODAY:
+ - TPL Questions
+ - Parsing and parse trees		   
+
+HOMEWORK:  PC++P Ch 20		   
+   Program 4 NOW AT -45%		   
+   Program 5 DUE Monday 5/08 5PM: 12DAYS, 3HOURS 
+
+Program 5 spec 1.0 known bugs:
+		    			  
+ (s7.5.3.1) should read ..."and 'd' nodes (s7.5.2.6) in"...
+ (s7.3.1.1) has a misspelling of 'represents'.
+
+
+
+
+
+
+ADMINISTRIVIA - HERE ON OUT
+
+  WHEN 	       	       	  DISTANCE     WHAT
+MON   4/24 1PM            -past-      Program 4 in     	  
+TUE   4/25 1PM            -past-      Program 4 in for -15%    
+WED   4/26 1PM            -past-      Program 4 in for -30%    
+THU   4/27 1PM             23h        Program 4 in for -45%    
+MON   4/30 5PM              5d3h      Program 3 late days close
+FRI   5/05 2PM              9d 	      Last day of class
+MON   5/08 5PM             12d3h      Program 5 in
+THU   5/11 5PM             15d3h      Program 5 latest turnin
+FRI   5/12 12:30PM-2:30PM  15d22.5h   Final exam
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., and-or trees
+		       	       	 
+               .72 pass 251    	 
+		   / (or) \    	     
+       	       	  /    	   \	 
+	       honestly     dishonestly
+       	    .72/(and)\ 	       .4|(or) \-----------\
+	      /	  |   \	       	 |     	       	   |   	       	  
+	    pass  pass pass    	 change grade in  posthypnotic	  
+       	    tests quiz projects	 UNM computers 	  suggestion on	  
+       	   /  ..       	 .     	 / (or) \.4    	  professor(.0001)
+       	pass   	   .   	 .     	/        \     	     |(and) \ ..\
+       test1	   .	 .   break in  	  break	     |	     \	 -
+       	.80    	   .   	.72  via network  into 	    buy	    go to
+	       	  .9   	       .02     	  building  pocket  office
+				       	    .4 	    watch   hours 
+					       	    with     1.0 
+					      	    chain	 
+					       	     .95       	 
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+		       	       	 
+
+
+    sentence
+   /   	    \
+   |   	     |
+   |   	     |
+ noun  	   verb phrase
+ phrase	  /	      \
+   |   	  |	       |
+ noun  	 verb	  noun phrase
+   |  	  |    	   /       \ 
+   |  	  |  	   |   	   |  
+   |   	  |  	 article noun 
+   |   	  |    	   |	   |   
+ JOHN   FILLED    THE    BUCKET
+
+
+
+
+
+TREES - Other uses
+		  
+E.g., parse trees
+  		       	       	 
+#include <iostream.h>
+int main() {  
+  	      op<<
+  	     / 	 \
+     	/---- 	  ----------\
+      op<<		    |
+     / 	  \--\		    |
+     | 	      op+   	    |
+     | 	     / 	 \ 	    |
+     | 	    / 	  \	    |
+     | 	   | 	   op/	    |
+     | 	   |   	  / \  	    |
+     | 	   |   	op*  \ 	    |
+     | 	   |   /   \  \	    |
+     | 	  num num num num   |
+     |	   |   |   |   |    |
+   cout << 1 + 4 * 9 / 5 << endl;
+   return 0; 		   
+}
+8
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 1
+ Rule:
+  FOO <- "hello"
+
+ Start symbol == FOO
+  
+       	      FOO      FOO	FOO	   FOO
+       	       |       	|      	/  \	    | 
+	     hello    gabbo   bing bang	   FOO
+       	       	       			    | 
+       	     (legal)  (no)      (no)	  hello
+       	     			    
+       	       	       	       	       	   (no)
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 2
+ Rule: 	       
+  FOO <- "hello" | "gabbo"
+			    
+ Start symbol == FOO	    
+  			    
+
+
+
+
+
+       	     			    
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 2
+ Rule:
+  FOO <- "hello" | "gabbo"
+
+ Start symbol == FOO
+       	       	      
+       	      FOO      FOO	FOO	   FOO
+       	       |       	|      	/  \	    | 
+	     hello    gabbo   hello gabbo  FOO
+       	       	       	     		    | 
+       	     (legal)  (legal)   (no)	  hello
+       	     			    
+       	       	       	       	       	   (no)
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 3
+ Rule: 	       	
+  FOO <- "hello" + "gabbo"
+
+ Start symbol == FOO
+       	       	      
+
+
+
+
+
+       	     			    
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 3
+ Rule: 	       	
+  FOO <- "hello" + "gabbo"
+
+ Start symbol == FOO
+       	       	      
+       	      FOO      FOO	FOO	   FOO
+       	       |       	|      	/  \	    | 
+	     hello    gabbo   hello gabbo  FOO
+       	       	       	     		    | 
+       	      (no)     (no)    (legal)	  hello
+       	     			    
+       	       	       	       	       	   (no)
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 4
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo"
+ Start symbol == FOO
+       	       	      
+
+
+
+
+
+       	     			    
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 4
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo"
+ Start symbol == FOO
+       	       	      
+       	      FOO      FOO	FOO	   FOO
+       	       |       	|      	/  \	    | 
+       	     hello    gabbo   hello gabbo  FOO
+       	       	       	     		    | 
+       	      (no)     (no)      (no) 	  hello
+       	     			    
+       	       	       	       	       	   (no)
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 4
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo"
+ Start symbol == FOO   	       	       	       	    
+       	       	      				    
+       	      FOO      FOO	FOO	   FOO	      FOO
+       	       |       	|      	/  \	    | 	      /	 \
+       	     hello    gabbo   hello gabbo  FOO	   hello  BAR 
+       	       	       	     		    | 		   |  
+       	      (no)     (no)      (no) 	  hello		 gabbo
+       	     			    			      
+       	       	       	       	       	   (no)	      (legal) 
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      				    
+
+
+
+
+
+       	     			    			      
+
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      				    
+       	      FOO      FOO	FOO	   FOO	  
+       	       |       	|      	/  \	    | 	  
+       	     hello    gabbo   hello gabbo  FOO	  
+       	       	       	     		    | 	  
+       	      (no)     (no)      (no) 	  hello	  
+       	       	       	       	       	       	    	      
+       	       	       	       	       	   (no)	  
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      				    
+       	      FOO      FOO	FOO	   FOO	      FOO
+       	       |       	|      	/  \	    | 	      /	 \
+       	     hello    gabbo   hello gabbo  FOO	   hello  BAR 
+       	       	       	     		    | 		   |  
+       	      (no)     (no)      (no) 	  hello		 gabbo
+       	       	       	       	       	       	    	      
+       	       	       	       	       	   (no)	        (legal)
+
+
+
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+  FOO  	     
+  /  \ 	     
+hello BAR    
+       |     
+      FOO    
+      /	 \   
+   hello  BAR
+ 	   |  
+       	 gabbo
+ 	      	       	      	      
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+  FOO  	      
+  /  \ 	      
+hello BAR     
+       |      
+      FOO     
+      /	 \    
+   hello  BAR 
+ 	   |  
+       	 gabbo
+ 	      	       	      	      
+  (legal)     
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+  FOO  	          FOO         
+  /  \ 	          /  \        
+hello BAR       hello BAR     
+       |       	       |      
+      FOO             FOO     
+      /	 \     	      /  \    
+   hello  BAR  	   hello  BAR 
+ 	   |   	           |   	      
+       	 gabbo 	         hello 	      
+ 	      	       	      	      
+  (legal)     	    
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	       	      	    		       
+  FOO  	          FOO         
+  /  \ 	          /  \        
+hello BAR       hello BAR     
+       |       	       |      
+      FOO             FOO     
+      /	 \     	      /  \    
+   hello  BAR  	   hello  BAR 
+ 	   |   	           |   	      
+       	 gabbo 	         hello 	      
+ 	      	       	      	      
+  (legal)      	     (no)   
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+  FOO  	          FOO              FOO           
+  /  \ 	          /  \             /  \          
+hello BAR       hello BAR        hello BAR       
+       |       	       |                |        
+      FOO             FOO              FOO       
+      /	 \     	      /  \    	       /  \      
+   hello  BAR  	   hello  BAR 	    hello  gabbo       
+       	   |   	           |   	      
+       	 gabbo 	         hello 	      
+ 	      	       	      	      
+  (legal)     	     (no)	  
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+  FOO  	          FOO              FOO           
+  /  \ 	          /  \             /  \          
+hello BAR       hello BAR        hello BAR       
+       |       	       |                |        
+      FOO             FOO              FOO       
+      /	 \     	      /  \    	       /  \      
+   hello  BAR  	   hello  BAR 	    hello  gabbo       
+ 	   |   	           |   	      
+       	 gabbo 	         hello 	      
+ 	      	       	      	      
+  (legal)     	     (no)	      (no)
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+
+
+
+
+
+
+
+
+
+          hello hello hello gabbo     
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+	   FOO--\
+	    | 	 BAR
+	    | 
+	    | 
+       	    | 
+	    | 
+	    | 
+	    | 
+	    | 
+          hello hello hello gabbo     
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+	   FOO--\
+       	    |  	 BAR
+	    |	  |    
+	    |	 FOO
+       	    |  	  
+	    |	  
+	    |	  
+	    |  	  
+	    |	  
+          hello hello hello gabbo     
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+Example 5
+ Rule: 	       	
+  FOO <- "hello" + BAR
+  BAR <- "gabbo" | FOO
+ Start symbol == FOO   	       	       	       	    
+       	       	      	      	    		       
+	   FOO--\  
+	    |	 BAR
+	    |	  |    
+	    |	 FOO--\
+       	    |  	  |    BAR
+	    |	  |     |
+	    |	  |    FOO--\
+	    |  	  |     |    BAR
+	    |	  |     |     |
+          hello hello hello gabbo     
+
+TREES - grammars
+		  
+- A grammar is a way of describing a set of legal parse trees
+  	   	       	       	 
+- A grammar consists of a set of RULES describing how parse trees
+  can be put together, and a START SYMBOL saying where to begin
+ 
+- Grammar rules consist of TERMINAL symbols (like "hello" and
+  "gabbo") and NON-TERMINAL symbols (like FOO and BAR)
+						      
+- Terminal symbols appear only as leaves in parse trees; 
+  non-terminal symbols only as interior nodes in parse trees
+
+- Grammar rules can use '|' to express 'either or'.
+
+- Grammar rules can use '+' to represent 'and then'.
+
+- Grammar rules can be recursive		      
+  						      
+
+       	       	      	      	    		       
+
+
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+
+
+
+
+
+
+
+
+
+
+
+
+   					   		   
+
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+       
+       
+ NUM 
+  |  
+  9  
+     
+     
+     
+     
+     
+     
+     
+     
+   					   		   
+
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+
+ NUM 
+  |  
+  9  
+     
+     
+     
+     
+     
+     
+     
+     
+     					   		   
+  no 
+     
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+
+ NUM   E   
+  |    |   
+  9   NUM  
+       |   
+       3   
+           
+           
+   	   
+   	   
+   	   
+   	   
+       	   				   		   
+  no  
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+	   
+	   
+ NUM   E   
+  |    |   
+  9   NUM  
+       |   
+       3   
+           
+           
+   	   
+   	   
+   	   
+   	   
+   	   				   		   
+  no   yes
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+       	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+	      
+	      
+ NUM   E     E  
+  |    |     |  
+  9   NUM   NUM 
+       |     |  
+       3    123 
+                
+                
+   		
+   		
+   		
+   		
+   					   		   
+  no   yes   
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+       	       	
+ NUM   E     E  
+  |    |     |  
+  9   NUM   NUM 
+       |     |  
+       3    123 
+                
+                
+   		
+   		
+   		
+   		
+   					   		   
+  no   yes   no 
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+       	       	       	   
+ NUM   E     E      E      
+  |    |     |     /|\     
+  9   NUM   NUM NUM + NUM  
+       |     |   |     |   
+       3    123  7     7   
+                           
+                           
+   			   
+   			   
+   			   
+   			   
+   			   		   		   
+  no   yes   no    
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+
+ NUM   E     E      E      
+  |    |     |     /|\     
+  9   NUM   NUM NUM + NUM  
+       |     |   |     |   
+       3    123  7     7   
+                           
+                           
+   			   
+   			   
+   			   
+   			   
+   			   		   		   
+  no   yes   no     no     
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+       	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E		   
+				   
+				   
+ NUM   E     E      E           E  
+  |    |     |     /|\         /|\ 
+  9   NUM   NUM NUM + NUM   NUM + E
+       |     |   |     |     |    | 
+       3    123  7     7     7   NUM
+                                  | 
+                                  7 
+   				    
+   				    
+   				    
+   				    
+   				    	   		   
+  no   yes   no     no          
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+       	       	       	       	      
+				      
+ NUM   E     E      E           E     
+  |    |     |     /|\         /|\    
+  9   NUM   NUM NUM + NUM   NUM + E   
+       |     |   |     |     |    |   
+       3    123  7     7     7   NUM  
+                                  |   
+                                  7   
+   				      
+   				      
+
+
+       	       	       	       	   	   		   
+  no   yes   no     no          yes      
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+       	 "5" | "6" | "7" | "8" | "9"   	     
+ Start symbol == E			     
+					     
+					     
+ NUM   E     E      E           E        E     
+  |    |     |     /|\         /|\      /|\    
+  9   NUM   NUM NUM + NUM   NUM + E    E + NUM 
+       |     |   |     |     |    |    |    |  
+       3    123  7     7     7   NUM  NUM   7  
+                                  |    |       
+                                  7    7       
+   					       
+   					       
+   					       
+   					       
+   					       		   
+  no   yes   no     no          yes      
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+       	       	       	       	       	      
+ NUM   E     E      E           E        E     
+  |    |     |     /|\         /|\      /|\    
+  9   NUM   NUM NUM + NUM   NUM + E    E + NUM 
+       |     |   |     |     |    |    |    |  
+       3    123  7     7     7   NUM  NUM   7  
+                                  |    |       
+                                  7    7       
+   					       
+   					       
+   					       
+   					       
+   					       		   
+  no   yes   no     no          yes      no    
+
+TREES - more grammars
+
+Example 6
+ Rule: 	       	
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | 
+	 "5" | "6" | "7" | "8" | "9"   
+ Start symbol == E
+
+       	       	       	       	       	      
+ NUM   E     E      E           E        E     
+  |    |     |     /|\         /|\      /|\    
+  9   NUM   NUM NUM + NUM   NUM + E    E + NUM 
+       |     |   |     |     |    |    |    |  
+       3    123  7     7     7   NUM  NUM   7  
+                                  |    |       
+                                  7    7       
+   					       
+   					       
+   					       
+   					       
+   					       		   
+  no   yes   no     no          yes      no    
+       	       	 ..OK, but how to you write CODE to do this??..
+TOP-DOWN PARSING	  
+
+
+
+
+		       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+ FOO <- "h" | "g" + FOO
+ Start symbol == FOO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+ FOO <- "h" | "g" + FOO
+ Start symbol == FOO
+
+
+
+
+
+
+
+
+
+#include <strstream.h>
+int main() {
+  istrstream s("hgggggghi");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}
+
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+ FOO <- "h" | "g" + FOO
+ Start symbol == FOO
+
+
+
+
+
+
+
+
+
+#include <strstream.h>
+int main() {
+  istrstream s("hgggggghi");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}
+110
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+ FOO <- "h" | "g" + FOO
+ Start symbol == FOO
+
+#include <iostream.h>
+bool Parse(istream&in) {
+  if (in.peek()=='h') { in.get(); return true; } // FOO <- "h"
+  if (in.peek()=='g') {		// then must be FOO <- "g" + FOO 
+    in.get(); return Parse(in);
+  }  	    
+  return false;			// else it's not a FOO
+}	    
+#include <strstream.h>
+int main() {
+  istrstream s("hgggggghi");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}
+110
+TOP-DOWN PARSING	  
+ - Start with the start symbol
+ - Look at the input, decide which (piece of which) rule applies
+ - Go that (piece of that) rule, calling
+   methods to match each piece of the rule
+		       
+ FOO <- "h" | "g" + FOO
+ Start symbol == FOO
+
+#include <iostream.h>
+bool Parse(istream&in) {
+  if (in.peek()=='h') { in.get(); return true; } // FOO <- "h"
+  if (in.peek()=='g') {		// then must be FOO <- "g" + FOO 
+    in.get(); return Parse(in);
+  }  	    
+  return false;			// else it's not a FOO
+}	    
+#include <strstream.h>
+int main() {
+  istrstream s("hgggggghi");
+  cout << Parse(s); cout << Parse(s); cout << Parse(s);
+  return 0;
+}      	       	This kind of code is called a `recognizer'. 
+110    	       	It checks the syntax but doesn't do anything else.
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+
+
+
+
+
+
+
+       	       	      		   
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	       	      
+            E  	      
+      	   /+\	      
+	NUM   E	      
+	 |    |	      
+       	 3   NUM      
+	      |	      
+	      6	      
+       	       	      		   
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+	   /+\	      three kinds of nodes in these parse trees
+	NUM3  E	        (1) NUM nodes -- no children	       
+	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      		   
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+       	   /+\ 	      three kinds of nodes in these parse trees
+       	NUM3  E	        (1) NUM nodes -- no children	       
+	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      		   
+struct Node {	 
+..	     	 
+  int value;   	 
+  Node * left; 	 
+  Node * right;	 
+};		 
+		 
+       	       	 
+		 
+		 
+		 
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+	   /+\	      three kinds of nodes in these parse trees
+       	NUM3  E	        (1) NUM nodes -- no children	       
+	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      	 	   
+struct Node {  	   (E+)	  	   
+..	     	  +----+ 
+  int value;   	  |  ? | 
+  Node * left; 	  |----| 
+  Node * right;	  |  ? | 
+};		  |----| 
+		  |  ? | 
+       	       	  +----+ 
+		      	 
+			 
+			 
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+	   /+\	      three kinds of nodes in these parse trees
+       	NUM3  E	        (1) NUM nodes -- no children	       
+	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      	 	   
+struct Node {  	   (E+)	  	   
+..	     	  +----+    (NUM)    			  
+  int value;   	  |  ? |   +----+ 
+  Node * left; 	  |----|   |  3 | 
+  Node * right;	  |   ---->|----| 
+};		  |----|   |NULL| 
+		  |  ? |   |----| 
+       	       	  +----+   |NULL| 
+		      	   +----+ 
+			 	  
+			       	  
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+       	   /+\	      three kinds of nodes in these parse trees
+	NUM3  E	        (1) NUM nodes -- no children	       
+	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      	 	      
+struct Node {	   (E+)	  	      
+..	     	  +----+    (NUM)     			  
+  int value;   	  |  ? |   +----+  (E<-NUM)
+  Node * left; 	  |----|   |  3 |  >+----+ 
+  Node * right;	  |   ---->|----| / | ?  | 
+};		  |----|   |NULL| | |----| 
+		  |   --\  |----| | | ?  | 
+       	       	  +----+ | |NULL| | |----|   
+       	       	       	 | +----+ | | ?  |   
+			 \     	  / +----+   
+			  \------/     	 
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+            E  	      We can simplify a little and say we've got
+	   /+\	      three kinds of nodes in these parse trees
+	NUM3  E	        (1) NUM nodes -- no children	       
+       	      |	        (2) E<-NUM nodes -- one child 	       
+       	     NUM6       (3) E+ nodes -- two children       
+	       	      	   (could be three children but	   
+	       	      	    since all we have is '+'...)
+       	       	      	 	   
+struct Node {	   (E+)	  	   
+..	     	  +----+    (NUM)    			  
+  int value;   	  |  ? |   +----+  (E<-NUM)    	     (NUM)
+  Node * left; 	  |----|   |  3 |  >+----+	/-->+----+
+  Node * right;	  |   ---->|----| / | ?  |     /    | 6  |
+};		  |----|   |NULL| | |----|    /	    |----|
+		  |   --\  |----| | |   -----/	    |NULL|
+       	       	  +----+ | |NULL| | |----|	    |----|
+		      	 | +----+ | |NULL|	    |NULL|
+			 \     	  / +----+	    +----+
+			  \------/     	 
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+  Node(int what,Node * l, Node * r) {
+    value = what; left = l; right = r;
+  } ...more stuff...
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+  Node(int what,Node * l, Node * r) {
+    value = what; left = l; right = r;
+  } ...more stuff...					
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+6");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;
+  return 0;
+}
+
+
+
+
+TOP-DOWN PARSING - BUILDING A PARSE TREE
+ Start symbol == E
+  E <- NUM | NUM + "+" + E
+  NUM <- "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+struct Node {
+  Node(int what,Node * l, Node * r) {
+    value = what; left = l; right = r;
+  } ...more stuff...					
+  ~Node() { delete left; delete right; }
+  int value;
+  Node * left, * right;
+};
+#include <strstream.h>
+int main() {    
+  istrstream s ("3+6");
+  Node * t = Node::ParseE(s);
+  t->Print(cout,0);
+  delete t;		       	    E
+  return 0;		   	   / \
+}                              	 NUM  E
+ E(1)			    	  |   |
+  NUM=6			   	  3  NUM
+E+			   	      |	
+ NUM=3			     	      6

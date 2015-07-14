@@ -1,0 +1,1056 @@
+QUESTIONS
+
+LAST TIME:
+ - Quiz
+
+TODAY:
+ - Administrivia: Option for late days on Program 1 expiring..
+ - iostream tips: char foo; cin.get(foo);
+ - Value semantics: Copy ctor and op=
+ - Intro to pointers
+ - New and delete
+
+
+HOMEWORK: PC++P Ch 15
+ Program 2 due in 9 days 23.5 hours: MON MAR 6 1:30 PM
+			 
+  NO CREDIT for any Program 2's turned-in
+  AFTER Mon Mar 6 1:30 PM, REGARDLESS of 
+  `free late day' use.
+
+
+
+
+
+ADMINISTRIVIA
+
+ - If you plan to use any of your three free late days
+   on PROGRAM 1, your request to do so must be on your student
+   resource web page before 5PM SUNDAY FEBRUARY 27, 2000!  
+	     	 				       
+ - Your option to EVER use ANY free late days on PROGRAM 1 
+   EXPIRES at 5PM SUNDAY FEBRUARY 27, 2000!  LAST WARNING!
+
+ - First In-class Quizzes back Monday
+
+ - Program 1 back Monday
+
+ - Program 2 adjustments (spec version 1.2):
+
+   - New command `C'; new response `CIRCULATE'
+
+   - Revised due dates:
+    Program 2 due THU MAR 2 5PM for EXTRA CREDIT +3%
+    Program 2 due MON MAR 6 1:30 PM for FULL CREDIT         
+     NO CREDIT for any Program 2's turned-in
+     after MON MAR 6 1:30 PM, REGARDLESS of 
+     `free late day' use.
+
+IOSTREAM TIPS
+ Sample Task:  Copy one line of text from cin to cout, changing
+               all ' 's to '_'s.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					  
+					  
+					  
+
+
+
+
+IOSTREAM TIPS
+ Sample Task:  Copy one line of text from cin to cout, changing
+               all ' 's to '_'s.
+
+#include <iostream.h>
+int main()     	  // LOSING APPROACH #1!  STRAWMAN!
+{	  	  
+  char ch;
+  while ((cin >> ch) && (ch!='\n'))
+    if (ch==' ') cout << '_'; else cout << ch;
+  cout << endl;
+  return 0;
+} 	
+
+
+
+
+					  
+					  
+					  
+
+
+
+
+IOSTREAM TIPS
+ Sample Task:  Copy one line of text from cin to cout, changing
+               all ' 's to '_'s.
+
+#include <iostream.h>
+int main()     	  // LOSING APPROACH #1!  STRAWMAN!
+{	  	  
+  char ch;
+  while ((cin >> ch) && (ch!='\n'))
+    if (ch==' ') cout << '_'; else cout << ch;
+  cout << endl;
+  return 0;
+} 	
+
+% ./foo
+ Sample Task:  Copy one line of text from cin to cout, changing
+SampleTask:Copyonelineoftextfromcintocout,changing
+					  
+					  
+					  
+  - 'cin >> ch' ignores spaces ' ' and newlines '\n'!  
+     So the 'if' is never true... and the 'while' doesn't stop
+     after one line!
+
+IOSTREAM TIPS
+ Sample Task:  Copy one line of text from cin to cout, changing
+               all ' 's to '_'s.
+
+#include <iostream.h>
+int main()     	  // LOSING APPROACH #2!  STRAWMAN!
+{		  
+  char buf[50];	  
+  cin.get(buf,50);
+  for (int i = 0;i<50;++i) if (buf[i]==' ') buf[i] = '_';
+  cout << buf << endl;
+  return 0;
+} 	
+
+
+
+
+
+  
+
+
+
+
+
+IOSTREAM TIPS
+ Sample Task:  Copy one line of text from cin to cout, changing
+               all ' 's to '_'s.
+
+#include <iostream.h>
+int main()     	  // LOSING APPROACH #2!  STRAWMAN!
+{		  
+  char buf[50];	  
+  cin.get(buf,50);
+  for (int i = 0;i<50;++i) if (buf[i]==' ') buf[i] = '_';
+  cout << buf << endl;
+  return 0;
+} 	
+
+% ./foo
+ Sample Task:  Copy one line of text from cin to cout, changing
+_Sample_Task:__Copy_one_line_of_text_from_cin_to_
+% 
+  
+
+
+ - Fails on 50 char or longer lines!  The task doesn't say there's
+   ANY fixed limit on the line length, not 50, not 500,000,000!
+
+IOSTREAM TIPS
+ Sample Task:  Copy one line of text from cin to cout, changing
+               all ' 's to '_'s.
+
+#include <iostream.h>
+int main()     	  // WINNING APPROACH!
+{		  
+  char ch;     	       	       	    
+  while (cin.get(ch) && ch!='\n') 
+    if (ch==' ') cout << '_'; else cout << ch;
+  cout << endl;			      
+  return 0;
+}     	
+
+
+% ./foo
+ Sample Task:  Copy one line of text from cin to cout, changing
+_Sample_Task:__Copy_one_line_of_text_from_cin_to_cout,_changing
+% 
+
+
+ - Works!  No line length limitations at all!
+  
+
+VALUE SEMANTICS
+		  	       
+ A class has value semantics if copies of objects are completely
+ independent of each other, like copies of ints are..
+ 
+but isn't that just always true anyway?  
+
+..It (generally) is, until you start dealing with pointers,
+  and dynamic memory..					   
+  
+Giving a class value semantics is usually not too hard.  You
+just have to remember to declare and appropriately define
+four methods:
+	     
+class Foo {  
+public:	     
+  Foo();                        // (1) The default ctor
+  Foo(const Foo &);             // (2) The copy ctor   
+  Foo & operator=(const Foo &);	// (3) The assignment operator
+  ~Foo();                       // (4) The destructor
+..
+private:
+..
+};
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	     [f] 
+void Func(Foo f) {  cout << "(Func)"; [g]} [h]
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g; [c]     cout << "(2)"; [d]	      
+     g = f; [e]	 		      	      
+     Func(g); [f]   cout << "(3)"; [i] 	      
+   } [j]       	       	       	      
+   cout << "(4)"; [k]
+   return 0;	     
+} [l]  	       	     
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {
+   Foo f;           cout << "(1)";
+   if (1>0) {
+     Foo g;         cout << "(2)";
+     g = f;
+     Func(g);       cout << "(3)"; 
+   }	     
+   cout << "(4)";
+   return 0;	 
+}
+
+
+
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo&f) {  cout << "(Func)";    }
+int main() {  
+   Foo f;           cout << "(1)";
+   if (1>0) { 
+     Foo g;         cout << "(2)";
+     g = f;   
+     Func(g);       cout << "(3)"; 
+   }	      
+   cout << "(4)";
+   return 0;  	 
+}	      
+	      
+	      				     
+	      				     
+(def)(1)(def)(2)(op=)(Func)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+class Foo {
+public:
+  Foo();
+  Foo(const Foo &);
+  Foo & operator=(const Foo &);
+  ~Foo();
+private:
+  int _data;  double _ary[3];
+};	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+class Foo {
+public:
+  Foo();
+  Foo(const Foo &);
+  Foo & operator=(const Foo &);
+  ~Foo();
+private:
+  int _data;  double _ary[3];
+};	    
+Foo::Foo() { _data = 0; for (int i = 0; i<3; ++i) _ary[i] = 0.0; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+class Foo {
+public:
+  Foo();
+  Foo(const Foo &);
+  Foo & operator=(const Foo &);
+  ~Foo();
+private:
+  int _data;  double _ary[3];
+};	    
+Foo::Foo() { _data = 0; for (int i = 0; i<3; ++i) _ary[i] = 0.0; }
+Foo::Foo(const Foo & f) {
+  _data = f._data;
+  for (int i = 0; i<3; ++i) _ary[i] = f._ary[i];
+}     						
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+class Foo {
+public:
+  Foo();       	       	       	  Foo a, b, c;
+  Foo(const Foo &);		    ...       
+  Foo & operator=(const Foo &);  a =  b = c;
+  ~Foo();
+private:
+  int _data;  double _ary[3];
+};	    
+Foo::Foo() { _data = 0; for (int i = 0; i<3; ++i) _ary[i] = 0.0; }
+Foo::Foo(const Foo & f) {
+  _data = f._data;
+  for (int i = 0; i<3; ++i) _ary[i] = f._ary[i];
+}     						
+Foo & Foo::operator=(const Foo & f)			
+{  							
+  if (this==&f) return *this;     // avoid self-assignment
+  _data = f._data;					
+  for (int i = 0; i<3; ++i) _ary[i] = f._ary[i];	
+  return *this;						
+}  
+
+
+VALUE SEMANTICS
+class Foo {
+public:
+  Foo();
+  Foo(const Foo &);
+  Foo & operator=(const Foo &);
+  ~Foo();
+private:
+  int _data;  double _ary[3];
+};	    
+Foo::Foo() { _data = 0; for (int i = 0; i<3; ++i) _ary[i] = 0.0; }
+Foo::Foo(const Foo & f) {
+  _data = f._data;
+  for (int i = 0; i<3; ++i) _ary[i] = f._ary[i];
+}     						
+Foo & Foo::operator=(const Foo & f)			
+{  							
+  if (this==&f) return *this;     // avoid self-assignment
+  _data = f._data;					
+  for (int i = 0; i<3; ++i) _ary[i] = f._ary[i];	
+  return *this;						
+}  
+Foo::~Foo() { }
+
+THE BIG FOUR: DEF CTOR, COPY CTOR, OP=, & DTOR
+		  	       
+ - In almost every non-trivial class, you declare them all.
+							   
+ - For value semantics, define copy ctor and op= so 
+   that they copy everything in the object
+ 
+ - Passing objects by value uses the copy ctor and the dtor
+       
+
+
+  
+
+
+
+	     
+
+
+
+
+
+
+
+
+DYNAMIC ARRAYS
+	      
+The ARRAY 
+ DESCRIBE
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+				  
+ DEFEND				  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           
+ ATTACK    
+ - we have to know how big the array will ever need to be at
+   the time we make the array
+ - without doing some kind of additional arranging of the
+   objects, we have to search the whole array to find out if
+   a given object is stored in it or not		    
+
+
+
+
+
+
+
+DYNAMIC ARRAYS		     
+	      		     
+The ARRAY 		     
+ DESCRIBE		     
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+			     	  
+ DEFEND			     	  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           		     
++------------------------------------------------------------+
+|- we have to know how big the array will ever need to be at |
+|  the time we make the array  	       	       	       	     |
++------------------------------------------------------------+
+   objects, we have to search the whole array to find out if
+   a given object is stored in it or not		    
+			     
+			     
+ ..so how do we do the Deque?
+
+
+
+
+DYNAMIC ARRAYS		     
+	      		     
+The ARRAY 		     
+ DESCRIBE		     
+   An array is a fixed size group of objects arranged one after
+   the other in memory.  All the objects are the same type.
+			     	  
+ DEFEND			     	  
+ + array indexing allows us to access any array element rapidly
+ + no wasted space - just the objects laid out end-to-end
+           		     
++------------------------------------------------------------+
+|- we have to know how big the array will ever need to be at |
+|  the time we make the array  	       	       	       	     |
++------------------------------------------------------------+
+   objects, we have to search the whole array to find out if
+   a given object is stored in it or not		    
+			     
+			     
+ ..so how do we do the Deque?
+       
+       --> We need to know the size when we `make the array', but
+       	   we don't have to make all our arrays at COMPILE-TIME.
+
+POINTERS - OVERVIEW
+
+ A pointer is a place in memory that contains the address of
+ something else in memory.  A pointer to a TYPE is represented
+ by 'TYPE *': 		  		       	  
+
+    int i;        // i is an integer		  
+    int * pi;     // pi is a pointer to int
+    char * pc;    // pc is a pointer to char	  
+    double ** ppd;// ppd is a pointer to a pointer to double
+
+ The '&' address-of operator creates a pointer to something
+ (whenever that something actually has an address):	   
+
+    pi = &i;      // now pi is `pointing at' i (the location in
+		  // memory called 'pi' contains the address of
+		  // the location in memory called 'i').       
+
+    pi = &(1+9);  // Syntax error: The expression 1+9 doesn't
+		  // have an address.  Variables and objects
+		  // have addresses.  Numbers and such don't.
+    
+
+
+POINTERS - OVERVIEW
+
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+       	     
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   		    			      
+
+
+
+
+
+				   
+
+
+
+
+POINTERS - OVERVIEW
+
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+	    
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   		    			      
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+
+
+
+				   
+
+
+
+
+POINTERS - OVERVIEW
+
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   		    			      
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+				   
+
+
+
+
+POINTERS - OVERVIEW
+
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   		    			      
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+				   
+   pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+
+
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+   pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+       	       	       	       	     +---------+         
+       	       +-----------+	     |         | array[0]
+  	    pi |	   |	     |---------|         
+  	       +-----------+	     |         | array[1]
+  		  		     |---------|         
+  		  		     |         | array[2]
+  		  		     |---------|         
+  		  		     |         | array[3]
+  		  		     |---------|         
+  	       	  		     |         | array[4]
+  				     |---------|         
+  				     |         | array[5]
+  				     |---------|         
+  				     |         | array[6]
+  				     +---------+         
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+>  pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+   pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+       	       	       	       	 /-->+---------+         
+       	       +-----------+	/    |         | array[0]
+  	    pi |      ---------/     |---------|         
+  	       +-----------+	     |         | array[1]
+  		  		     |---------|         
+  		  		     |         | array[2]
+  		  		     |---------|         
+  		  		     |         | array[3]
+  		  		     |---------|         
+  	       	  		     |         | array[4]
+  				     |---------|         
+  				     |         | array[5]
+  				     |---------|         
+  				     |         | array[6]
+  				     +---------+         
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   pi = array;      // Now pi points to the first element of array
+>  pi = &array[0];  // (exact same effect as previous line)
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+   pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+       	       	       	       	 /-->+---------+         
+       	       +-----------+	/    |         | array[0]
+  	    pi |      ---------/     |---------|         
+  	       +-----------+	     |         | array[1]
+  		  		     |---------|         
+  		  		     |         | array[2]
+  		  		     |---------|         
+  		  		     |         | array[3]
+  		  		     |---------|         
+  	       	  		     |         | array[4]
+  				     |---------|         
+  				     |         | array[5]
+  				     |---------|         
+  				     |         | array[6]
+  				     +---------+         
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+>  array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+   pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+       	       	       	       	 /-->+---------+         
+       	       +-----------+	/    |         | array[0]
+  	    pi |      ---------/     |---------|         
+  	       +-----------+	     |         | array[1]
+  		  		     |---------|         
+  		  		     |         | array[2]
+  		  		     |---------|         
+  		  		     |      92 | array[3]
+  		  		     |---------|         
+  	       	  		     |         | array[4]
+  				     |---------|         
+  				     |         | array[5]
+  				     |---------|         
+  				     |         | array[6]
+  				     +---------+         
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+   array[3] = 92;   // Store a number
+>  cout << pi[3];   // Prints 92.  
+   pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+       	       	       	       	 /-->+---------+         
+       	       +-----------+	pi[0]|         | array[0]
+       	    pi |      ---------/     |---------|         
+  	       +-----------+	pi[1]|         | array[1]
+  		  		     |---------|         
+  		  		pi[2]|         | array[2]
+  		  		     |---------|         
+  		  		pi[3]|      92 | array[3]
+  		  		     |---------|         
+  	       	  		pi[4]|         | array[4]
+  				     |---------|         
+  				pi[5]|         | array[5]
+  				     |---------|         
+  				pi[6]|         | array[6]
+  				     +---------+         
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+>  pi = &array[5];  // Now pi points to the sixth element of array
+   cout << pi[-2];  // Again prints 92!
+				     +---------+         
+       	       +-----------+	     |         | array[0]
+       	    pi |      -------\ 	     |---------|         
+  	       +-----------+ | 	     |         | array[1]
+			     |	     |---------|         
+			     |	     |         | array[2]
+			     |	     |---------|         
+			     |	     |      92 | array[3]
+			     |	     |---------|         
+			     |	     |         | array[4]
+			     \------>|---------|         
+				     |         | array[5]
+				     |---------|         
+       	       	       		     |         | array[6]
+				     +---------+         
+POINTERS - OVERVIEW
+   int array[7];    // An array of seven int
+   int * pi;        // A pointer to int
+   pi = array;      // Now pi points to the first element of array
+   pi = &array[0];  // (exact same effect as previous line)
+   array[3] = 92;   // Store a number
+   cout << pi[3];   // Prints 92.  
+   pi = &array[5];  // Now pi points to the sixth element of array
+>  cout << pi[-2];  // Again prints 92!
+       	       	       	     	     +---------+         
+       	       +-----------+   pi[-5]|         | array[0]
+       	    pi |      -------\ 	     |---------|         
+  	       +-----------+ | pi[-4]|         | array[1]
+			     |	     |---------|         
+			     | pi[-3]|         | array[2]
+			     |	     |---------|         
+			     | pi[-2]|      92 | array[3]
+			     |	     |---------|         
+			     | pi[-1]|         | array[4]
+			     \------>|---------|         
+			       	pi[0]|         | array[5]
+				     |---------|         
+       	       	       		pi[1]|         | array[6]
+				     +---------+         
+POINTERS - OVERVIEW
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+       	     
+
+
+   	    	    			      
+
+
+
+
+
+      			   
+
+
+
+
+
+POINTERS - OVERVIEW
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+       	     
+  - The expression 'new TYPE[SIZE]' creates a new array
+    of SIZE objects of type TYPE.
+   	    	    			      
+
+
+
+
+
+      			   
+
+
+
+
+
+POINTERS - OVERVIEW
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+       	     
+  - The expression 'new TYPE[SIZE]' creates a new array
+    of SIZE objects of type TYPE.
+   	    	    			      
+      int * pi;
+      pi = new int[7]; // now pi points to a new array of 7 int
+      char * pc;
+      int count = 12; 					
+      pc = new char[count]; // pc points to an array of 12 char
+      			   
+
+
+
+
+
+POINTERS - OVERVIEW
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+       	     
+  - The expression 'new TYPE[SIZE]' creates a new array
+    of SIZE objects of type TYPE.
+   	    	    			      
+      int * pi;
+      pi = new int[7]; // now pi points to a new array of 7 int
+      char * pc;
+      int count = 12; 					
+      pc = new char[count]; // pc points to an array of 12 char
+      			   
+  - The expression 'delete [] POINTER' throws back an array that
+    was created with 'new'. 
+
+
+
+POINTERS - OVERVIEW
+ C++ systematically confuses pointers and arrays: 
+
+  - The NAME of an array is like a POINTER TO THE FIRST
+    ARRAY ELEMENT.
+
+  - Any pointer can be accessed using '[subscript]' AS IF
+    it was the NAME OF AN ARRAY.  (Whether that makes any
+    sense or not, in any spot of any particular program!)
+       	     
+  - The expression 'new TYPE[SIZE]' creates a new array
+    of SIZE objects of type TYPE.
+   	    	    			      
+      int * pi;
+      pi = new int[7]; // now pi points to a new array of 7 int
+      char * pc;
+      int count = 12; 					
+      pc = new char[count]; // pc points to an array of 12 char
+      			   
+  - The expression 'delete [] POINTER' throws back an array that
+    was created with 'new'. 
+      delete [] pi;   // array is freed, pi now points at garbage
+      delete [] pc;   // ditto.
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE
+
+#include <iostream.h>		   
+int main() {          // Reverse a list of numbers, take 1
+  int nums[50];      
+  unsigned int max;    	       	       	  	    
+  cin >> max;	   		   	  	    	  
+  if (max>50) { cout << "max too big"; exit(1); }  	  
+  for (int i = 0;i<max;++i) cin >> nums[i];
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';
+  return 0;	      				      	  	
+}		      				      	  	
+
+
+
+
+
+
+
+
+
+
+
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE
+
+#include <iostream.h>		   
+int main() {          // Reverse a list of numbers, take 1
+  int nums[50];       // nums is an array of 50 ints
+  unsigned int max;				    
+  cin >> max;	   		   		    	  
+  if (max>50) { cout << "max too big"; exit(1); }   	  
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+  return 0;	      				      	  	
+}		      				      	  	
+
+
+
+
+
+
+
+
+
+
+
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE
+
+#include <iostream.h>		   
+int main() {          // Reverse a list of numbers, take 1
+  int nums[50];       // nums is an array of 50 ints
+  unsigned int max;				    
+  cin >> max;	   		   		    	  
+  if (max>50) { cout << "max too big"; exit(1); }  	  
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+  return 0;	      				      	  	
+}		      				      	  	
+#include <iostream.h> 		   		    	  	
+int main() {          // Reverse a list of numbers, take 2	
+  int * nums;	      // nums is a pointer to int(s)		
+
+
+
+
+
+
+
+
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE
+
+#include <iostream.h>		   
+int main() {          // Reverse a list of numbers, take 1
+  int nums[50];       // nums is an array of 50 ints
+  unsigned int max;				    
+  cin >> max;	   		   		    	  
+  if (max>50) { cout << "max too big"; exit(1); }  	  
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+  return 0;	      				      	  	
+}		      				      	  	
+#include <iostream.h> 		   		    	  	
+int main() {          // Reverse a list of numbers, take 2	
+  int * nums;	      // nums is a pointer to int(s)		
+  unsigned int max;   						
+  cin >> max;	      	       	       	       	       	       	
+  nums = new int[max];	// CREATING A NEW ARRAY OF max INTS!
+
+
+
+
+
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE
+
+#include <iostream.h>		   
+int main() {          // Reverse a list of numbers, take 1
+  int nums[50];       // nums is an array of 50 ints
+  unsigned int max;				    
+  cin >> max;	   		   		    	  
+  if (max>50) { cout << "max too big"; exit(1); }  	  
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+  return 0;	      				      	  	
+}		      				      	  	
+#include <iostream.h> 		   		    	  	
+int main() {          // Reverse a list of numbers, take 2	
+  int * nums;	      // nums is a pointer to int(s)		
+  unsigned int max;   						
+  cin >> max;	      	       	       	       	       	       	
+  nums = new int[max];	// CREATING A NEW ARRAY OF max INTS!
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access	
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+
+
+
+
+POINTERS TO DYNAMIC ARRAYS - EXAMPLE
+
+#include <iostream.h>		   
+int main() {          // Reverse a list of numbers, take 1
+  int nums[50];       // nums is an array of 50 ints
+  unsigned int max;				    
+  cin >> max;	   		   		    	  
+  if (max>50) { cout << "max too big"; exit(1); }  	  
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+  return 0;	      				      	  	
+}		      				      	  	
+#include <iostream.h> 		   		    	  	
+int main() {          // Reverse a list of numbers, take 2	
+  int * nums;	      // nums is a pointer to int(s)		
+  unsigned int max;   						
+  cin >> max;	      	       	       	       	       	       	
+  nums = new int[max];	// CREATING A NEW ARRAY OF max INTS!
+  for (int i = 0;i<max;++i) cin >> nums[i];  // array access	
+  for (int i = max-1;i>=0;--i) cout << nums[i] << ' ';	// ditto
+  delete [] nums;      	// DESTROYING THE ARRAY WE CREATED!
+  return 0;		       	       	       	       	
+}						      
+

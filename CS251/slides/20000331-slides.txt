@@ -1,0 +1,1116 @@
+QUESTIONS	 
+
+LAST TIME:
+ - Administrivia
+ - Programming notes: Hacking on linked lists
+
+TODAY:
+ - Administrivia: Bignum, Dequer
+ - Pointers & subscripts, multidimensional arrays
+ - Debugging demo II
+		    
+
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365) 
+           				  
+   Program 3 due: 1PM MON Apr 3, 2000	  
+       	       	  UNDER 71 HOURS REMAINING	     
+
+   On CIRT AIX:   ~ackley/public/TurnInBignum   NOW AVAILABLE
+
+   Second in-class quiz 2PM FRI APR 7, 2000
+       	       	       	ONE WEEK FROM TODAY
+
+
+
+ADMINISTRIVIA
+   On CIRT AIX:   ~ackley/public/TurnInBignum   NOW AVAILABLE	 
+
+Program 3: UNDER 2 days 23 hours REMAINING    vvv
+     Due: 1PM MON Apr 3, 2000  NOTE THAT'S >>>1PM<<<
+                                              ^^^
+  Deadline for +3% in 23 hours: 1PM THU Mar 30, 2000
+
+Free                 TIME PENALTIES FOR PROGRAM 3
+Late           	     Last turned in BEFORE 1PM on:
+DaysTHU3/30 FRI3/31 SAT4/1 SUN4/2  MON4/3 TUE4/4 WED4/5 LATER
++------------------------------------------------------------+
+| 0 | past | past  |   0% |   0%  |   0% | -33% | -66% |-100%|
++------------------------------------------------------------+
+| 1 | past | past  |   0% |   0%  |   0% |   0% | -33% |-100%|
++------------------------------------------------------------+
+| 2 | past | past  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+| 3 | past | past  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+
+Reminder:
+	 
+  NO CREDIT FOR PROGRAM 3 AFTER CLASS STARTS ON WED APR 5, 2000.
+ADMINISTRIVIA
+		    
+  Dequer data (before time adjustemnts)
+	   
+    n = 97 
+  max = 100  
+  avg =  83.08
+    stddev = 12.39
+  min =  45   	  	  
+		  
+		  
+(vs Blocks before time adjustments
+ 	   	  
+    n = 100	  
+  max = 100	  
+  avg =  81.63	  
+    stddev = 14.08	  
+  min =  45    
+)
+
+
+
+
+	 
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+   (Not as badly as C does, but still, a lot)
+
+ (In most cases,) the NAME of an array can be treated as a
+   POINTER to the first element of the array.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+   (Not as badly as C does, but still, a lot)
+
+ (In most cases,) the NAME of an array can be treated as a
+   POINTER to the first element of the array.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+#include <iostream.h>
+int main() {
+  int i = 42;
+  int * p = &i;
+  cout << p[0] << ' ';
+  cout << p[1] << ' ';
+  cout << p[-1] << endl;
+  return 0;
+}
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+   (Not as badly as C does, but still, a lot)
+
+ (In most cases,) the NAME of an array can be treated as a
+   POINTER to the first element of the array.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+#include <iostream.h>
+int main() {
+  int i = 42;
+  int * p = &i;
+  cout << p[0] << ' ';
+  cout << p[1] << ' ';
+  cout << p[-1] << endl;
+  return 0;
+}
+% ./foo
+42 -1073742712 -1073742748
+%
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+       	       	       	       	       	   
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+This program is legal:
+
+#include <iostream.h>
+int main() {
+  cout << "WHAT??"[3] << endl;   // ???
+  return 0;
+}
+
+
+
+
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+This program is legal:
+
+#include <iostream.h>
+int main() {
+  cout << "WHAT??"[3] << endl;   // ???
+  return 0;
+}
+
+% ./foo
+T
+%
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+This program is legal:					   
+       	       	       	       	       	       	char * p = "foo";
+#include <iostream.h>			     double  d = 12.0; 	 
+int main() {				      double * pd = &d;
+  cout << "WHAT??"[3] << endl;   // ???		cout << *p; f  	 
+  return 0;					cout << p; foo	 
+}						cout << pd; 0x22 
+						cout << *pd; 12.0
+% ./foo						cout << p[1]; o
+T
+%
+(because the type of "WHAT??" is 'const char *', a pointer to
+ the first char ('W'), so (pointer)[3] <=> *(pointer+3) or
+ the third char after 'W'...)
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+Blow your mind!  This program is LEGAL:
+
+#include <iostream.h>
+int main() {
+  int foo[3] = {12,99,108};
+  cout << 2[foo] << endl;    // what the?!?!? (head explodes)
+  return 0;
+}
+
+
+
+
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+Blow your mind!  This program is LEGAL:
+
+#include <iostream.h>
+int main() {
+  int foo[3] = {12,99,108};
+  cout << 2[foo] << endl;    // what the?!?!? (head explodes)
+  return 0;
+}
+
+% ./foo
+108
+%
+
+
+
+POINTERS AND SUBSCRIPTING
+
+ C++ systematically confuses pointers and arrays in certain ways.
+
+ A pointer can ALWAYS be accessed using [array] subscripts,
+ whether it makes ANY SENSE or NOT!
+
+ C++ THEOREM:   a[b] <=> *(a+b)    for ANY expressions 'a' and 'b'
+
+Blow your mind!  This program is LEGAL:
+
+#include <iostream.h>
+int main() {
+  int foo[3] = {12,99,108};
+  cout << 2[foo] << endl;    // what the?!?!? (head explodes)
+  return 0;
+}
+
+% ./foo
+108
+%
+
+(because '2[foo]' <=> '*(2+foo)' <=> '*(foo+2)' <=> 'foo[2]'!)
+
+MULTIDIMENSIONAL ARRAYS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+
+  for (int i = 0;i<7;++i) {
+    for (int j = 0;j<7;++j) cout << board[i][j];
+    cout << endl;
+  }
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+
+  for (int i = 0;i<7;++i) {
+    for (int j = 0;j<7;++j) cout << board[i][j];
+    cout << endl;
+  }
+  return 0;
+}
+% ./foo
+H.....a
+.a...l.
+..c.o..
+...k...
+..c.o..
+.a...l.
+H.....a
+%
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+>>char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+
+  for (int i = 0;i<7;++i) {
+    for (int j = 0;j<7;++j) cout << board[i][j];
+    cout << endl;
+  }
+  return 0;    	  [row][col]      0 1 2 3 4 5 6
+}      		       	        0 ? ? ? ? ? ? ?
+% ./foo	       	       	       	1 ? ? ? ? ? ? ?
+H.....a		       		2 ? ? ? ? ? ? ?
+.a...l.		       		3 ? ? ? ? ? ? ?
+..c.o..				4 ? ? ? ? ? ? ?
+...k...				5 ? ? ? ? ? ? ?
+..c.o..				6 ? ? ? ? ? ? ?
+.a...l.
+H.....a
+%
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+>>
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+
+  for (int i = 0;i<7;++i) {
+    for (int j = 0;j<7;++j) cout << board[i][j];
+    cout << endl;
+  }
+  return 0;	  [row][col]      0 1 2 3 4 5 6
+}      		       	        0 . . . . . . .
+% ./foo	       	       	       	1 . . . . . . .
+H.....a		       		2 . . . . . . .
+.a...l.		       		3 . . . . . . .
+..c.o..				4 . . . . . . .
+...k...				5 . . . . . . .
+..c.o..				6 . . . . . . .
+.a...l.
+H.....a
+%
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+2>for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+
+  for (int i = 0;i<7;++i) {
+    for (int j = 0;j<7;++j) cout << board[i][j];
+    cout << endl;
+  }
+  return 0;	  [row][col]      0 1 2 3 4 5 6
+}      		       	        0 H . . . . . .
+% ./foo	       	       	       	1 . a . . . . .
+H.....a		       		2 . . . . . . .
+.a...l.		       		3 . . . . . . .
+..c.o..				4 . . . . . . .
+...k...				5 . a . . . . .
+..c.o..				6 H . . . . . .
+.a...l.
+H.....a
+%
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+				   		    |      |    
+  for (int i = 0;i<7;++i) {	   	       	 100|      |    
+    for (int j = 0;j<7;++j) cout << board[i][j]; 101|      |    
+    cout << endl;		   	       	 102|      |    
+  }		       	    	   	       	 103|      |    
+  return 0;	  [row][col]      0 1 2 3 4 5 6	 104|      |    
+}      		       	        0 H . . . . . .  105|      |    
+% ./foo	       	       	       	1 . a . . . . .  106|      |    
+H.....a		       		2 . . . . . . .  107|      |    
+.a...l.		       		3 . . . . . . .  108|      |    
+..c.o..				4 . . . . . . .  109|      |    
+...k...				5 . a . . . . .  110|      |    
+..c.o..				6 H . . . . . .  111|      |    
+.a...l.						 112|      |    
+H.....a						 113|      |    
+% 						  ..|      |    
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+				   		    |      |    
+  for (int i = 0;i<7;++i) {	   	       	 100|[0][0]|     
+    for (int j = 0;j<7;++j) cout << board[i][j]; 101|[0][1]|     
+    cout << endl;		   	       	 102|[0][2]|    
+  }		       	    	   	       	 103|[0][3]|    
+  return 0;	  [row][col]      0 1 2 3 4 5 6	 104|[0][4]|    
+}      		       	        0 H . . . . . .  105|[0][5]|    
+% ./foo	       	       	       	1 . a . . . . .  106|[0][6]|    
+H.....a	       	       	       	2 . . . . . . .  107|[1][0]|    
+.a...l.		       		3 . . . . . . .  108|[1][1]|    
+..c.o..				4 . . . . . . .  109|[1][2]|    
+...k...				5 . a . . . . .  110|[1][3]|    
+..c.o..				6 H . . . . . .  111|[1][4]|    
+.a...l.						 112|[1][5]|    
+H.....a						 113|[1][6]|    
+% 						  ..|[2][0]|    
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+				   		    |      |     
+  for (int i = 0;i<7;++i) {	   	       	 100|[0][0]| 'H'
+    for (int j = 0;j<7;++j) cout << board[i][j]; 101|[0][1]| '.'
+    cout << endl;		   	       	 102|[0][2]| '.'
+  }		       	    	   	       	 103|[0][3]| '.'  
+  return 0;	  [row][col]      0 1 2 3 4 5 6	 104|[0][4]| '.'  
+}      		       	        0 H . . . . . .  105|[0][5]| '.'  
+% ./foo	       	       	       	1 . a . . . . .  106|[0][6]| '.'  
+H.....a		       		2 . . . . . . .  107|[1][0]| '.'  
+.a...l.		       		3 . . . . . . .  108|[1][1]| 'a'
+..c.o..				4 . . . . . . .  109|[1][2]| '.'  
+...k...				5 . a . . . . .  110|[1][3]| '.'
+..c.o..				6 H . . . . . .  111|[1][4]| '.'
+.a...l.						 112|[1][5]| '.'
+H.....a						 113|[1][6]| '.'
+% 						  ..|[2][0]| '.'
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+				   		    |      |     
+  for (int i = 0;i<7;++i) {	   	       	 100|[0][0]| 'H'
+    for (int j = 0;j<7;++j) cout << board[i][j]; 101|[0][1]| '.'
+    cout << endl;		   	       	 102|[0][2]| '.'
+  }		       	    	   	       	 103|[0][3]| '.'  
+  return 0;	  [row][col]      0 1 2 3 4 5 6	 104|[0][4]| '.'  
+}      		       	        0 H . . . . . .  105|[0][5]| '.'  
+% ./foo	       	       	       	1 . a . . . . .  106|[0][6]| '.'  
+H.....a	       	       		2 . . . . . . .  107|[1][0]| '.'  
+.a...l.	       	       		3 . . . . . . .  108|[1][1]| 'a'
+..c.o..	 For foo[NROWS][NCOLS]:	4 . . . . . . .  109|[1][2]| '.'  
+...k...	 &foo[i][j] == 	       	5 . a . . . . .  110|[1][3]| '.'
+..c.o..	   (&foo[0][0] +       	6 H . . . . . .  111|[1][4]| '.'
+.a...l.	    (i*NCOLS + j))       		 112|[1][5]| '.'
+H.....a	                               	       	 113|[1][6]| '.'
+% 	               	       	    		  ..|[2][0]| '.'
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  char board[7][7];
+  for (int i=0;i<7;++i) for (int j=0;j<7;++j) board[i][j] = '.';
+
+  for (int c=0;c<7;++c) board[c][c]= board[6-c][c]= "Hackola"[c];
+				   		    |      |     
+  for (int i = 0;i<7;++i) {	   	       	 100|[0][0]| 'H'
+    for (int j = 0;j<7;++j) cout << board[i][j]; 101|[0][1]| '.'
+    cout << endl;		   	       	 102|[0][2]| '.'
+  }		       	    	   	       	 103|[0][3]| '.'  
+  return 0;	  [row][col]      0 1 2 3 4 5 6	 104|[0][4]| '.'  
+}      		       	        0 H . . . . . .  105|[0][5]| '.'  
+% ./foo	       	       	       	1 . a . . . . .  106|[0][6]| '.'  
+H.....a	       	       		2 . . . . . . .  107|[1][0]| '.'  
+.a...l.	       	       		3 . . . . . . .  108|[1][1]| 'a'
+..c.o..	 For foo[NROWS][NCOLS]:	4 . . . . . . .  109|[1][2]| '.'  
+...k...	 &foo[i][j] == 	       	5 . a . . . . .  110|[1][3]| '.'
+..c.o..	   (&foo[0][0] +       	6 H . . . . . .  111|[1][4]| '.'
+.a...l.	    (i*NCOLS + j))       		 112|[1][5]| '.'
+H.....a	                               	       	 113|[1][6]| '.'
+% ONLY IF 'foo' global or local, w/constant dims  ..|[2][0]| '.'
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  int S;
+  cin >> S;
+  char *board = new char [S][S];	    
+  for (int i=0;i<S;++i) for (int j=0;j<S;++j) board[i][j] = '.';
+  for (int i = 0;i<S;++i) {    	       	       	 
+    for (int j = 0;j<S;++j) cout << board[i][j]; 
+    cout << endl;		   	       	 
+  } 
+  return 0;
+} 
+
+
+
+
+
+
+
+
+
+
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  int S;
+  cin >> S;
+  char *board = new char [S][S];	    
+  for (int i=0;i<S;++i) for (int j=0;j<S;++j) board[i][j] = '.';
+  for (int i = 0;i<S;++i) {    	       	       	 
+    for (int j = 0;j<S;++j) cout << board[i][j]; 
+    cout << endl;		   	       	 
+  } 
+  return 0;
+} 
+
+foo3.C: In function `int main()':
+foo3.C:5: warning: ANSI C++ forbids variable-size array
+foo3.C:5: initialization to `char *' from `char (*)[((S - 1) + 1)]'
+foo3.C:6: invalid types `char[int]' for array subscript
+foo3.C:8: invalid types `char[int]' for array subscript
+
+
+
+
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  int S;
+  cin >> S;
+  char **board = new char [S][S];	    
+  for (int i=0;i<S;++i) for (int j=0;j<S;++j) board[i][j] = '.';
+  for (int i = 0;i<S;++i) {    	       	       	 
+    for (int j = 0;j<S;++j) cout << board[i][j]; 
+    cout << endl;		   	       	 
+  } 	 
+  return 0;
+} 	 
+	 
+
+
+
+
+
+
+
+
+
+MULTIDIMENSIONAL ARRAYS
+  What does this program print?
+#include <iostream.h>
+int main() {
+  int S;
+  cin >> S;
+  char **board = new char [S][S];	    
+  for (int i=0;i<S;++i) for (int j=0;j<S;++j) board[i][j] = '.';
+  for (int i = 0;i<S;++i) {    	       	       	 
+    for (int j = 0;j<S;++j) cout << board[i][j]; 
+    cout << endl;		   	       	 
+  } 	 
+  return 0;
+} 	 
+	 
+foo3.C: In function `int main()':
+foo3.C:5: warning: ANSI C++ forbids variable-size array
+foo3.C:5: initialization to `char **' from `char (*)[((S - 1) + 1)]'
+
+
+
+
+
+
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>
+int main() {
+  int S;
+  S = 3;
+
+  char **board = new char *[S];	    
+  for (int i=0;i<S;++i) board[i] = new char [S];
+
+  for (int i=0;i<S;++i) 
+    for (int j=0;j<S;++j) board[i][j] = 'a'+i+j;
+
+  for (int i = 0;i<S;++i) {    	       	       	 
+    for (int j = 0;j<S;++j) cout << board[i][j]; 
+    cout << endl;		   	       	 
+  } 
+
+  for (int i=0;i<S;++i) delete [] board[i];
+  delete [] board;
+  return 0;
+} 
+abc
+bcd
+cde
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>  	
+int main() {   	       	
+  int S;		
+  S = 3;		
+		       	
+  char **board;	       	    
+  board = new char *[S];    
+  for (int i=0;i<S;++i)     
+    board[i] = new char [S];
+			    
+  // use board[i][j]   	    
+		       	    
+  for (int i=0;i<S;++i)     
+    delete [] board[i];	    
+  delete [] board;	    
+  return 0;		    
+} 			    
+       	       	       	    
+			    
+			    
+			    
+			    
+			    
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  ?	|		   
+  S = 3;       	       	  +-----+		   
+  		       	       
+>>char **board;	       	       
+  board = new char *[S];       
+  for (int i=0;i<S;++i)     
+    board[i] = new char [S];
+			    
+  // use board[i][j]   	    
+		       	    
+  for (int i=0;i<S;++i)     
+    delete [] board[i];	    
+  delete [] board;	    
+  return 0;		    
+} 			    
+       	       	       	    
+			    
+			    
+			    
+			    
+			    
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       |       
+  char **board;	       	       V       
+>>board = new char *[S];       +------+
+  for (int i=0;i<S;++i)     [0]|  ?   |
+    board[i] = new char [S];   |------|
+			    [1]|  ?   |
+  // use board[i][j]   	       |------|
+		       	    [2]|  ?   |
+  for (int i=0;i<S;++i)        +------+
+    delete [] board[i];	       char *  
+  delete [] board;		       
+  return 0;			       
+} 				       
+       	       	       	       	       
+				       
+				       
+				       
+				       
+				       
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       | 	       char 	   
+  char **board;	       	       V 	  /-->+---+ 	   
+  board = new char *[S];       +------+  /    | ? | [0][0] 
+  for (int i=0;i<S;++i)     [0]|     ---/     |---|    	   
+1>  board[i] = new char [S];   |------|	      | ? | [0][1] 
+       	       	       	    [1]|  ?   |       |---|    	   
+  // use board[i][j]   	       |------|	      | ? | [0][2]
+		       	    [2]|  ?   |       +---+    	  
+  for (int i=0;i<S;++i)        +------+	
+    delete [] board[i];	       char *	
+  delete [] board;			
+  return 0;				
+} 					
+       	       	       	       	       	
+					
+					
+					
+					
+					
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       | 	       char 	   
+  char **board;	       	       V 	  /-->+---+ 	   
+  board = new char *[S];       +------+  /    | ? | [0][0] 
+  for (int i=0;i<S;++i)     [0]|     ---/     |---|    	   
+3>  board[i] = new char [S];   |------|	      | ? | [0][1] 
+			    [1]|     ---\     |---|    	   
+  // use board[i][j]   	       |------|	 \    | ? | [0][2]
+		       	    [2]|     --\  \   +---+    	  
+  for (int i=0;i<S;++i)        +------+	\  \  	    	  
+    delete [] board[i];	       char *	|   \------\    char	
+  delete [] board;			|      	    \->+---+
+  return 0;				|    char      | ? |	
+} 					\-->+---+      |---|	 
+       	       	       	       	       	    | ? |      | ? |[1][1]
+					    |---|      |---|	
+					    | ? |      | ? |	
+					    |---|      +---+	
+					    | ? | [2][2]
+					    +---+
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       | 	       char 	   
+  char **board;	       	       V 	  /-->+---+ 	   
+  board = new char *[S];       +------+  /    |'H'| [0][0] 
+  for (int i=0;i<S;++i)     [0]|     ---/     |---|    	   
+    board[i] = new char [S];   |------|	      |'.'| [0][1] 
+  			    [1]|     ---\     |---|    	   
+>>// use board[i][j]   	       |------|	 \    |'.'| [0][2]
+		       	    [2]|     --\  \   +---+    	  
+  for (int i=0;i<S;++i)        +------+	\  \  	    	  
+    delete [] board[i];	       char *	|   \------\    char	
+  delete [] board;			|      	    \->+---+
+  return 0;				|    char      |'w'|	
+} 					\-->+---+      |---|	 
+       	       	       	       	       	    |'t'|      |'h'|[1][1]
+					    |---|      |---|	
+					    |'v'|      |'a'|	
+					    |---|      +---+	
+					    |'r'| [2][2]
+					    +---+
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       | 	      
+  char **board;	       	       V 	  /-->+ - + 	   
+  board = new char *[S];       +------+  /         
+  for (int i=0;i<S;++i)     [0]|     ---/     |   |    	   
+    board[i] = new char [S];   |------|	        ?  
+  			    [1]|     ---\     |   |    	   
+  // use board[i][j]   	       |------|	 \         
+  		       	    [2]|     --\  \   + - +    	  
+  for (int i=0;i<S;++i)        +------+	\  \  	    	  
+1>  delete [] board[i];	       char *	|   \------\    char	
+  delete [] board;			|      	    \->+---+
+  return 0;				|    char      |'w'|	
+} 					\-->+---+      |---|	 
+       	       	       	       	       	    |'t'|      |'h'|[1][1]
+					    |---|      |---|	
+					    |'v'|      |'a'|	
+					    |---|      +---+	
+					    |'r'| [2][2]
+					    +---+
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       | 	      
+  char **board;	       	       V 	  /-->+ - + 	   
+  board = new char *[S];       +------+  /         
+  for (int i=0;i<S;++i)     [0]|     ---/     |   |    	   
+    board[i] = new char [S];   |------|	        ?  
+  			    [1]|     ---\     |   |    	   
+  // use board[i][j]   	       |------|	 \         
+  		       	    [2]|     --\  \   + - +    	  
+  for (int i=0;i<S;++i)        +------+	\  \  	    	  
+3>  delete [] board[i];	       char *  	|   \------\    
+  delete [] board;			|      	    \->+ - +
+  return 0;				|              
+} 					\-->+ - +      |   |	 
+       	       	       	       	       	                 ?
+					    |   |      |   |	
+					      ?        	
+					    |   |      + - +	
+					    
+					    + - +
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>	  char ** board
+int main() {   	       	  +-----+
+  int S;		  |  \	|		   
+  S = 3;		  +---\-+		   
+		       	       | 	      
+  char **board;	       	       V       
+  board = new char *[S];       + - - -+
+  for (int i=0;i<S;++i)     
+    board[i] = new char [S];   |      |	 
+  			      	   ?   	 
+  // use board[i][j]   	       |      |	 
+  		       	       	      	 
+  for (int i=0;i<S;++i)        +- - - +	
+    delete [] board[i];	      
+>>delete [] board;	       	       	
+  return 0;		       	    	
+} 				    
+       	       	       	       	    
+				    
+				    
+				    
+				    	    
+
+MULTIDIMENSIONAL ARRAYS
+#include <iostream.h>  	 
+int main() {   	       	 
+  int S;		 
+  S = 3;		 
+		       	 
+  char **board;	       	   
+  board = new char *[S];   
+  for (int i=0;i<S;++i)    
+    board[i] = new char [S];
+  			    
+  // use board[i][j]   	    
+  		       	    
+  for (int i=0;i<S;++i)     
+    delete [] board[i];	    
+  delete [] board;	    
+  return 0;		    
+}<<			    
+       	       	       	    
+			    
+			    
+			    
+			    
+			    
+DEBUGGING DEMO II 
+
+class List {
+public:
+  void Insert(char c) ;          // Insert at head {O(1)}
+  bool InsertBeforeK(char c);    // Like it says {O(n)}
+  bool Delete(char c);	       	 // Delete from anywhere {O(n)}
+  ~List() ;
+ private:  	 
+..
+};   	   
+..	   
+
+
+
+
+
+
+
+
+
+
+
+
+DEBUGGING DEMO II 
+..       (still in List.C..)
+
+int main() {
+  cout << "starting" << endl;
+  {
+    List test;
+    test.Delete('A');
+  }
+  {    
+    List l;
+    l.Insert('K');
+    for (char * ptr = "ABC"; *ptr; ++ptr) l.InsertBeforeK(*ptr);
+    cout << l.Delete('Z') << endl;
+    cout << l.Delete('B') << endl;
+    cout << l.Delete('K') << endl;
+  }
+  return 0;
+}
+
+
+
+
+
+DEBUGGING DEMO II 
+..       (still in List.C..)
+
+int main() {
+  cout << "starting" << endl;
+  {
+    List test;
+    test.Delete('A');
+  }
+  {    
+    List l;
+    l.Insert('K');
+    for (char * ptr = "ABC"; *ptr; ++ptr) l.InsertBeforeK(*ptr);
+    cout << l.Delete('Z') << endl;
+    cout << l.Delete('B') << endl;
+    cout << l.Delete('K') << endl;
+  }
+  return 0;
+}
+
+% ./foo
+Segmentation fault (core dumped)
+% 
+
+DEBUGGING DEMO II 
+
+  (gdb demo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DEBUGGING DEMO II 
+
+Emacs stuff:
+ ^X-1           Get rid of all windows but this one
+
+ ^X-o           Switch to another window
+
+ ^X-b           Prompt to switch to another buffer
+
+ ^G             Bail out of anything
+
+ M-x shell      Start a shell (named '*shell*') inside emacs,
+		or switch to *shell* if already started	     
+		(^X-* with Dave's .emacs)      	       
+
+ M-x compile	Prompt for compile command     	   
+       	       	(^X-c with Dave's .emacs) 
+
+ ^X-`           Jump to next compile error, if any
+
+ C-M-a          Go to beginning of function
+
+
+
+DEBUGGING DEMO II 
+
+gdb AIX bogosity reminder:
+
+"/usr/lib/libcrypt.a": not in executable format: File format not recognized.
+(gdb) c	      <---------The WORKAROUND for the bogus part
+Continuing.	  	is to just type 'c' to continue!
+
+gdb stuff:
+(gdb) r                  Run the program (with no cmd line args)
+(gdb) b main             Break at start of main()
+(gdb) b Foo.C:123        Break in file Foo.C at line number 123
+
+(gdb) c                  Continue from a breakpoint
+(gdb) s                  Single step (go into function calls)
+(gdb) fin                Finish the current function then stop
+(gdb) n                  Next statement (skip over function calls)
+
+(gdb) where              Print the stack if possible
+(gdb) up                 Move to caller if possible
+(gdb) down               Move to callee if possible
+
+(gdb) l                  Print some lines of code around current
+
+DEBUGGING DEMO II 
+		  
+(gdb) p <<<expression>>> Print the value of <<<expression>>>
+  (gdb) p 12+4*2         Print 20
+  (gdb) p p              Print value of variable 'p' if exists
+  (gdb) p *foo           Print what pointer 'foo' is pointing at
+  (gdb) p this           Print the 'this' pointer
+  (gdb) p *this          Print what the 'this' pointer points at
+  (gdb) p foo->next      Print the value of the 'next' field in
+			 the object that foo is pointing at    
+
+

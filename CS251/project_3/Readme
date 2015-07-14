@@ -1,0 +1,12 @@
+Project: Program 3, Bignum
+Name:    Ken Segura
+Email: 	 ksegura@unm.edu
+Class:   CS251 Spring 2000
+Date:    4/4/2000
+
+Description:	Can be found at.
+		http://www.cs.unm.edu/~ackley/cs251/projects/3/p3-0.9.html
+
+		Passes test2 cleanly.
+
+Bugs:           Problems with char *'s. Math functions not fully implimented.

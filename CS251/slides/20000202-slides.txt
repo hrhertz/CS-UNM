@@ -1,0 +1,1411 @@
+QUESTIONS
+
+LAST TIME:
+ - Finding the objects example, concluded
+ - Declarations and definitions..
+ - Ctors
+
+TODAY:
+ - Ctors, cont
+ - The life of an object
+ - Dtors
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : 8 days 3 hours remaining
+         JUST OVER A WEEK!  YOW!
+
+class Foo { void Func(); void Ofunc(); };
+Foo ins[5];
+void Foo::Func() {
+  ins[0].Ofunc();
+  ins[3].Ofunc();
+}
+
+PROGRAM 1 QUESTIONS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - default constructor - upshot
+
+ - A constructor is called when an object comes into
+   existence
+
+ - The default constructor is used unless another
+   constructor is explicitly called for
+
+ - A constructor CAN do anything it wants (essentially)
+   but it SHOULD initialize ALL DATA MEMBERS to sensible
+   values.
+
+ - If a class definition doesn't explicitly declare
+   a default constructor, the compiler will declare
+   and define one AUTOMATICALLY.
+			   (be afraid, be very afraid.)
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+
+class Player2 {
+ public:
+   Player2();
+   void SetType(bool robot);
+  ...
+ private:
+   bool _robot;
+  ...
+};
+
+Player2::Player2()
+{
+   _robot = false;
+   _playx = false;
+}
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+
+class Player2 {
+ public:
+   Player2();
+   void SetType(bool robot);
+  ...
+ private:
+   bool _robot;
+  ...
+};
+
+Player2::Player2()
+{
+   _robot = false;
+   _playx = false;
+}
+
+int main() {
+  Player2 p;
+  p.SetType(false);
+  p.SetSide(true);
+...
+}
+CONSTRUCTORS - parametrized constructors
+
+class Player2 {	       	      class Player3 {
+ public:       		       public:
+   Player2();		         Player3()
+   void SetType(bool robot);     Player3(bool isbot,bool playx);
+  ...                          	...
+ private:                      private:
+   bool _robot;		         bool _robot;
+  ...          		         bool _playx;
+};  			       };
+
+Player2::Player2()	      Player3() { _robot=_playx=false; }
+{
+   _robot = false;	      Player3(bool bebot,bool bex) {
+   _playx = false;		_robot = bebot;
+}                 		_playx = bex;
+                              }
+int main() {
+  Player2 p;
+  p.SetType(false);
+  p.SetSide(true);
+...
+}
+CONSTRUCTORS - parametrized constructors
+
+class Player2 {	       	      class Player3 {
+ public:       		       public:
+   Player2();		         Player3()
+   void SetType(bool robot);     Player3(bool isbot,bool playx);
+  ...                          	...
+ private:             	       private:
+   bool _robot;		         bool _robot;
+  ...          		         bool _playx;
+};  			       };
+
+Player2::Player2()	      Player3() { _robot=_playx=false; }
+{
+   _robot = false;	      Player3(bool bebot,bool bex) {
+   _playx = false;		_robot = bebot;
+}                 		_playx = bex;
+                              }
+int main() {
+  Player2 p;		      int main() {
+  p.SetType(false);		Player3 p(false,true);
+  p.SetSide(true); 	       ...
+...			      }
+}
+CONSTRUCTORS - parametrized constructors
+//foo3.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo();
+  Foo(int i);
+  Foo(double d);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+//foo3.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo();
+  Foo(int i);
+  Foo(double d);
+};
+Foo::Foo() { cout << "Def" << endl; }
+Foo::Foo(int i) {
+  cout << "Int" << i << endl;
+}
+Foo::Foo(double d) {
+  cout << "Dub" << endl;
+}
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+//foo3.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo();
+  Foo(int i);
+  Foo(double d);
+};
+Foo::Foo() { cout << "Def" << endl; }
+Foo::Foo(int i) {
+  cout << "Int" << i << endl;
+}
+Foo::Foo(double d) {
+  cout << "Dub" << endl;
+}
+
+int main() {
+   Foo a(8.7);
+   Foo b(8/7);
+   Foo c;
+   return 0;
+}
+
+CONSTRUCTORS - parametrized constructors
+//foo3.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo();
+  Foo(int i);
+  Foo(double d);
+};
+Foo::Foo() { cout << "Def" << endl; }
+Foo::Foo(int i) {
+  cout << "Int" << i << endl;
+}
+Foo::Foo(double d) {
+  cout << "Dub" << endl;
+}                          % g++ -Wall -pedantic foo3.C -o foo3
+			   <bunch of unused parm/var warnings..>
+int main() {   	       	   %
+   Foo a(8.7);
+   Foo b(8/7);
+   Foo c;
+   return 0;
+}
+
+CONSTRUCTORS - parametrized constructors
+//foo3.C
+#include <iostream.h>
+class Foo {
+ public:
+  Foo();
+  Foo(int i);
+  Foo(double d);
+};
+Foo::Foo() { cout << "Def" << endl; }
+Foo::Foo(int i) {
+  cout << "Int" << i << endl;
+}
+Foo::Foo(double d) {
+  cout << "Dub" << endl;
+}                          % g++ -Wall -pedantic foo3.C -o foo3
+			   <bunch of unused parm/var warnings..>
+int main() {   	       	   % ./foo3
+   Foo a(8.7);		   Dub
+   Foo b(8/7);		   Int1
+   Foo c;     		   Def
+   return 0;		   %
+}
+
+CONSTRUCTORS - parametrized constructors - upshots
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors - upshots
+
+ - You can have more than just the default ctor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors - upshots
+
+ - You can have more than just the default ctor
+
+ - Ctors are distinguished by the NUMBER of parameters they
+   have and the TYPE of each parameter
+
+class Foo {
+  public:
+    Foo(int i, int j);
+    Foo(int x, double y);
+		      
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors - upshots
+
+ - You can have more than just the default ctor
+
+ - Ctors are distinguished by the NUMBER of parameters they
+   have and the TYPE of each parameter
+
+ - At the point at which the object is constructed, the number
+   and types of the supplied arguments are used to select the
+   correct ctor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors - upshots
+
+ - You can have more than just the default ctor
+
+ - Ctors are distinguished by the NUMBER of parameters they
+   have and the TYPE of each parameter
+
+ - At the point at which the object is constructed, the number
+   and types of the supplied arguments are used to select the
+   correct ctor
+
+ - Some 'implicit type conversions' will occur..
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors - upshots
+
+ - You can have more than just the default ctor
+
+ - Ctors are distinguished by the NUMBER of parameters they
+   have and the TYPE of each parameter
+
+ - At the point at which the object is constructed, the number
+   and types of the supplied arguments are used to select the
+   correct ctor
+
+ - Some 'implicit type conversions' will occur..
+					 (ugh)
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+
+What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int);
+  Foo(short);
+};
+
+Foo::Foo(int a) { cout << "int " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() {
+  Foo f(1);
+  return 0;
+}
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+
+What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int);
+  Foo(short);
+};
+
+Foo::Foo(int a) { cout << "int " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() {
+  Foo f(1);
+  return 0;
+}
+% g++ -Wall -pedantic foo21.C -o foo
+foo21.C: In function `int main()':
+foo21.C:12: warning: unused variable `class Foo f'
+%
+
+
+CONSTRUCTORS - parametrized constructors
+
+What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int);
+  Foo(short);
+};
+
+Foo::Foo(int a) { cout << "int " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() {
+  Foo f(1);
+  return 0;
+}
+% g++ -Wall -pedantic foo21.C -o foo
+foo21.C: In function `int main()':
+foo21.C:12: warning: unused variable `class Foo f'
+% ./foo
+int 1
+%
+CONSTRUCTORS - parametrized constructors
+
+What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  //  Foo(int);
+  Foo(short);
+};
+
+//Foo::Foo(int a) { cout << "int " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() {
+  Foo f(1);
+  return 0;
+}
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+
+What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  //  Foo(int);
+  Foo(short);
+};
+
+//Foo::Foo(int a) { cout << "int " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() {
+  Foo f(1);
+  return 0;
+}
+
+% ./foo
+short 1
+%
+
+
+CONSTRUCTORS - parametrized constructors
+ What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  Foo(long);
+  Foo(short);
+};
+Foo::Foo(long a) { cout << "long " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() { Foo f(1); return 0; }
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized constructors
+ What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  Foo(long);
+  Foo(short);
+};
+Foo::Foo(long a) { cout << "long " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() { Foo f(1); return 0; }
+
+% g++ -Wall -pedantic f.C -o foo
+f.C: In function `int main()':
+f.C:12: call of overloaded constructor `Foo(int)' is ambiguous
+f.C:6: candidates are: Foo::Foo(const Foo &)
+f.C:9:                 Foo::Foo(short int)
+f.C:8:                 Foo::Foo(long int)
+f.C:12: in base initialization for class `Foo'
+f.C:12: warning: unused variable `class Foo f'
+%
+
+CONSTRUCTORS - parametrized constructors
+ What does this program print?
+
+#include <iostream.h>
+class Foo {
+public:
+  Foo(long);
+  Foo(short);
+};
+Foo::Foo(long a) { cout << "long " << a << endl; }
+Foo::Foo(short a) { cout << "short " << a << endl; }
+
+int main() { Foo f(1); return 0; }
+
+% g++ -Wall -pedantic f.C -o foo
+f.C: In function `int main()':
+f.C:12: call of overloaded constructor `Foo(int)' is ambiguous
+f.C:6: candidates are: Foo::Foo(const Foo &)
+f.C:9:                 Foo::Foo(short int)
+f.C:8:                 Foo::Foo(long int)
+f.C:12: in base initialization for class `Foo'
+f.C:12: warning: unused variable `class Foo f'
+% ./foo
+bash: ./foo: No such file or directory
+CONSTRUCTORS - parametrized ctors, conversions - upshots
+        				             
+ - Implicit type conversions are confusing and bordering on evil
+
+ - Exact matches are by far the safest thing to deal with
+
+
+
+        		     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized ctors, conversions - upshots
+        				             
+ - Implicit type conversions are confusing and bordering on evil
+
+ - Exact matches are by far the safest thing to deal with
+
+ - Compiler will (sometimes) accept `near misses' so long as
+   there is a UNIQUE `nearest' miss.  
+        		     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized ctors, conversions - upshots
+        				             
+ - Implicit type conversions are confusing and bordering on evil
+
+ - Exact matches are by far the safest thing to deal with
+
+ - Compiler will (sometimes) accept `near misses' so long as
+   there is a UNIQUE `nearest' miss.  
+        		     
+ - Multiple equally-nearest misses is an error (ambiguity).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONSTRUCTORS - parametrized ctors, conversions - upshots
+        				             
+ - Implicit type conversions are confusing and bordering on evil
+
+ - Exact matches are by far the safest thing to deal with
+
+ - Compiler will (sometimes) accept `near misses' so long as
+   there is a UNIQUE `nearest' miss.  
+        		     
+ - Multiple equally-nearest misses is an error (ambiguity).
+
+ - What a confusing mess.  Don't rely on anything but
+   exact matches.     
+
+
+
+
+
+
+
+
+
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  cout << "argle ";                   
+  Foo f1(10); 	 	 
+
+  if (1>0) {		 
+    Foo f2;              
+    cout << "an";        
+  }	        	  
+  cout << "dout" << endl;                   
+  return 0;		  
+}			  
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  cout << "argle ";                   
+  Foo f1(10); 	 	 
+
+  if (1>0) {		 
+    Foo f2;              
+    cout << "an";        
+  }	        	  
+  cout << "dout" << endl;                   
+  return 0;		  
+}			  
+  argle bargle over andout
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  cout << "argle ";                   
+  Foo f1(10), f2(0), f3; 
+  cout << "under" << endl;                   
+  return 0;     
+}	        
+	      
+	      
+
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  cout << "argle ";                   
+  Foo f1(10), f2(0), f3; 
+  cout << "under" << endl;                   
+  return 0;     
+}	        
+	      
+argle bargle bargle over under
+
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  Foo a(10), b[3], c(9);
+  return 0;	     	   
+}		     	   
+		     	   
+
+			    
+
+
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  Foo a(10), b[3], c(9);
+  return 0;	     	   
+}		     	   
+		     	   
+bargle over over over bargle
+			    
+
+
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  Foo a(10), b[3], c(9);
+  return 0;	     	   
+}		     	   
+		     	   
+bargle over over over bargle
+			    
+Q: Hey, how do you use a parametrized ctor for array elements??
+
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   Foo(int);	     
+};      	     
+
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+        	     	             
+int main() {	     	             
+  Foo a(10), b[3], c(9);
+  return 0;	     	   
+}		     	   
+		     	   
+bargle over over over bargle
+			    
+Q: Hey, how do you use a parametrized ctor for array elements??
+A: Don't ask..
+
+
+THE LIFE OF AN OBJECT
+ What does this program print?
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo(); Foo(int,double);
+   Foo(int);	     	  
+};      	     	  
+			  
+Foo::Foo() {cout << "over ";}	  
+Foo::Foo(int a) {cout << "bargle ";}                 
+			  
+int main() {	     	             
+  Foo a(10), b[3] , c(9);
+  return 0;	     	   
+}		     	   
+		     	   
+bargle bargle bargle over bargle
+     ( ^b[0]^ ^b[1]^ b[2] )
+Q: Hey, how do you use a parametrized ctor for array elements??
+A: Don't ask..
+
+
+THE LIFE OF AN OBJECT
+
+
+
+
+
+		       
+
+
+		       
+
+
+		       
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+		             			       vvvvv    
+Somebody somewhere creates an object (like int main(){ Foo f;.. )
+						       ^^^^^     
+
+
+		       
+
+
+		       
+
+
+		       
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                             	     
+Somebody somewhere creates an object 
+			             
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth.    (like Foo::Foo() { _data = 0; } )
+		       
+
+
+		       
+
+
+		       
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                                     
+Somebody somewhere creates an object 
+				     
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth. 			     	    
+		       
+  Member functions get called on the object and it does stuff
+   in response.  (like 'f.DoItTillItHurts();')
+		       			      
+
+
+		       
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                                    
+Somebody somewhere creates an object
+				    
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth. 	        	     	    
+		       		    
+  Member functions get called on the object and it does stuff
+   in response.         	        		     
+		       		    
+  Eventually the object gets tired, it feels old and useless, and
+   nobody ever calls (member functions on) it anymore.
+     (like g.DoOtherStuff(); h.NobodyNeedsFAnymore(); )
+
+
+
+
+
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                                     
+Somebody somewhere creates an object 
+				     
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth. 	        	     	    
+		       		     
+  Member functions get called on the object and it does stuff
+   in response.         	        		     
+		       		     
+  Eventually the object gets tired, it feels old and useless, and
+   nobody ever calls (member functions on) it anymore.
+		       		     
+  Finally somebody destroys the poor old thing...
+    (like int main() { Foo f; ... }    
+				  ^ right there at the end)
+
+
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                                    
+Somebody somewhere creates an object
+				    
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth. 	        	     	    
+		       		    
+  Member functions get called on the object and it does stuff
+   in response.         	        		     
+		       		    
+  Eventually the object gets tired, it feels old and useless, and
+   nobody ever calls (member functions on) it anymore.
+		       		    
+  Finally somebody destroys the poor old thing...   BUT!  
+				    
+     AFTER somebody starts to destroy the object, but
+      before the object is really gone,           
+				    
+
+
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                                    
+Somebody somewhere creates an object
+				    
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth. 	        	     	    
+		       		    
+  Member functions get called on the object and it does stuff
+   in response.         	        		     
+		       		    
+  Eventually the object gets tired, it feels old and useless, and
+   nobody ever calls (member functions on) it anymore.
+		       		    
+  Finally somebody destroys the poor old thing...   BUT!  
+				    
+     AFTER somebody starts to destroy the object, but
+      before the object is really gone,           
+				    
+     a DESTRUCTOR is called on the object, to pick its pockets,
+      close its bank account, sell the house, and so forth.    
+
+
+
+       	       	       	       	  
+THE LIFE OF AN OBJECT
+                                     
+Somebody somewhere creates an object 
+				     
+  A ctor is called on the object to spank its bottom, clean 
+   it up, and so forth. 			     	    
+		       
+  Member functions get called on the object and it does stuff
+   in response.         				     
+		       
+  Eventually the object gets tired, it feels old and useless, and
+   nobody ever calls (member functions on) it anymore.
+		       
+  Finally somebody destroys the poor old thing...   BUT!  
+
+     AFTER somebody starts to destroy the object, but
+      before the object is really gone,           
+
+     a DESTRUCTOR is called on the object, to pick its pockets,
+      close its bank account, sell the house, and so forth.    
+	                /-------\     
+	                V       /     
+  creation -> ctor -> member function -> dtor -> destruction
+       	       	       	       	  
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {
+  Foo f;
+  cout << "Hello world" << endl;
+  return 0;
+}
+
+
+
+
+
+
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {
+  Foo f;
+  cout << "Hello world" << endl;
+  return 0;
+}
+
+Hi foo
+Hello world
+Bye foo
+
+
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {   	       	       	       	 
+  Foo f;			         
+  cout << "Hello world" << endl;    
+  {				    
+    Foo b;			    
+    cout << "Honk" << endl; 
+  }				    
+  cout << "Goodbye world" << endl;  
+  return 0;			    
+}  
+   
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+ 				   
+int main() {   	       	       	       	 
+  Foo f;			   	 
+  cout << "Hello world" << endl;   	 Hi foo         
+  {    				   	 Hello world    
+    Foo b;			   	 Hi foo         
+    cout << "Honk" << endl;	   	 Honk           
+  }				   	 Bye foo        
+  cout << "Goodbye world" << endl; 	 Goodbye world  
+  return 0;				 Bye foo        
+}  
+   
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {   	       	       	       	 
+  Foo f; ............................\   
+  cout << "Hello world" << endl;      \..Hi foo         
+  {                                      Hello world    
+    Foo b;                               Hi foo         
+    cout << "Honk" << endl;              Honk           
+  }                                      Bye foo        
+  cout << "Goodbye world" << endl;       Goodbye world  
+  return 0;			         Bye foo        
+}                                        
+   
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {   	       	       	       	 
+  Foo f; ............................\   
+  cout << "Hello world" << endl;...\  \..Hi foo         
+  {                                 \....Hello world    
+    Foo b;                               Hi foo         
+    cout << "Honk" << endl;              Honk           
+  }                                      Bye foo        
+  cout << "Goodbye world" << endl;       Goodbye world  
+  return 0;		                 Bye foo        
+}                                        
+   
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {   	       	       	       	 
+  Foo f; ............................\   
+  cout << "Hello world" << endl;...\  \..Hi foo         
+  {                                 \....Hello world    
+    Foo b;...............................Hi foo         
+    cout << "Honk" << endl;..............Honk           
+  }                                      Bye foo        
+  cout << "Goodbye world" << endl;       Goodbye world  
+  return 0;			         Bye foo        
+}
+   
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {   	       	       	       	 
+  Foo f; ............................\   
+  cout << "Hello world" << endl;...\  \..Hi foo         
+  {                                 \....Hello world    
+    Foo b;...............................Hi foo         
+    cout << "Honk" << endl;..............Honk           
+  }......................................Bye foo        
+  cout << "Goodbye world" << endl;.......Goodbye world  
+  return 0;                              Bye foo        
+}                                        
+   
+DESTRUCTORS
+
+#include <iostream.h>
+class Foo {	     
+ public:	     
+   Foo();	     
+   ~Foo();    // declaring THE destructor (there is only one)
+};		        				     
+		     
+Foo::Foo() { cout << "Hi foo" << endl; }
+
+Foo::~Foo() { cout << "Bye foo" << endl; }
+
+int main() {   	       	       	       	 
+  Foo f; ............................\   
+  cout << "Hello world" << endl;...\  \..Hi foo         
+  {                                 \....Hello world    
+    Foo b;...............................Hi foo         
+    cout << "Honk" << endl;..............Honk           
+  }......................................Bye foo        
+  cout << "Goodbye world" << endl;.......Goodbye world  
+  return 0;			   /.....Bye foo        
+}................................./      
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

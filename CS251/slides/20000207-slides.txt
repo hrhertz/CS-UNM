@@ -1,0 +1,1249 @@
+QUESTIONS
+
+LAST TIME:
+ - Ctors, cont
+ - The life of an object
+ - Dtors
+       	       	       	       	       ./blocks | ./showblock
+TODAY:
+ - Administrivia: The Undeclared, GOING...
+ - Administrivia: What&How to turn in for program 1
+ - Makefile troubles @ CIRT 
+ - Container classes and efficiency, arrays
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : 3 days 3 hours remaining
+
+ WHAT'S A SPLINE?  [Xerox PARC] This phrase expands to: "You have
+  just used a term that I've heard for a year and a half, and I
+     feel I should know, but don't.  My curiosity has finally
+ overcome my guilt." The PARC lexicon adds "Moral: don't hesitate
+	  to ask questions, even if they seem obvious."
+
+
+ADMINISTRIVIA - THE UNDECLARED
+   No recorded student declarations from:
+
+Arzate,Tiffany C       	       	Macy,Robert John          
+Bach, Jonathan A		Peer,Jennifer Fraser      
+                    		Perez,Gregory A R         
+Benjamin, Matthew Jaco		Putze,Mark Jay            
+Chung, Doil    	    		Romero,Lawrence Aaron     
+Cordova, Patricia Ann		Self,Michael Hunter       
+Das, Ram Kinkar	    		Smith,Cal                 
+               	    		Sweeney,Jenelle C         
+Espinoza, Everett A		Uncapher,Mark D           
+Fuller,Michael McNair		Williams,Danny Benjam     
+                       	       	                          
+Long,Xiangcun             				
+     
+      -> Remaining on this list leaves you 
+      	 liable to be 'instructor-dropped'         
+       	 this week!                       
+      
+      -> Opening day handout (with declaration) available at:
+	     http://www.cs.unm.edu/~ackley/cs251
+
+      -> Fair Warning!    Going....
+PROGRAM 1 QUESTIONS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1: WHAT TO TURN IN
+
+Five files exactly:
+  README
+  Block.C
+  Block.h
+  Board.C
+  Board.h
+
+Nothing else.
+	     
+
+
+
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1: WHAT TO TURN IN
+
+Five files exactly:
+  README
+  Block.C
+  Block.h
+  Board.C
+  Board.h
+
+Nothing else.
+	     
+
+TO AVOID LOSING CREDIT: 
+Your Board.C and Block.C must compile and link			
+ - with the original unaltered copies of Main.C and Main.h,
+ - without warnings or errors on the CIRT AIX machines, using g++
+ - with the original unaltered Makefile.			
+
+
+
+
+
+
+
+PROGRAM 1: WHAT TO TURN IN
+
+Five files exactly:
+  README
+  Block.C
+  Block.h
+  Board.C
+  Board.h
+
+Nothing else.
+	     
+
+TO AVOID LOSING CREDIT: 
+Your Board.C and Block.C must compile and link			
+ - with the original unaltered copies of Main.C and Main.h,
+ - without warnings or errors on the CIRT AIX machines, using g++
+ - with the original unaltered Makefile.			
+
+YOUR CODE WILL BE TESTED AND READ 
+ - Exact correct behavior counts
+ - Readability/style counts
+
+
+
+PROGRAM 1: WHAT TO TURN IN - The README file
+The README file contains
+(1) Identification (your name & email addr; this class name; date)
+(2) A brief description of the program (you can cite the spec URL)
+(3) A description of any remaining bugs that you are aware of,
+    or else the statement "No known bugs."  WARNING: All bugs cost
+    you in grading, but DOCUMENTED BUGS cost you less.
+
+Sample README template
+---		          	  	    
+Project: Program 1, Blocks	  
+Name:    Bugs Aplenty		  
+Email: 	 bugsap@unm.edu		  
+Class:   CS251 Spring 2000	  
+Date:    2/7/2000   		  
+		    		  
+Description: The `blocks' program is a simple `physics engine'
+	 that simulates ... <ETC> 			      
+		     		  
+Bugs:    (1) Segfaults if you specify a 0x0 board
+         (2) Push S moves blocks upward
+         (3) <ETC>		  
+				  
+				  
+HOW TO TURN IN PROGRAM 1	  
+
+ DUE >ELECTRONICALLY< BY THURSDAY FEBRUARY 10, 2000 @ 5 PM
+ **NO** ON-PAPER TURN-INS EXPECTED OR ACCEPTED FOR CREDIT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HOW TO TURN IN PROGRAM 1
+
+ DUE >ELECTRONICALLY< BY THURSDAY FEBRUARY 10, 2000 @ 5 PM
+ **NO** ON-PAPER TURN-INS EXPECTED OR ACCEPTED FOR CREDIT
+
+
+    Electronic turn in has five steps:       
+
+      (1) Log into CIRT                
+
+      (2) Put (copies of) the files you are turning in into
+          a separate directory, if they are not already there.
+
+      (3) 'cd' to that directory
+
+
+
+
+
+
+
+
+
+
+HOW TO TURN IN PROGRAM 1
+
+ DUE >ELECTRONICALLY< BY THURSDAY FEBRUARY 10, 2000 @ 5 PM
+ **NO** ON-PAPER TURN-INS EXPECTED OR ACCEPTED FOR CREDIT
+
+
+    Electronic turn in has five steps:       
+
+      (1) Log into CIRT                
+
+      (2) Put (copies of) the files you are turning in into
+          a separate directory, if they are not already there.
+
+      (3) 'cd' to that directory
+
+      (4) Type this command:    
+             ~ackley/public/TurnInBlocks
+          and READ what it says (it will take you from there)
+
+      (5) Expect an email confirmation shortly (at least if
+          you are turning in on time or nearly so).          
+
+
+
+HOW TO TURN IN PROGRAM 1
+
+ DUE >ELECTRONICALLY< BY THURSDAY FEBRUARY 10, 2000 @ 5 PM
+ **NO** ON-PAPER TURN-INS EXPECTED OR ACCEPTED FOR CREDIT
+
+
+    Electronic turn in has five steps:       
+
+      (1) Log into CIRT                
+
+      (2) Put (copies of) the files you are turning in into
+          a separate directory, if they are not already there.
+
+      (3) 'cd' to that directory
+
+      (4) Type this command:    
+             ~ackley/public/TurnInBlocks
+          and READ what it says (it will take you from there)
+
+      (5) Expect an email confirmation shortly (at least if
+          you are turning in on time or nearly so).          
+
+  **ALLOW AT LEAST ONE HOUR TO PERFORM THE ELECTRONIC TURNIN!**
+
+HOW TO TURN IN PROGRAM 1 - Electronic turn in
+
+  % slogin -P pegasus.unm.edu       (or however you get to CIRT)
+  ackley@pegasus.unm.edu's password:             (..telnet, etc)
+  Last login: Mon Feb  7 10:44:50 2000 from cirt-op-0008.unm.edu
+                *---------------------------------------------*
+                | Welcome to Pegasus, an IBM rs6000 Model 370 |
+                |         running IBM AIX version 4.3.1       |
+(etc)				      
+  No mail.			      
+  bash-2.02$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+HOW TO TURN IN PROGRAM 1 - Electronic turn in
+
+  % slogin -P pegasus.unm.edu       (or however you get to CIRT)
+  ackley@pegasus.unm.edu's password:             (..telnet, etc)
+  Last login: Mon Feb  7 10:44:50 2000 from cirt-op-0008.unm.edu
+                *---------------------------------------------*
+                | Welcome to Pegasus, an IBM rs6000 Model 370 |
+                |         running IBM AIX version 4.3.1       |
+(etc)				      
+  No mail.			      
+  bash-2.02$ mkdir prog1final               (making a directory)
+  bash-2.02$ cp Block.C prog1final   	   (copying files to it)
+  bash-2.02$ cp Block.h prog1final	                 (ditto)
+  bash-2.02$ cp Board.C prog1final			 (ditto)
+  bash-2.02$ cp Board.h prog1final			 (ditto)
+  bash-2.02$ cp README prog1final			 (ditto)  
+  bash-2.02$ cd prog1final		    (changing directory)
+  bash-2.02$ ls	                         (checking all is ready)
+  Block.C  Block.h  Board.C  Board.h  README             (it is)
+  bash-2.02$ 
+
+
+
+
+HOW TO TURN IN PROGRAM 1 - Electronic turn in
+
+  % slogin -P pegasus.unm.edu       (or however you get to CIRT)
+  ackley@pegasus.unm.edu's password:             (..telnet, etc)
+  Last login: Mon Feb  7 10:44:50 2000 from cirt-op-0008.unm.edu
+                *---------------------------------------------*
+                | Welcome to Pegasus, an IBM rs6000 Model 370 |
+                |         running IBM AIX version 4.3.1       |
+(etc)				      
+  No mail.			      
+  bash-2.02$ mkdir prog1final               (making a directory)
+  bash-2.02$ cp Block.C prog1final   	   (copying files to it)
+  bash-2.02$ cp Block.h prog1final	                 (ditto)
+  bash-2.02$ cp Board.C prog1final			 (ditto)
+  bash-2.02$ cp Board.h prog1final			 (ditto)
+  bash-2.02$ cp README prog1final			 (ditto)  
+  bash-2.02$ cd prog1final		    (changing directory)
+  bash-2.02$ ls	                         (checking all is ready)
+  Block.C  Block.h  Board.C  Board.h  README             (it is)
+  bash-2.02$ ~ackley/public/TurnInBlocks        (run the script)
+  (starting)							
+  Hi ackley!  I am the CS 251 Spring 2000 Blocks TurnIn Robot!
+  I was last updated Mon Feb  7 11:08:57 2000!
+(etc etc)
+HOW TO TURN IN PROGRAM 1 - Electronic turn in tips
+   						  
+ - **ALLOW AT LEAST ONE HOUR TO PERFORM THE ELECTRONIC TURNIN!**
+    (EVERYBODY's going to be trying to do it, the machines are  
+     going to be buried.  Get down early!)        
+        					      
+ - Put ONLY the files to be turned-in in the directory.  The
+   script will turn in basically EVERYTHING in the directory
+   you run it from!  (The script will complain if there's stuff
+   in there it's not expecting.  For this program, it's        
+   expecting just Block.[Ch], Board.[Ch], and the README).
+        					   
+ - Your program is not REALLY turned-in until you get an
+   email confirmation of the turn-in.   		
+    
+ - The script sends your code off in an email message.  
+   The TIME OF THE EMAIL MESSAGE determines whether your
+   turn-in was on-time (NOT the time you started running 
+   the turn-in script, which will be earlier, NOR the time  
+   you receive the email confirmation, which will be later.)
+    
+ - The turn-in script gives you MANY chances to exit without
+   turning anything in.  You can try it now to see how it will
+   work, but you should COMPLETE the script just ONCE!
+HOW TO TURN IN PROGRAM 1 - Electronic turn in tips
+   						  
+     ALLOW AT LEAST ONE HOUR
+
+
+        					      
+
+
+
+
+
+        					   
+   Your program is not REALLY turned-in until you get an
+   email confirmation of the turn-in.   		
+    
+
+   The TIME OF THE EMAIL MESSAGE determines whether your
+   turn-in was on-time
+
+
+    
+
+
+
+HOW TO TURN IN PROGRAM 1
+   						  
+ MAKE SURE YOUR NAME AND EMAIL ARE ON **EVERY** FILE YOU TURN IN!
+
+
+
+// Name: David Ackley
+// Email: ackley@cs.unm.edu     	       
+// Date: Mon Feb  7 10:47:35 2000
+// Class: 251
+// Project: Program 1
+
+        					   
+
+
+    
+
+
+
+
+
+    
+
+
+MAKEFILE TROUBLES
+Problems with the Makefile
+
+ Symptom:
+    make
+	    xlC -O -c Main.C
+    "IBM C and C++ Compilers" does not have a license enrolled.
+(etc)
+
+
+
+
+
+			     
+
+
+
+
+
+
+
+
+
+
+MAKEFILE TROUBLES
+Problems with the Makefile		 
+
+ Symptom:
+    make
+   	    xlC -O -c Main.C
+    "IBM C and C++ Compilers" does not have a license enrolled.
+(etc)	
+   	
+CURE 0 (TOPICAL REMEDY)
+Instead of typing
+    make		     
+to make your program, type
+    /usr/local/gnu/bin/make
+to make it.		   
+			   
+    /usr/local/gnu/bin/make
+    g++ -c -g -Wall -pedantic -c Main.C -o Main.o
+    main.C: In function `int main()':
+ (etc)
+
+
+You'll need to do that EVERY TIME YOU >>MAKE YOUR PROGRAM<<!
+
+MAKEFILE TROUBLES
+Problems with the Makefile		 
+
+ Symptom:
+    make
+	    xlC -O -c Main.C
+    "IBM C and C++ Compilers" does not have a license enrolled.
+(etc)
+
+CURE 1 (DRUGS)
+ Right after you log into CIRT, type 
+
+          setenv PATH "/usr/local/gnu/bin:$PATH"
+			     
+assuming you're using the default `shell'.  Then you should get
+	
+    make
+    g++ -c -g -Wall -pedantic -c Main.C -o Main.o
+    main.C: In function `int main()':
+ (etc)
+
+
+You'll need to do that EVERY TIME YOU >>LOG IN<<!
+
+MAKEFILE TROUBLES
+Problems with the Makefile		 
+
+ Symptom:
+    make
+	    xlC -O -c Main.C
+    "IBM C and C++ Compilers" does not have a license enrolled.
+(etc)
+
+CURE 2 (SURGERY)
+ Edit your .login file and stick this command	  
+
+          setenv PATH "/usr/local/gnu/bin:$PATH"
+
+ at the end of the file.
+ Then log out and log in again.  Then you will (hopefully) get:
+
+    make
+    g++ -c -g -Wall -pedantic -c main.C -o main.o
+    main.C: In function `int main()':
+ (etc)
+
+You'll need to do that >>ONLY ONCE<<!
+
+CONTAINER CLASSES AND EFFICIENCY
+
+
+   
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+ A: They're neither fast nor slow because they don't do anything
+    by themselves.   A PROGRAM can be judged fast or slow AT 
+    DOING SOMETHING.
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+ A: They're neither fast nor slow because they don't do anything
+    by themselves.   A PROGRAM can be judged fast or slow AT 
+    DOING SOMETHING.
+ 
+ Q: What makes a program fast or slow at doing something?
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+ A: They're neither fast nor slow because they don't do anything
+    by themselves.   A PROGRAM can be judged fast or slow AT 
+    DOING SOMETHING.
+ 
+ Q: What makes a program fast or slow at doing something?
+ A: It depends, lots of answers.  In general: It depends how
+    efficiently the program can manipulate the objects it   
+    works with.
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+ A: They're neither fast nor slow because they don't do anything
+    by themselves.   A PROGRAM can be judged fast or slow AT 
+    DOING SOMETHING.
+ 
+ Q: What makes a program fast or slow at doing something?
+ A: It depends, lots of answers.  In general: It depends how
+    efficiently the program can manipulate the objects it   
+    works with.
+
+ Q: What kind of `manipulations' do programs do to objects?
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+ A: They're neither fast nor slow because they don't do anything
+    by themselves.   A PROGRAM can be judged fast or slow AT 
+    DOING SOMETHING.
+ 
+ Q: What makes a program fast or slow at doing something?
+ A: It depends, lots of answers.  In general: It depends how
+    efficiently the program can manipulate the objects it   
+    works with.
+
+ Q: What kind of `manipulations' do programs do to objects?
+ A: Again, lots of answers.  Very commonly, though: Programs
+    (1) Create objects,
+    (2) Store them in containers,
+    (3) Search for them in the containers in various ways, 
+    (4) Update the objects, and
+    (5) Destroy the objects     	  
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ Q:Are computers fast?
+   
+ A: Maybe not YOURS but MY new P9-966Mhz-blah-blah sure is! Yeah!
+ A: Yes, but they're stupid	     
+ A: They're neither fast nor slow because they don't do anything
+    by themselves.   A PROGRAM can be judged fast or slow AT 
+    DOING SOMETHING.
+ 
+ Q: What makes a program fast or slow at doing something?
+ A: It depends, lots of answers.  In general: It depends how
+    efficiently the program can manipulate the objects it   
+    works with.
+
+ Q: What kind of `manipulations' do programs do to objects?
+ A: Again, lots of answers.  Very commonly, though: Programs
+    (1) Create objects,
+    (2) Store them in containers,
+    (3) Search for them in the containers in various ways, 
+    (4) Update the objects, and
+    (5) Destroy the objects     	  
+  Most of the field of DATA STRUCTURES is concerned with
+  steps (2) and (3) (and sometimes a little (4)).
+CONTAINER CLASSES AND EFFICIENCY
+
+ - Different kinds of containers are good at different tasks
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ - Different kinds of containers are good at different tasks
+   
+ - In general, all the objects that get put into one container
+   will have SOMETHING in common 
+     (CD rack, sock drawer, Pez dispenser, refrigerator...)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ - Different kinds of containers are good at different tasks
+   
+ - In general, all the objects that get put into one container
+   will have SOMETHING in common 
+     (CD rack, sock drawer, Pez dispenser, refrigerator...)
+
+ - In some sense, the Mother of All Containers is the array
+       (We'll meet the father later)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER CLASSES AND EFFICIENCY
+
+ - Different kinds of containers are good at different tasks
+   
+ - In general, all the objects that get put into one container
+   will have SOMETHING in common 
+     (CD rack, sock drawer, Pez dispenser, refrigerator...)
+
+ - In some sense, the Mother of All Containers is the array
+       (We'll meet the father later)
+   - We can build many other kinds of containers OUT OF arrays
+     ..but let's look at the array itself first.
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:  --      
+  101:  --      
+  102:	--
+  103:	--
+  104:	--
+  105:	--
+  106:	--
+  107:	--
+  108:	--
+  109:	--
+  110:	--
+  111:	--
+  112:	--
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number) 
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:  --     	       	       	   Given:  char foo[5];
+  101:  --      		   Suppose the foo array
+  102:	--      		   starts at address 104
+  103:	--
+  104:	--
+  105:	--
+  106:	--
+  107:	--
+  108:	--
+  109:	--
+  110:	--
+  111:	--
+  112:	--
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:         	       	       	   Given:  char foo[5];
+  101:          		   Suppose the foo array
+  102:				   starts at address 104
+  103: 	       	    
+  104: foo[0]	    
+  105: foo[1]  	    
+  106: foo[2]	    
+  107: foo[3]
+  108: foo[4]
+  109:
+  110:
+  111:
+  112:
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:         	       	       	   Given:  char foo[5];
+  101:          		   Suppose the foo array
+  102:				   starts at address 104
+  103: 
+  104: foo[0]			   So the C++ compiler can
+  105: foo[1]  	       	       	   find the address of foo[i]
+  106: foo[2]			   by computing 104+i  	      
+  107: foo[3]
+  108: foo[4]
+  109:
+  110: 	       	       	       	  foo[5] = 'X'
+  111:
+  112:
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:         	       	       	   Given:  char foo[5];
+  101:          		   Suppose the foo array
+  102:				   starts at address 104
+  103: 
+  104: foo[0]			   So the C++ compiler can
+  105: foo[1]  	       	       	   find the address of foo[i]
+  106: foo[2]			   by computing 104+i  	      
+  107: foo[3]
+  108: foo[4]  	       	       (What would happen if we did
+  109:				foo[5] = 'X'; 
+  110:				?)            
+  111:
+  112:
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:                         	   Given:  int bar[2];
+  101:                             Suppose the bar array
+  102:                             starts at address 100
+  103:                    
+  104:                             Each int is four bytes long!
+  105:                    	    (on current-day machines)  
+  106:                         	      
+  107: 
+  108: 
+  109:
+  110:
+  111:
+  112:
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100: bar[0] (1st byte)       	   Given:  int bar[2];
+  101: bar[0] (2nd byte)           Suppose the bar array
+  102: bar[0] (3rd byte)	   starts at address 100
+  103: bar[0] (4th byte)
+  104: bar[1] (1st byte)           Each int is four bytes long!
+  105: bar[1] (2nd byte)      	    (on current-day machines)
+  106: bar[1] (3rd byte)      
+  107: bar[1] (4th byte)      
+  108:         		      
+  109:
+  110:
+  111:
+  112:
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100: bar[0] (1st byte)       	   Given:  int bar[2];
+  101: bar[0] (2nd byte)           Suppose the bar array
+  102: bar[0] (3rd byte)	   starts at address 100
+  103: bar[0] (4th byte)
+  104: bar[1] (1st byte)           Each int is four bytes long!
+  105: bar[1] (2nd byte)       	    (on current-day machines)
+  106: bar[1] (3rd byte)           So the C++ compiler can find
+  107: bar[1] (4th byte)       	   the address of bar[i] by    
+  108:         			   computing 100+4*i       
+  109:
+  110:
+  111:
+  112:
+  etc
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   			
+  100:                             Given:  class Bletch {
+  101:					     public: void Run();
+  102:					     private: int _woof;
+  103:						      int _gag; 
+  104:					   };                  
+  105:					   Bletch poof[2];     
+  106:				   
+  107:				   
+  108:				   
+  109:				   
+  110:				   
+  111:				
+  112:				
+  etc				
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100:				   Given:  class Bletch {
+  101:					     public: void Run();
+  102:					     private: int _woof;
+  103:						      int _gag; 
+  104:					   };                  
+  105:					   Bletch poof[2];     
+  106:				   Each Bletch has two ints in
+  107:				   in it so it's 8 bytes long, 
+  108:				   so poof is 16 bytes long.. 
+  109:				   suppose poof starts at    
+  110:				   address 100           
+  111:				
+  112:				
+  etc				
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100: poof[0]._woof (1st byte)	   Given:  class Bletch {
+  101: poof[0]._woof (2nd byte)              public: void Run();
+  102: poof[0]._woof (3rd byte)              private: int _woof;
+  103: poof[0]._woof (4th byte) 		      int _gag; 
+  104: poof[0]._gag  (1st byte)            };                  
+  105: poof[0]._gag  (2nd byte)            Bletch poof[2];     
+  106: poof[0]._gag  (3rd byte)    Each Bletch has two ints in
+  107: poof[0]._gag  (4th byte)	   in it so it's 8 bytes long, 
+  108: poof[1]._woof (1st byte)    so poof is 16 bytes long.. 
+  109: poof[1]._woof (2nd byte)    suppose poof starts at    
+  110: poof[1]._woof (3rd byte)    address 100           
+  111: poof[1]._woof (4th byte)
+  112: poof[1]._gag  (1st byte)
+  etc	   etc                 
+ARRAYS & MEMORY
+ - Computer memory is a big pile of BYTEs
+ - A BYTE is 8 BITS     	      
+ - A BIT is a number that is either 0 or 1
+ - Each byte of memory has an ADDRESS (which is some number)
+ - A C++ 'char' takes up 1 byte			 
+ - We usually don't care where exactly objects get stored in 
+   memory; all we need is the address where the object starts,
+   and we can figure out the rest.
+Address   
+  100: poof[0]._woof (1st byte)	   Given:  class Bletch {
+  101: poof[0]._woof (2nd byte)              public: void Run();
+  102: poof[0]._woof (3rd byte)              private: int _woof;
+  103: poof[0]._woof (4th byte) 		      int _gag; 
+  104: poof[0]._gag  (1st byte)            };                  
+  105: poof[0]._gag  (2nd byte)            Bletch poof[2];     
+  106: poof[0]._gag  (3rd byte)    Each Bletch has two ints in
+  107: poof[0]._gag  (4th byte)	   in it so it's 8 bytes long, 
+  108: poof[1]._woof (1st byte)    so poof is 16 bytes long.. 
+  109: poof[1]._woof (2nd byte)    suppose poof starts at    
+  110: poof[1]._woof (3rd byte)    address 100           
+  111: poof[1]._woof (4th byte)	 And the compiler finds the 
+  112: poof[1]._gag  (1st byte)	 address of poof[i] by computing
+  etc	   etc                 		100+ 8*i                
+

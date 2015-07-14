@@ -1,0 +1,816 @@
+QUESTIONS
+
+LAST TIME:
+ - Stacks & Queues
+ - Program 2 overview
+
+TODAY:
+ - Program 2 questions
+ - Quiz sample questions
+ - Value semantics: Copy ctor and op=
+
+
+
+
+
+HOMEWORK: 
+ Previously assigned: PC++P Ch 1-9, 13
+ Program 2 due THU MAR 2 5PM
+
+    FIRST IN-CLASS QUIZ NEXT CLASS WED FEB 23
+                 COVERS MATERIAL THROUGH LAST FRIDAY
+
+
+
+PROGRAM 2 QUESTIONS
+
+
+
+    	    	 
+
+
+	      		 
+
+
+			 
+
+
+
+
+
+
+
+
+
+
+
+
+
+QUIZ
+
+ One hour, in-class, closed-book, closed-notes.
+
+ You are responsible for
+ - PC++P Ch 1-9 and 13
+ - Material covered in lectures, labs, and programs
+
+ Typical kinds of questions:   	       	       	      
+ - What does this program print?		      
+ - What is the type of this expression?
+ - What is the big-O of this code, assuming 'n' is...?
+ - Draw the #include file dependencies among these files:
+ - Given this class declaration, implement the method that...
+
+ Like lab quiz questions, but deeper. 
+  
+
+
+
+
+
+
+
+QUIZ - SAMPLE QUESTIONS
+
+    What does this program print?  Use the grid next to the
+    program for your answer; start in the shaded box; put at most
+    one character in each box.  Be EXACT.
+
+#include <iostream.h>  	       	       	 +-----------------------+
+int main() {   	       	       	       	 | | | | | | | | | | | | |
+  for (int i = 0; i<6; ++i) { 		 |-----------------------|
+    switch (i) {     			 | | | | | | | | | | | | |
+    case 0: cout << "A"; //FALL THROUGH	 |-----------------------|
+    case 1: cout << "B"; //FALL THROUGH	 | | | | | | | | | | | | |
+    case 2: cout << "C"; break;		 |-----------------------|
+    case 4: cout << endl; break;	 | | | | | | | | | | | | |
+    case 5: cout << "D"; break;		 |-----------------------|
+    }                           	 | | | | | | | | | | | | |
+  }  					 +-----------------------+
+  return 0;
+}
+
+
+
+
+
+QUIZ - SAMPLE QUESTIONS
+
+    What does this program print?  Use the grid next to the
+    program for your answer; start in the shaded box; put at most
+    one character in each box.  Be EXACT.
+
+#include <iostream.h>  	       	       	 +-----------------------+
+int main() {   	       	       	       	 |A|B|C|B|C|C| | | | | | |
+  for (int i = 0; i<6; ++i) { 		 |-----------------------|
+    switch (i) {     			 |D| | | | | | | | | | | |
+    case 0: cout << "A"; //FALL THROUGH	 |-----------------------|
+    case 1: cout << "B"; //FALL THROUGH	 | | | | | | | | | | | | |
+    case 2: cout << "C"; break;		 |-----------------------|
+    case 4: cout << endl; break;	 | | | | | | | | | | | | |
+    case 5: cout << "D"; break;		 |-----------------------|
+    }                           	 | | | | | | | | | | | | |
+  }  					 +-----------------------+
+  return 0;
+}
+
+
+
+
+
+QUIZ - SAMPLE QUESTIONS
+
+ Given the following declarations, provide the type of each of
+ the expressions.  If any of the expressions is a COMPILATION
+ error given the declarations, write `Error' instead of a type.
+
+    int i;       double f();       double d;     
+    int ia[3];   void f(double);   double da[2]; 
+    	   		     		 
+       	       	  +-----------------+
+ a. i+3/4      	  |    		    |
+       	   	  +-----------------+
+    		       		    
+    	       	  +-----------------+
+ b. ia[d]	  |       	    |
+       	 	  +-----------------+
+       	 	 	  
+       	       	  +-----------------+
+ c. da[-1]	  |       	    |
+		  +-----------------+
+       	       	 	  
+       	       	  +-----------------+
+ d. f(3.4)	  |            	    |
+		  +-----------------+
+QUIZ - SAMPLE QUESTIONS
+
+ Given the following declarations, provide the type of each of
+ the expressions.  If any of the expressions is a COMPILATION
+ error given the declarations, write `Error' instead of a type.
+
+    int i;       double f();       double d;     
+    int ia[3];   void f(double);   double da[2]; 
+    	   		     		 
+       	       	  +-----------------+
+ a. i+3/4      	  |int		    |
+       	   	  +-----------------+
+    		      		    
+    	       	  +-----------------+
+ b. ia[d]	  |Error  	    |
+       	 	  +-----------------+
+       	 	 	  
+       	       	  +-----------------+
+ c. da[-1]	  |double 	    |
+		  +-----------------+
+       	       	 	  
+       	       	  +-----------------+
+ d. f(3.4)	  |void        	    |
+		  +-----------------+
+QUIZ - SAMPLE QUESTIONS
+
+For each of the following code fragments, indicate whether 
+its running time as a function of n is:
+------------------------------------------------------------------
+       	       	       	       	       2
+(A)  O(1)     (B)  O(n)        (C)  O(n )      (D)  something else
+------------------------------------------------------------------
+					 
+   Circle the answer:    (A)     (B)     (C)     (D)
+
+for (int i = 0; i<i; ++i)
+  for (int j = 0; j<n; ++j)
+    for (int k = 0; k<n; ++k)
+      cout << "*";
+    
+
+
+
+
+
+
+
+
+QUIZ - SAMPLE QUESTIONS
+
+For each of the following code fragments, indicate whether 
+its running time as a function of n is:
+------------------------------------------------------------------
+       	       	       	       	       2
+(A)  O(1)     (B)  O(n)        (C)  O(n )      (D)  something else
+------------------------------------------------------------------
+			+---+		 
+   Circle the answer:   |(A)|    (B)     (C)     (D)
+			+---+
+for (int i = 0; i<i; ++i)
+  for (int j = 0; j<n; ++j)
+    for (int k = 0; k<n; ++k)
+      cout << "*";
+    
+
+
+
+
+
+
+
+
+QUIZ
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+What does this program print:
+
+#include <iostream.h>
+void func(int j) { j = 17; cout << j << ' '; }
+int main() {	     			   
+  int foo = 3;	     			   
+  cout << foo << ' ';			   
+  func(foo);	      
+  cout << foo << endl;		      
+  return 0;	      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+What does this program print:
+
+#include <iostream.h>
+void func(int j) { j = 17; cout << j << ' '; }
+int main() {	     			   
+  int foo = 3;	     			   
+  cout << foo << ' ';			   
+  func(foo);	      
+  cout << foo << endl;		      
+  return 0;	      
+}
+3 17 3
+
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+What does this program print:
+
+#include <iostream.h>
+void func(int j) { j = 17; cout << j << ' '; }
+int main() {	     			   
+  int foo = 3;	     			   
+  cout << foo << ' ';			   
+  func(foo);	      
+  cout << foo << endl;		      
+  return 0;	      
+}
+3 17 3
+
+#include <iostream.h>
+void func(int &j) { j = 17; cout << j << endl; }
+int main() {
+  int foo = 3;
+  cout << foo << endl;
+  func(foo);	      
+  cout << foo << endl;		      
+  return 0;	      
+}
+
+VALUE SEMANTICS
+What does this program print:
+	    
+#include <iostream.h>
+void func(int j) { j = 17; cout << j << ' '; } 	 
+int main() {   	
+  int foo = 3; 	      
+  cout << foo << ' '; 
+  func(foo);
+  cout << foo << endl;		      		 	       	  
+  return 0;    	      				 	       	  
+}	       					 	       	  
+3 17 3	       					 	       	  
+	       					 	       	  
+#include <iostream.h>				 	       	  
+void func(int &j) { j = 17; cout << j << ' '; }  	       	  
+int main() {   
+  int foo = 3; 	      
+  cout << foo << ' ';
+  func(foo);
+  cout << foo << endl;		      
+  return 0;	      
+}
+3 17 17
+VALUE SEMANTICS
+What does this program print:
+
+#include <iostream.h>
+void func(int j) { j = 17; cout << j << ' '; } 	 
+int main() {  \--------------------------------- `call by value'
+  int foo = 3; 	       	  /            	       	  so `j' gets a
+  cout << foo << ' ';	 /	       	       	  COPY of `foo'
+  func(foo);<-----------/      	 		 	       	  
+  cout << foo << endl;		      		 	       	  
+  return 0;    	      				 	       	  
+}	       					 	       	  
+3 17 3	       					 	       	  
+	       					 	       	  
+#include <iostream.h>				 	       	  
+void func(int &j) { j = 17; cout << j << ' '; }  	       	  
+int main() {   \------------------------------ `call by reference'
+  int foo = 3;		  /    	       	       	so `j' is ANOTHER
+  cout << foo << ' '; 	 /			NAME for `foo' 
+  func(foo);<-----------/      	       	       	       	       
+  cout << foo << endl;		      
+  return 0;	      
+}
+3 17 17
+VALUE SEMANTICS
+What does this program print:
+
+#include <iostream.h>
+class Foo {	     
+public:		     
+  void Set(int i) { _data = i; }
+  int Get() { return _data; }	
+private:
+  int _data;
+};
+void Func(Foo&j) {
+  j.Set(27);  \-------- call by reference, so inside 
+}	      	     	this call to `Func', `j' is 
+int main() {  	     	    /  another name for main's `f'.
+  Foo f;      	     	   /   	       	       	     		 
+  f.Set(12);  	     	  /    	      
+  cout << f.Get() << ' ';/     	       	    
+  Func(f);<-------------/ 
+  cout << f.Get() << endl;
+  return 0;   
+}	      
+12 27  	      
+
+VALUE SEMANTICS
+What does this program print:
+
+#include <iostream.h>
+class Foo {	     
+public:		     
+  void Set(int i) { _data = i; }
+  int Get() { return _data; }	
+private:
+  int _data;
+};
+void Func(Foo j) {
+  j.Set(27); \------------call by value, so class Foo's
+}			  copy constructor is called to
+int main() {		  make a copy of main's `f', and
+  Foo f;		  THAT COPY is called `j' inside 
+  f.Set(12);		  Func, (and then that copy is 
+  cout << f.Get() << ' '; destructed when Func is finished.)
+  Func(f);
+  cout << f.Get() << endl;
+  return 0;
+}
+12 12
+
+VALUE SEMANTICS
+		  	       
+ A class has value semantics if copies of objects are completely
+ independent of each other, like copies of ints are..
+ 
+
+
+
+
+  
+
+
+
+	     
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+		  	       
+ A class has value semantics if copies of objects are completely
+ independent of each other, like copies of ints are..
+ 
+but isn't that just always true anyway?  
+
+..It (generally) is, until you start dealing with pointers,
+  and dynamic memory..					   
+  
+
+
+
+	     
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+		  	       
+ A class has value semantics if copies of objects are completely
+ independent of each other, like copies of ints are..
+ 
+but isn't that just always true anyway?  
+
+..It (generally) is, until you start dealing with pointers,
+  and dynamic memory..					   
+  
+Giving a class value semantics is usually not too hard.  You
+just have to remember to declare and appropriately define
+four methods:
+	     
+
+
+                                   (1) The default ctor
+                                   (2) The copy ctor   
+                                   (3) The assignment operator
+                                   (4) The destructor
+
+
+
+
+VALUE SEMANTICS
+		  	       
+ A class has value semantics if copies of objects are completely
+ independent of each other, like copies of ints are..
+ 
+but isn't that just always true anyway?  
+
+..It (generally) is, until you start dealing with pointers,
+  and dynamic memory..					   
+  
+Giving a class value semantics is usually not too hard.  You
+just have to remember to declare and appropriately define
+four methods:
+	     
+class Foo {  
+public:	     
+  Foo();                        // (1) The default ctor
+  Foo(const Foo &);             // (2) The copy ctor   
+  Foo & operator=(const Foo &);	// (3) The assignment operator
+  ~Foo();                       // (4) The destructor
+..
+private:
+..
+};
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        
+  Foo(const Foo &)             
+  Foo & operator=(const Foo &) 
+  ~Foo()                       
+};	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {
+   Foo f;           cout << "(1)";
+   if (1>0) {
+     Foo g;         cout << "(2)";
+     g = f;
+     Func(g);       cout << "(3)"; 
+   }	     
+   cout << "(4)";
+   return 0;	 
+}
+
+
+
+
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {
+   Foo f;           cout << "(1)";
+   if (1>0) {
+     Foo g;         cout << "(2)";
+     g = f;
+     Func(g);       cout << "(3)"; 
+   }	     
+   cout << "(4)";
+   return 0;	 
+}
+
+
+
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {	 			      
+   Foo f;           cout << "(1)"; 
+   if (1>0) {	 		      	      
+     Foo g;         cout << "(2)"; 
+     g = f; 
+     Func(g);       cout << "(3)"; 
+   }
+   cout << "(4)"; 
+   return 0;	     
+}
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	       	       	       	      
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g;         cout << "(2)"; 
+     g = f;
+     Func(g);       cout << "(3)"; 
+   }
+   cout << "(4)";
+   return 0;	     
+}
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }		 
+};     	    				       	       	       	 
+void Func(Foo f) {  cout << "(Func)";    } 
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g; [c]     cout << "(2)"; [d]	      
+     g = f; 
+     Func(g);       cout << "(3)"; 
+   }
+   cout << "(4)"; 
+   return 0;	     
+}
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	  
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g; [c]     cout << "(2)"; [d]	      
+     g = f; [e]	 		      	      
+     Func(g);       cout << "(3)"; 
+   } 
+   cout << "(4)"; 
+   return 0;	     
+} 
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	     [f] 
+void Func(Foo f) {  cout << "(Func)"; [g]}
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g; [c]     cout << "(2)"; [d]	      
+     g = f; [e]	 		      	      
+     Func(g); [f]   cout << "(3)"; 
+   } 				      
+   cout << "(4)";		   
+   return 0;	     		   
+}
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	     [f] 
+void Func(Foo f) {  cout << "(Func)"; [g]} [h]
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g; [c]     cout << "(2)"; [d]	      
+     g = f; [e]	 		      	      
+     Func(g); [f]   cout << "(3)"; [i] 	      
+   } 
+   cout << "(4)";
+   return 0;	     
+}
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	     [f] 
+void Func(Foo f) {  cout << "(Func)"; [g]} [h]
+int main() {	 			      
+   Foo f; [a]       cout << "(1)"; [b]	      
+   if (1>0) {	 		      	      
+     Foo g; [c]     cout << "(2)"; [d]	      
+     g = f; [e]	 		      	      
+     Func(g); [f]   cout << "(3)"; [i] 	      
+   } [j]       	       	       	      
+   cout << "(4)"; [k]
+   return 0;	     
+} [l]  	       	     
+
+
+[a]  [b][c]  [d][e]  [f]   [g]   [h]   [i][j]   [k][l]
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo f) {  cout << "(Func)";    }
+int main() {
+   Foo f;           cout << "(1)";
+   if (1>0) {
+     Foo g;         cout << "(2)";
+     g = f;
+     Func(g);       cout << "(3)"; 
+   }	     
+   cout << "(4)";
+   return 0;	 
+}
+
+
+
+(def)(1)(def)(2)(op=)(copy)(Func)(dtor)(3)(dtor)(4)(dtor)
+VALUE SEMANTICS
+#include <iostream.h>
+class Foo {	     
+public:		     
+  Foo()                        { cout << "(def)"; }
+  Foo(const Foo &)             { cout << "(copy)"; }
+  Foo & operator=(const Foo &) { cout << "(op=)"; return *this; }
+  ~Foo()                       { cout << "(dtor)"; }
+};	    
+void Func(Foo&f) {  cout << "(Func)";    }
+int main() {  
+   Foo f;           cout << "(1)";
+   if (1>0) { 
+     Foo g;         cout << "(2)";
+     g = f;   
+     Func(g);       cout << "(3)"; 
+   }	      
+   cout << "(4)";
+   return 0;  	 
+}	      
+	      
+	      				     
+	      				     
+(def)(1)(def)(2)(op=)(Func)(3)(dtor)(4)(dtor)

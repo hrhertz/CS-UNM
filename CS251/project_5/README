@@ -1,0 +1,12 @@
+Project: Program 5, TPL
+Name:    Ken Segura
+Email:   ksegura@unm.edu
+Class:   CS251 Spring 2000
+Date:    5/08/2000
+ 
+Description:    Can be found at.
+		http://www.cs.unm.edu/~ackley/cs251/projects/5/p5-1.0.txt
+
+Bugs:           (1) The following compiler warnings: 
+
+warning: cannot declare member function `Node::ParseXXXX(istream &)' to have static linkage

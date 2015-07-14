@@ -1,0 +1,1032 @@
+QUESTIONS
+
+LAST TIME:
+ - Trees I
+		
+TODAY:		
+ - Trees II
+ 		
+Announcements:
+	   FREE UNIX INSTALL PARTY APRIL 22 8AM-3PM.
+      UNM SUB BALLROOM.  See http://www.cs.unm.edu/~acm/
+			  Get Linux!
+
+
+HOMEWORK:  PC++P Ch 24, 20
+		
+   Program 4 DUE MON APR 24 1PM - UNDER FIVE DAYS!
+     One known bug in spec 1.0: CharMain should say Dequer<char>
+						 
+
+
+
+
+
+INTRO
+     
+ - If the mother of all data structures is the array
+     						    
+ - And the father of all data structures is the linked list
+							   
+ - What would their kid be?
+		       	      ..and partly like a linked list..
+      Partly like  +-----+	  +-----+      +-----+
+      an array..   |   ---------->|   -------->|     |
+       	       	   |-----| 	  |-----|      |-----|
+		   |   ----\	  |   	|      |     |
+       	       	   +-----+  \	  +-----+      +-----+
+		  	     \
+			      \-->+-----+      +-----+
+     				  |   -------->|     |
+				  |-----|      |-----|
+     				  |   ----\    |     |
+				  +-----+  \   +-----+
+     					    \ 	 +-----+
+			..but different than \-->|     |
+			  either of them..     	 |-----|
+	     ..a TREE.			       	 |     |
+       	     				       	 +-----+
+TREES - Defined
+
+Given that:
+     
+ a VERTEX is an object, possibly labelled and possibly with
+   other associated information
+     	      
+and  
+     
+ an EDGE is a connection between two vertices
+     
+and  	      
+     
+ a PATH is a list of distinct vertices in which successive
+   entries are connected by edges
+     
+and  
+     
+ exactly one node is designated the ROOT node
+     
+then 
+ a TREE is a nonempty collection of vertices and edges
+ such that there is exactly one path between the root and
+ each other vertex.
+TREES -	Sample
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+    cout << setw(2*depth) << "X;
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+};		     
+int main() {	     
+  Tree * root = new Tree(12, new Tree(19,NULL,
+				      new Tree(22,NULL,NULL)),
+			 new Tree(7,NULL,NULL));
+  root->Print(0);
+  return 0;
+}      	       	       	       	       	  12
+12					 /  \
+  19				       19    7
+    22				       	 \    
+  7					  22
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = Tree::Read(cin);
+  root->Print(0);
+  return 0;
+} 	   
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+ ..
+  }
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = Tree::Read(cin);
+  root->Print(0);
+  return 0;
+} 	   
+
+    .. Let's try it! 
+
+TREES - BUILDING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) {
+    cout << setw(2*depth) << "";
+    cout << label << endl;
+    if (left) left->Print(depth+1);
+    if (right) right->Print(depth+1);
+  }
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = Tree::Read(cin);
+  if (root) root->Print(0);          // <<<<<<<< 
+  return 0;
+} 	   
+TREES - BUILDING
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Print(int depth) { if (!this) return;
+    cout << setw(2*depth) << "";	    
+    cout << label << endl;		    
+    left->Print(depth+1);
+    right->Print(depth+1);
+  }
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+};		     
+int main() {	     
+  Tree * root = Tree::Read(cin);
+  root->Print(0);          // <<<<<<<< 
+  return 0;
+} 	   
+TREES - BUILDING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TREES - BUILDING
+Rt2.C:
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    return new Tree(num,Read(in),Read(in));
+  }
+
+Rt3.C:
+  static Tree * Read(istream & in) {
+    int num;
+    in >> num;
+    if (num==0) return NULL;
+    Tree * l = Read(in), * r = Read(in);
+    return new Tree(num,l,r);
+  }
+
+
+
+
+
+
+
+UPSHOTS
+
+
+
+
+
+
+
+	     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOTS
+
+ - We can build trees recursively just like we printed them
+   recursively.
+
+
+
+
+	     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOTS
+
+ - We can build trees recursively just like we printed them
+   recursively.
+
+ - Static member functions can be called without having an object
+   of the class available.  Handy when the member function CREATES
+   an object.
+	     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOTS
+
+ - We can build trees recursively just like we printed them
+   recursively.
+
+ - Static member functions can be called without having an object
+   of the class available.  Handy when the member function CREATES
+   an object.
+	     
+ - The order in which arguments to functions are evaluated is
+   ARBITRARY.						     
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPSHOTS
+
+ - We can build trees recursively just like we printed them
+   recursively.
+
+ - Static member functions can be called without having an object
+   of the class available.  Handy when the member function CREATES
+   an object.
+	     
+ - The order in which arguments to functions are evaluated is
+   ARBITRARY.						     
+
+ - The order in which declarations with initializations are
+   evaluated is LEFT-TO-RIGHT.				   
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+                         12
+		       	/  \
+		       7    19
+		      /	\   / \
+		     2 	 9 14  33 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+                         12
+		       	/  \
+		       7    19
+		      /	\   / \
+       	       	     2 	 9 14  33 
+
+
+For all nodes:
+   value is > everything in its left subtree
+   value is < everything in its right subtree    
+
+
+
+
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES
+
+                         12
+		       	/  \
+		       7    19
+		      /	\   / \
+		     2 	 9 14  33 
+
+
+For all nodes:
+   value is > everything in its left subtree
+   value is < everything in its right subtree    
+
+                         12
+		       	/  \
+		       7    19
+		      /	\   / \
+       	       	     2 	 9 11  33 
+		    /
+		   1
+
+
+
+
+BINARY SEARCH TREES
+
+                         12
+		       	/  \
+		       7    19
+		      /	\   / \
+		     2 	 9 14  33 
+
+
+For all nodes:
+   value is > everything in its left subtree
+   value is < everything in its right subtree    
+
+                         12
+		       	/  \
+		       7    19
+		      /	\   / \
+       	       	     2 	 9 11  33 
+
+     So THIS is not a binary search tree
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+
+
+
+
+
+		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+
+
+		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+
+		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+                     6	
+	      	    / \	
+	      	   2   9
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+    use step 3, insert i in tree->left		
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+    use step 3, insert i in tree->left		
+		    		      		
+Insert 4 in    	     6		      		
+   	      	    / \		      		
+   	 tree----->2   9	      		
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+    use step 3, insert i in tree->left		
+		    		      		
+Insert 4 in    	     6		      		
+   	      	    / \		      		
+   	 tree----->2   9	      		
+  i == 4, tree->value == 2	      
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+    use step 3, insert i in tree->left		
+		    		      		
+Insert 4 in    	     6		      		
+   	      	    / \		      		
+   	 tree----->2   9	      		
+  i == 4, tree->value == 2	      
+    use step 4, insert i in tree->right  
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+    use step 3, insert i in tree->left		
+		    		      		
+Insert 4 in    	     6		      		
+   	      	    / \		      		
+   	 tree----->2   9	      		
+  i == 4, tree->value == 2	      
+    use step 4, insert i in tree->right  
+		    		    
+Insert 4 in	    		    
+   	  tree==NULL		    
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+Insert 4 in  tree--->6	
+	      	    / \	
+	      	   2   9
+  i == 4, tree->value == 6	     	  	
+    use step 3, insert i in tree->left		
+		    		      		
+Insert 4 in    	     6		      		
+   	      	    / \		      		
+   	 tree----->2   9	      		
+  i == 4, tree->value == 2	      
+    use step 4, insert i in tree->right  
+		    		    
+Insert 4 in	    		    
+   	  tree==NULL		    
+    use step 1 and segfault..
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value, then insert 'i' in tree->left
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value
+     (3.1) If tree->left exists then insert 'i' in tree->left
+     (3.2) Otherwise tree->left = new Tree(i,NULL,NULL)
+ (4) If i>tree->value, then insert 'i' in tree->right	    
+		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+
+
+BINARY SEARCH TREES - Insertion
+
+To insert 'i' in 'tree'
+ (1) Compare i to tree->value;
+ (2) If ==, done
+ (3) If i<tree->value
+     (3.1) If tree->left exists then insert 'i' in tree->left
+     (3.2) Otherwise tree->left = new Tree(i,NULL,NULL)
+ (4) If i>tree->value
+     (4.1) If tree->right exists then insert 'i' in tree->right
+     (4.2) Otherwise tree->right = new Tree(i,NULL,NULL)
+    		  
+
+
+
+
+
+		    		      		
+
+
+
+
+
+		    		    
+BINARY SEARCH TREES - Insertion
+
+
+struct Tree {	     
+
+
+
+  void Insert(int n) {
+    if (n<label) {
+      if (!left) left = new Tree(n,NULL,NULL);
+      else left->Insert(n);
+    } else if (n> label) {
+      if (!right) right = new Tree(n,NULL,NULL);
+      else right->Insert(n);
+    }
+  }
+
+
+
+
+
+
+
+
+BINARY SEARCH TREES - Insertion
+
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Insert(int n) {
+    if (n<label) {
+      if (!left) left = new Tree(n,NULL,NULL);
+      else left->Insert(n);
+    } else if (n> label) {
+      if (!right) right = new Tree(n,NULL,NULL);
+      else right->Insert(n);
+    }
+  }
+  void Print(int depth) {
+    cout << setw(depth) << setfill('.') << ""; // dots==depth..
+    cout << label << endl;			
+    if (left) left->Print(depth+1);		
+    if (right) right->Print(depth+1);		
+  }						
+};		     				
+						
+BINARY SEARCH TREES - Insertion
+
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Insert(int n) {
+    if (n<label) {
+      if (!left) left = new Tree(n,NULL,NULL);
+      else left->Insert(n);
+    } else if (n> label) {
+      if (!right) right = new Tree(n,NULL,NULL);
+      else right->Insert(n);
+    }
+  }
+  void Print(int depth) {
+    if (left) left->Print(depth+1);		
+    cout << setw(depth) << setfill('.') << ""; // dots==depth..
+    cout << label << endl;			
+    if (right) right->Print(depth+1);		
+  }						
+};		     				
+						
+BINARY SEARCH TREES - Insertion
+
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Insert(int n) {
+    if (n<label) {
+      if (!left) left = new Tree(n,NULL,NULL);
+      else left->Insert(n);
+    } else if (n> label) {
+      if (!right) right = new Tree(n,NULL,NULL);
+      else right->Insert(n);
+    }
+  }
+  void Print(int depth) { // INORDER traversal puts root in middle
+    if (left) left->Print(depth+1);		
+    cout << setw(depth) << setfill('.') << ""; // dots==depth..
+    cout << label << endl;			
+    if (right) right->Print(depth+1);		
+  }						
+};		     				
+						
+BINARY SEARCH TREES - Insertion
+
+#include <iomanip.h>          /* for setw */
+struct Tree {	     
+  int label;   	       	       	       	
+  Tree * left, * right;
+  Tree(int num,Tree*l,Tree*r) { label = num; left = l; right = r;}
+  void Insert(int n) {
+    if (n<label) {
+      if (!left) left = new Tree(n,NULL,NULL);
+      else left->Insert(n);
+    } else if (n> label) {
+      if (!right) right = new Tree(n,NULL,NULL);
+      else right->Insert(n);
+    }
+  }
+  void Print(int depth) { // INORDER traversal puts root in middle
+    if (left) left->Print(depth+1);		
+    cout << setw(depth) << setfill('.') << ""; // dots==depth..
+    cout << label << ' ' << !!left << !!right << endl;
+    if (right) right->Print(depth+1);		
+  }						
+};		     				
+						
+BINARY SEARCH TREES - Insertion			
+//Rt4.C						
+int main() {	     
+  int num;
+  cin >> num;
+  if (cin) {
+    Tree * root = new Tree(num,NULL,NULL);
+    while (1) {
+      cin >> num;
+      if (!cin) break;
+      root->Insert(num);
+      root->Print(0);
+    }
+  }
+  return 0;
+} 	   
+
+
+
+
+
+
+
+

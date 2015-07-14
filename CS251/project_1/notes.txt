@@ -1,0 +1,192 @@
+CS 251 Program 1 Notes and suggestions
+Last modified: Tue Jan 25 22:31:12 2000 
+
+GENERAL DESIGN AND DEVELOPMENT NOTES
+------------------------------------
+
+- Figuring out the spec and the protocol
+	
+	Try to figure out how the engine is supposed to work.  Ask
+	yourself what sequences of commands and responses can happen
+	when.  Check the spec (over and over if need be) to try to
+	establish whether what you are thinking of is legal or not.
+	If you're unsure how to interpret the spec, ask a question!
+
+- Make a first cut at class design
+
+	Just by looking at Makefile, you can tell you are going to
+	need a class Board and another class Block.  Seems reasonable
+	to suspect that a Board object would be in charge of the
+	overall engine operations and operations involving multiple
+	blocks, while an individual Block object would deal with just
+	the affairs of a single block sliding around and stopping and
+	so forth.
+
+- Make a first cut at private data members
+
+	Take a cut at deciding what private data each class will need,
+	given the jobs each class is handling.  As a rule, *all* data
+	members in a class should be private.
+
+	Try to be willing to change; try not to be overly wedded to
+	your first choices.  A tremendous amount of bad code and
+	vicious bugs are created when you really know, at least in the
+	back of your mind, that an earlier decision was a mistake that
+	you should go back and fix, but you're loathe change what
+	you've already written so you end up continually propping up
+	and working around the effects of the bad decision.
+
+- Adding private member functions to classes
+
+	Just by looking at Main.C, you can tell you are going to need
+	a public member function 'void Board::Run()'.  But that
+	doesn't mean you CAN'T have other, private, member functions
+	to do other internal business for the class.  If you can't
+	think of any such other functions at first, that's okay, don't
+	worry about it... BUT, as SOON as you find yourself
+	DUPLICATING CODE inside a member function, STOP and think
+	about putting that code into a private member function, and
+	just calling the function from all the places where you'd been
+	duplicating sequences of code.
+
+- Adding public member functions to classes
+
+	 Adding a private member function is `cheap and easy' in the
+	 sense that nobody but the class itself can use the function,
+	 so if you change your mind later it's easy to fix things up
+	 because all the changes will be in one .h and one .C file.
+
+	 Sometimes, though, you'll need to add a member function to a
+	 class for *other* classes to use, so you'll want to add a
+	 public member function.  This is okay too, but you'll put a
+	 little more thought into it first, because it can be harder
+	 to change all the code scattered over multiple .C files.
+	 Think about what arguments to give the method, and what type
+	 of value the method should return.  And don't forget to think
+	 about what you want to *name* the function---it's very easy
+	 for a poorly-chosen, misleading member function name to cause
+	 bugs just because after a little while even you won't
+	 remember what it really does.
+
+- When you get stuck
+
+	It's OK to get stuck!  Just don't let yourself STAY stuck for
+	too long a time.  If you get stuck, figure out a way to
+	express as clearly as you can what you are stuck on, and then
+	ASK A QUESTION!  Ask in class, or ask a TA in recitation, or
+	send an email.  Just don't STAY STUCK and do nothing!
+
+
+NOTES FOR DEVELOPMENT OF THE BLOCKS PROGRAM
+-------------------------------------------
+
+
+Interactions between Board and Block
+------------ ------- ----- --- -----
+
+The blocks program is good practice for object-oriented programming,
+because
+
+1 - some things are easily done by the (one-and-only) Board---such
+    as reading commands, while
+
+2 - other things are easily done by (each-of-the-many) Blocks---such
+    as remembering where it is and whether it's movable or not, while   
+
+3 - still other things pretty much require Blocks and the Board
+    to cooperate---such as when one moving Block bumps into something
+    on the Board that turns out to be another Block. 
+
+Type 1 and 2 stuff are 'internal' to one class, while type 3 stuff
+deals with interactions between multiple classes.  This division
+between `class-internal' stuff and `inter-class' stuff is typical of
+object-oriented programming.  A basic goal is to try to get as much
+work done within individual classes (1 and 2, here), leaving as little
+as possible happening between the classes (3, here).  But there's
+almost always *something* in category 3 --- classes have to interact
+somehow to get anything done --- so you typically make some public
+member functions in Block and (or) Board to allow the cooperation to
+occur.
+
+
+Data structures
+---- ----------
+
+If you have assumed you'll have to have a two-dimensional array to
+represent the contents of the board, be prepared to think again!  In
+particular, think about these things:
+
+ 1 - Note that more than one Block can be at exact same coordinates on
+     the Board at the same time!
+
+ 2 - Given that maybe it makes more sense for each Block to keep track
+     of where it is, and respond to queries from the Board about
+     that..
+
+
+The `showblock' script
+--- -----------  ------
+
+A program called `showblock' is available for this project.  The idea
+is that you can feed the *output* of your blocks program as *input* to
+the `showblock' program, and it will display what is happening in a
+graphics window.
+
+You are not required or expected to understand how the showblock
+program actually works; you certainly may take a look at the contents
+of the file if you wish, but you are under no obligation to do so.  It
+is written in the scripting language called `Tcl/Tk', and is only
+configured to work on the CIRT AIX systems.
+
+Using it anywhere else will very likely require at least changing the
+first line of the script, and may require installing (newer versions)
+of the Tcl/Tk system, and may simply be impossible.  No support is
+available for the showblock script *except* when it is used on the
+CIRT AIX systems.
+
+To use the showblock script on the CIRT AIX systems, perform the
+following steps:
+
+1 - Download the showblock file to your CIRT account, and store it in
+    the same directory as your other program 1 files.  Call the file
+    `showblock'. 
+
+2 - `cd' to your program 1 directory.
+
+3 - Enter this shell command: 
+	  chmod u+rx showblock
+
+4 - The showblock script is now `executable' and ready to use.  
+
+5 - Compile your `blocks' program as usual.
+
+6 - Enter this shell command:
+	  ./blocks | ./showblock
+
+7 - That command will connect the output of your blocks program to the
+    input of the showblock script, so you won't see the output from
+    your blocks program directly anymore.  You continue to type input
+    to your blocks program as usual.
+
+The showblock script is quite picky about the input it receives.  If
+the output from your blocks program is not *precisely* legal blocks
+protocol, showblock will usually print an error message and then
+exit.  
+
+THAT CAN BE A HUGE HELP IN DEVELOPING YOUR PROGRAM!  
+
+If `showblock' exits with an error message, your program *definitely*
+has a bug of some sort.  (On the other hand, if showblock seems to be
+`happy', that *doesn't* PROVE that your blocks program is correct.)
+
+You can even use showblock before your blocks program is complete,
+just to check the format of responses.  For example, if you enter the
+shell command:
+
+   ./showblock
+
+you'll be talking directly to the showblock program, and you can feed
+it a series of responses to make sure you and it agree on what the
+format must be.
+  
+

@@ -1,0 +1,1490 @@
+QUESTIONS
+	 
+LAST TIME:
+ - Administrivia
+ - Bug fix/miscellaneous
+ - Recursion, binary search, O(log n)
+
+TODAY:
+ - Binary search, O(log n)     	       	  
+ - Programming notes: friends, operator overloading, istrstream
+ - Dequer return			  
+
+HOMEWORK: PC++P Ch 18, Ch 20 (pg 355-365) 
+           				  
+   Program 3 due: 1PM MON Apr 3, 2000	  
+       	       	  >>>LESS THAN A WEEK<<<
+	       	  UNDER 6 days 23 hours REMAINING	     
+
+   Second in-class quiz 2PM FRI APR 7, 2000
+       	       	       	       	       	       	   
+
+
+
+
+PROGRAM 3 FAQ
+
+If you see this when testing at level 3:
+					
+    ...
+	     COPY CTOR LINEARITY TEST
+
+	       Average = 0 usec/elt  Standard deviation = 1.8749
+    TestBignum.C:806 FAILED: COPY CTOR (0)
+    ...
+   
+you should download a new copy of TestBignum.C.
+   
+
+
+
+
+
+
+
+	 
+
+           
+
+ADMINISTRIVIA
+	 
+Program 3: UNDER 6 days 23 hours REMAINING	 
+	  	       	       	       	      vvv
+     Due: 1PM MON Apr 3, 2000  NOTE THAT'S >>>1PM<<<
+                                              ^^^
+
+Free                 TIME PENALTIES FOR PROGRAM 3
+Late           	     Last turned in BEFORE 1PM on:
+DaysTHU3/30 FRI3/31 SAT4/1 SUN4/2  MON4/3 TUE4/4 WED4/5 LATER
++------------------------------------------------------------+
+| 0 |  +3% |   0%  |   0% |   0%  |   0% | -33% | -66% |-100%|
++------------------------------------------------------------+
+| 1 |  +3% |   0%  |   0% |   0%  |   0% |   0% | -33% |-100%|
++------------------------------------------------------------+
+| 2 |  +3% |   0%  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+| 3 |  +3% |   0%  |   0% |   0%  |   0% |   0% |   0% |-100%|
++------------------------------------------------------------+
+
+Reminder:
+	 
+  NO CREDIT FOR PROGRAM 3 AFTER CLASS STARTS ON WED APR 5, 2000.
+           
+BIGNUM STATUS SURVEY
+	 
+`Clean frontier' (highest test level passed) is:
+       	    T-13d  T-11d  T-9d   T-6d
+     level 9: 1      0 	       	   
+     level 8: 0	     0	   	   
+     level 7: 0	     0	   	   2
+     level 6: 0	     1	   1	   3
+     level 5: 0	     1	   1	    
+     level 4: 1	     0	   2	   1
+     LEVEL 3: 0	     3	   4	   9
+     LEVEL 2: 6	     4	   8	  10
+     LEVEL 1: 0	     1	   5	  11
+     LEVEL 0: 5	     22	  11
+Planning to	       	    
+ drop CS251	       	    
+     anyway : oo     oo	 <oo   
+		     
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH		      
+   int GuessR(int lo, int hi) {              
+     int mid = (hi-lo)/2+lo;                 
+     int val = Test(mid);                      	 
+     if (val<0) return GuessR(mid+1,hi);	     
+     if (val>0) return GuessR(lo,mid-1);	     
+     return mid;                        
+   }                                    
+   int Test(int guess) {                
+     if (guess<7) return -1;            
+     if (guess>7) return  1;            
+     return 0;                          
+   }                                    
+   int main() { return GuessR(0,10); }  
+					
+				       	
+ - In general, how many calls to Test will we make?	       
+      			  				       
+ - In general, how many recursive calls to GuessR will we make?
+					
+ - How many different numbers can you guess with a given number
+   of calls to Test?			
+					
+					
+RECURSION: BINARY SEARCH
+  k              RANGE SIZE      k             	       	RANGE SIZE
+ [1] G(23,23)        {1}       	[3]    	  G(19,25)          {7}
+ [2] G(10,12)        {3}       	 	  /   |	 \
+     /    |  \                 	   G(19,21)  22	  G(23,25)
+G(10,10)  11  G(12,12)	  	   /   | \     	   / |  \
+    |  	       |            G(19,19)  20  G(21,21) | 24	 G(25,25)
+   10  	      12           	|      	     | 	 G(23,23)    |
+       	       	       	       19	    21	    |       25
+                         			   23
+ [4]                {15} 10:24
+             /----------/  |  \------------\
+           10:16       	  17   	       	  18:24
+    /-----/  | 	\-----\		     /---/  |  \--------\
+  10:12      13	     14:16         18:20    21 	       22:24
+  /   |	\---\  	     /  | \    	    /  |\--\	      /  |  \
+10:10 11   12:12  14:14 15 16:16 18:18 19  20:20 22:22  23  24:24
+  |	     | 	    |  	     | 	   |  	     | 	   |          |
+ 10	     12	   14	    16	  18	    20	  22         24
+
+In general, with at most 'k' calls on 'Test', we can guess
+            k
+a range of 2 -1 different numbers.
+
+RECURSION: BINARY SEARCH
+
+In general, with at most 'k' calls on 'Test', we can guess
+            k
+a range of 2 -1 different numbers.
+
+	      tests
+ So, Range = 2	   - 1
+
+   		tests
+  or Range+1 = 2
+Let's let n = Range+1, so
+
+       	         tests
+            n = 2
+       	       	      tests
+      log (n) = log (2 	  )
+         2   	   2
+
+      log (n) = tests
+         2
+
+So: Work needed to guess among n numbers = O(log (n))
+						2
+RECURSION: BINARY SEARCH
+
+       	         tests
+            n = 2
+       	       	      tests
+      log (n) = log (2 	  )
+         2   	   2
+
+      log (n) = tests
+         2
+
+So: Work needed to guess among n numbers = O(log(n))
+Is that good?  Better than O(n)?
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+
+       	         tests
+            n = 2
+       	       	      tests
+      log (n) = log (2 	  )
+         2   	   2
+
+      log (n) = tests
+         2
+
+So: Work needed to guess among n numbers = O(log(n))
+Is that good?  Better than O(n)?
+
+      n        	  log(n)
+      1	       	    0
+     10		    3.3
+    100		    6.6
+   1000		    9.9
+  10000		   13.3		    
+ 100000		   16.3		    
+1000000            19.9		    
+       	  ...yeah.. log(n) is good  
+
+RECURSION: BINARY SEARCH
+
+       	         tests
+            n = 2
+       	       	      tests
+      log (n) = log (2 	  )
+         2   	   2
+
+      log (n) = tests
+         2
+
+So: Work needed to guess among n numbers = O(log(n))
+Is that good?  Better than O(n)?
+
+      n        	  log(n)
+      1	       	    0
+     10		    3.3
+    100		    6.6
+   1000		    9.9
+  10000		   13.3
+ 100000		   16.3
+1000000            19.9
+       	  ...yeah.. log(n) is good
+       	       	      	..but is this a good case for recursion?
+RECURSION: BINARY SEARCH
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;
+  int val = Test(mid);
+  if (val<0) return GuessR(mid+1,hi);
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+
+
+
+
+
+
+
+
+
+RECURSION: BINARY SEARCH
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;
+  int val = Test(mid);
+  if (val<0) return GuessR(mid+1,hi);
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+int Guess3() {
+  int lo = 0, hi = 1000000000, mid;
+  while (1) {
+    mid = (hi-lo)/2+lo;
+    int val = Test(mid);
+    if (val<0) lo = mid+1; else if (val>0) hi = mid-1; else break;
+  }
+  return mid;
+}
+RECURSION: BINARY SEARCH
+int Guess1() {
+  for (int i = 0;i<=1000000000;++i) if (Test(i)==0) return i;
+  assert(0);  // "Can't happen"
+}
+
+int GuessR(int lo, int hi) {
+  int mid = (hi-lo)/2+lo;
+  int val = Test(mid);
+  if (val<0) return GuessR(mid+1,hi);
+  if (val>0) return GuessR(lo,mid-1);
+  return mid;
+}
+int Guess2() { return GuessR(0,1000000000); }
+
+int Guess3() {
+  int lo = 0, hi = 1000000000, mid;
+  while (1) {
+    mid = (hi-lo)/2+lo;
+    int val = Test(mid);
+    if (val<0) lo = mid+1; else if (val>0) hi = mid-1; else break;
+  }
+  return mid;
+                                 Maybe..
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+
+				  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+...
+class Foo { 
+  friend int fungo(Foo&);
+  int _data;     	            	
+};
+int fungo(Foo& f) { return f._data; }
+...
+
+   ..compiles OK.
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+...					       
+class Foo { 				       
+//friend int fungo(Foo&);		       
+  int _data;     	            	
+};
+int fungo(Foo& f) { return f._data; }
+...
+
+foo.C:6: member `_data' is a private member of class `Foo'
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+   
+
+
+
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+
+#include <iostream.h>
+class Foo { int _data;  friend class Bar; };
+class Bar { public: int func(Foo& f) { return f._data; } };
+int main ()
+{	   
+  Foo f; Bar b;
+  cout << b.func(f);   
+  return 0;
+}
+                        ...compiles OK...
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+
+#include <iostream.h>
+class Foo { int _data;  /*friend class Bar;*/ };
+class Bar { public: int func(Foo& f) { return f._data; } };
+int main ()
+{	   
+  Foo f; Bar b;
+  cout << b.func(f);   
+  return 0;
+}
+foo.C:3: member `_data' is a private member of class `Foo'
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+
+
+
+
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+
+ - Are FRIENDS a good thing?
+      
+
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+
+ - Are FRIENDS a good thing?
+
+class A { friend class B; friend class C; friend class D; ... };
+class B { friend class A; friend class C; friend class D; ... };
+class C { friend class A; friend class B; friend class D; ... };
+class D { friend class A; friend class B; friend class C; ... };
+...
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+ - class Foo can declare that some functions are FRIENDS of  
+   class Foo, and thereby let those functions mess with
+   Foo's private parts.      	       	       	       	 
+
+ - class Foo can declare that some WHOLE OTHER CLASSES are
+   FRIENDS of class Foo.     	       	       	       	    
+
+ - Are FRIENDS a good thing?
+   
+   - Not for OOP.  A C++ 'friend' is pretty damn intimate..
+
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+
+				  
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+
+
+
+
+
+   
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+	  			 
+ostream & operator<<(ostream & o, const Foo & f) 
+{	 			 	   	   
+  o << _privatething << " ";
+} 			      
+   
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+	  			 
+ostream & operator<<(ostream & o, const Foo & f)
+{	 			 	   	   
+  o << _privatething << " ";	// Error, what's '_privatething'?
+} 			      
+   
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+	  			 
+ostream & operator<<(ostream & o, const Foo & f)
+{	 			 	       	   
+  o << f._privatething << " ";  //OK...	       
+}
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+	  			 
+ostream & operator<<(ostream & o, const Foo & f)
+{	 			 	       	   
+  o << f._privatething << " "; 	       	       
+} 	     //Error: control reaches end of non-void function
+
+
+
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+	  			 
+ostream & operator<<(ostream & o, const Foo & f)
+{	 		       	       	       	   
+  o << f._privatething << " "; 
+  return o;     // OK...
+}
+
+   
+
+
+
+
+MORE ON FRIENDS
+
+ - From the spec:
+   
+    friend ostream & operator<<(ostream &,const Bignum &);
+   							  
+class Foo {
+public: ...   			  
+  friend ostream & operator<<(ostream &, const Foo &)
+private: ...
+  int _privatething;
+};	       	       	       	 
+	  			 
+ostream & operator<<(ostream & o, const Foo & f)
+{	 			 	       	   
+  o << f._privatething << " ";	       	       
+  return o;
+} 			      
+ 
+
+
+int main() { Foo a;  cerr << a; return 0; }
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+
+  Suppose the desired input/output format for a Foo is '(_x,_y)'
+  -- a left paren, the value of _x, a comma, the value of _y,
+     and a right paren.
+
+  We want to print Foo's that way (and read them).
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+ostream & operator<<(ostream & o,const Foo & f)
+{
+  o << '(' << f._x << ',' << f._y << ')';
+  return o;
+}
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+ostream & operator<<(ostream & o,const Foo & f)
+{
+  o << '(' << f._x << ',' << f._y << ')';
+  return o;
+}
+int main()
+{
+  Foo f(1,2), g(+3,-4);
+  cout << "f = " << f << endl << "g = " << g << endl;
+  return 0;	     
+}
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+ostream & operator<<(ostream & o,const Foo & f)
+{
+  o << '(' << f._x << ',' << f._y << ')';
+  return o;
+}
+int main()
+{
+  Foo f(1,2), g(+3,-4);
+  cout << "f = " << f << endl << "g = " << g << endl;
+  return 0;	     
+}
+
+f = (1,2)
+g = (3,-4)
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+
+
+
+
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  cin >> c;
+  if (c!='(') ...
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') ... 
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') ...    //what to do?  what to do?
+
+
+
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') {      //what to do?  what to do?
+    in.putback(c);   //Whatever it was, it wasn't for a Foo.
+    return in;       //??? caller won't know the read failed!
+							    
+
+
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') { 
+    in.putback(c);         // Stuff it back
+    in.set(ios::badbit);   // Mark the stream is bad
+    return in;		   // then punt	       	    
+  }    	      
+
+
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') { 
+    in.putback(c);         // Stuff it back
+    in.set(ios::badbit);   // Mark the stream is bad
+    return in;		   // then punt	       	    
+  }    	      
+  in >> _x;                // Read an int
+...
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') { 
+    in.putback(c);         // Stuff it back
+    in.set(ios::badbit);   // Mark the stream is bad
+    return in;		   // then punt	       	    
+  }    	      
+  in >> _x;                // Try to read an int
+  if (!in) return in;	   // Punt if that died	
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') { 
+    in.putback(c);         // Stuff it back
+    in.set(ios::badbit);   // Mark the stream is bad
+    return in;		   // then punt	       	    
+  }    	      
+  in >> f._x;              // Try to read an int
+  if (!in) return in;	   // Punt if that died	
+
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;
+  if (c!='(') { 
+    in.putback(c);         // Stuff it back
+    in.set(ios::badbit);   // Mark the stream is bad
+    return in;		   // then punt	       	    
+  }    	      
+  in >> f._x;              // Try to read an int
+  if (!in) return in;	   // Punt if that died	
+ ...// now go for ',' _y, ')', the same way
+
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  char c;
+  in >> c;                 // Try to read a char
+  if (!in) return in;      // Nothing there.  
+  if (c!='(') {     
+    in.putback(c);         // Stuff it back
+    in.set(ios::badbit);   // Mark the stream is bad
+    return in;		   // then punt	       	    
+  }    	      
+  in >> f._x;              // Try to read an int
+  if (!in) return in;	   // Punt if that died	
+ ...// now go for ',' _y, ')', the same way
+MORE OPERATOR OVERLOADING
+#include <iostream.h>
+class Foo {
+public:
+  Foo(int x,int y) { _x = x; _y = y; }
+  friend ostream & operator<<(ostream&,const Foo&);
+  friend istream & operator>>(istream&,Foo&);  // Why no 'const'??
+private:  					   
+  int _x, _y;					   
+};	  					   
+	  					   
+#include <iomanip.h>     /* for ios::set and ios::badbit */
+istream & operator>>(istream &in, Foo &f)
+{
+  Foo temp;
+...
+  in >> temp._x;           // Try for an int
+...	    	
+  in >> temp._y;           // Try for an int
+...
+  f = temp;                // Success!  Stash the result
+  return in;               // Done
+}
+
+MORE OPERATOR OVERLOADING
+ 
+ ostream insertion and istream extraction -- Upshots
+
+ - Write your code in terms of ostream&'s and istream&'s, 
+   NOT in terms of cin/cout directly, (nor in terms of
+   ifstream's or ofstream's if you've used any of those).
+
+ - You can use 'operator!' on streams to check if they are
+   (currently) busted.  It will return non-zero if the stream
+   is unhappy.		      
+      		    	      
+ - You can use ios::set(ios::badbit) to deliberately put a
+   stream into an error state.  You can use ios::clear()
+   to reset it.						
+
+
+
+
+
+
+
+
+		    
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+
+
+
+						      
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+ - Those two `readers' might end up looking quite similar, except
+   one does pointer operations (p[0], *p++, etc), while the other
+   one does stream operations (in.get(ch), if (in), etc).
+						      
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+ - Those two `readers' might end up looking quite similar, except
+   one does pointer operations (p[0], *p++, etc), while the other
+   one does stream operations (in.get(ch), if (in), etc).
+						      
+ - Is there a way to unify the two methods?
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+ - Those two `readers' might end up looking quite similar, except
+   one does pointer operations (p[0], *p++, etc), while the other
+   one does stream operations (in.get(ch), if (in), etc).
+						      
+ - Is there a way to unify the two methods?
+   - Yes:  
+	   
+#include <strstream.h>       /* for istrstream */
+Foo::Foo(const char * p)   // Make a formatted Foo from a string.
+{	   
+  istrstream s(p);         // Make a stream on top of the string
+  s >> *this;              // Extract from that stream into us
+}	   
+
+
+
+
+
+
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+ - Those two `readers' might end up looking quite similar, except
+   one does pointer operations (p[0], *p++, etc), while the other
+   one does stream operations (in.get(ch), if (in), etc).
+						      
+ - Is there a way to unify the two methods?
+   - Yes:  
+	   
+#include <strstream.h>       /* for istrstream */
+Foo::Foo(const char * p)   // Make a formatted Foo from a string.
+{	   
+  istrstream s(p);         // Make a stream on top of the string
+  s >> *this;              // Extract from that stream into us
+}	   
+
+
+
+ -(If the stream and char * formats are very different, or there
+   are special needs, separate implementations might be better.)
+
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+ - Those two `readers' might end up looking quite similar, except
+   one does pointer operations (p[0], *p++, etc), while the other
+   one does stream operations (in.get(ch), if (in), etc).
+						      
+ - Is there a way to unify the two methods?
+   - Yes:  
+	   
+#include <strstream.h>       /* for istrstream */
+Foo::Foo(const char * p)   // Make a formatted Foo from a string.
+{	   
+  istrstream s(p);         // Make a stream on top of the string
+  s >> *this;              // Extract from that stream into us
+}                    // (What about if there's a read error?)
+							     
+
+
+
+
+
+ISTRSTREAM
+
+ - Suppose you need to be able to read your objects from a
+   istream, and ALSO read your objects from const char * strings.
+   	 					    
+ - Those two `readers' might end up looking quite similar, except
+   one does pointer operations (p[0], *p++, etc), while the other
+   one does stream operations (in.get(ch), if (in), etc).
+						      
+ - Is there a way to unify the two methods?
+   - Yes:  
+	   
+#include <strstream.h>       /* for istrstream */
+#include <assert.h>
+Foo::Foo(const char * p)   // Make a formatted Foo from a string.
+{	   	   
+  istrstream s(p);         // Make a stream on top of the string
+  s >> *this;              // Extract from that stream into us
+  assert(s);               // Insist the stream be okay
+}                    // (What about if there's a read error?)
+							     
+
+
+
+ISTRSTREAM
+
+#include <strstream.h>
+int main() {	      
+  char * p = "1 23 456";
+  istrstream in(p);      
+  int num;
+  while (in) {
+    in >> num;
+    if (in) cout << '(' << num << ')';
+  }				      
+  return 0;
+}
+
+% ./foo
+(1)(23)(456)
+%      
+
+
+
+
+
+
+
+DEQUER RETURN
+

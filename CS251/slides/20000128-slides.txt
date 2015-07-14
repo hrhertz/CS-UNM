@@ -1,0 +1,1176 @@
+QUESTIONS
+
+LAST TIME:
+ - Program 1 overview, demo, & questions
+ - #include file trees: Exposing the lie	 
+
+TODAY:
+ - Administrivia
+ - Program 1 questions
+ - Private data, public function
+ - Finding the objects example 
+ - Ctors
+
+HOMEWORK: PC++P Ch 13
+
+    PROGRAM 1 due THU 2/10/00 5PM : 13 days 3 hours remaining 
+class Board;      
+class Block {  	       	       	       	 //Block.C
+  void Move(      Board &);		 #include "Block.h"
+...					 #include "Board.h"
+					  ..
+       	       	       	       	       	  void Block::Move(Board&
+							       b){
+					       b.BoardFunc(arg);  
+ADMINISTRIVIA
+	     	   
+ - `CS251 student resources' web operation is UP (Beta warning!)
+		 				    
+   - So far, you can only register at the site if you were on
+     the original enrollment list 
+		 
+   - I am adding other names/ids by hand based on the student
+     declarations as I process them; it will take some time  
+
+   - When you get to confirming your registration, your
+     password will be EMAILED to your @unm.edu address!
+
+ - From the student resources web site you can get to the
+   'Blocks engine reference implementation' 		 
+   
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+		   
+
+
+                 	    
+
+
+          
+
+
+
+		          	     
+
+
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R     
+        
+
+
+
+
+       	       	              	     	     	   	 
+
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R       
+          
+          
+     yes  
+	  
+	  
+       	       	              	     	     	   	 
+
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R          B 1 0 0 1  
+             R          
+               	      	
+     yes       	       	
+
+		        
+       	       	              	     	     	   	 
+
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R          B 1 0 0 1  
+             R          
+               	      	
+     yes       	       	
+	        no      
+		        
+       	       	              	     	     	   	 
+
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R          B 1 0 0 1   B 0 0 0 0  
+             R           I 2 3 4    
+               	      	 R     	    
+     yes       	       	 R     	    
+	        no        	    
+
+       	       	              	     	     	   	 
+                       	       	    
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues..     	       	   
+  Are these command input sequences legal?
+                 	    	    	  
+  R          B 1 0 0 1   B 0 0 0 0  
+             R           I 2 3 4    
+               	      	 R     	    
+     yes       	       	 R     	    
+	        no        	    
+		           yes	    
+       	       	              	     	     	   	 
+                       	       	    
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                       	       	       	      
+  R          B 1 0 0 1   B 0 0 0 0   I 3 3 3  
+             R           I 2 3 4     I 2 2 2  
+               	      	 R     	     I 1 1 1  
+     yes       	       	 R     	     R        
+	        no        	     I 2 3 4  	  	 
+		           yes	     R        
+       	       	              	     	     	   	 
+       	       	       	       	       	   
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R          B 1 0 0 1   B 0 0 0 0   I 3 3 3  
+             R           I 2 3 4     I 2 2 2  
+               	      	 R     	     I 1 1 1  
+     yes       	       	 R     	     R        
+	        no        	     I 2 3 4  	  	 
+		           yes	     R        
+       	       	              	     	     	   	 
+                       	       	       yes   	   
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R          B 1 0 0 1   B 0 0 0 0   I 3 3 3    I 3 3 3
+             R           I 2 3 4     I 2 2 2	I 1 1 1
+               	      	 R     	     I 1 1 1	B 2 0 0 1
+     yes       	       	 R     	     R       	R	 
+	        no        	     I 2 3 4 	  	 
+		           yes	     R       	 
+       	       	              	     	     	   	 
+                       	       	       yes   	   
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PROGRAM 1 QUESTIONS
+        	   
+ Protocol issues.. 
+  Are these command input sequences legal?
+                 	    		  
+  R          B 1 0 0 1   B 0 0 0 0   I 3 3 3    I 3 3 3
+             R           I 2 3 4     I 2 2 2	I 1 1 1
+               	      	 R     	     I 1 1 1	B 2 0 0 1
+     yes       	       	 R     	     R       	R	 
+	        no        	     I 2 3 4 	  	 
+		           yes	     R       	 no    	 
+       	       	              	     	     	   	 
+                       	       	       yes   	   
+       	       	       	  
+
+
+
+
+
+
+
+
+
+
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+
+
+
+
+
+
+
+                     	                                      
+
+
+
+
+
+
+    				                           
+
+
+
+
+
+
+
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	        
+class Foo {                    	
+ public:	     	        
+   int Get() { return _num; }  	
+ private:                      	
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	        
+{          	     	        
+  Foo f;             	        
+  cout << f.Get();	       	
+  return 0;		        
+}      	       	       	        
+    				                           
+
+
+
+
+
+
+
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:	     	              public:                 
+   int Get() { return _num; }  	        int num;         
+ private:                      	     };                   
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	             int main()               
+{          	     	             {                        
+  Foo f;             	               Foo f;                 
+  cout << f.Get();	       	       cout << f.num;    
+  return 0;		               return 0;              
+}      	       	       	             }                        
+    				                           
+
+
+
+
+
+
+
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:	     	              public:                 
+   int Get() { return _num; }  	        int num;         
+ private:                      	     };                   
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	             int main()               
+{          	     	             {                        
+  Foo f;             	               Foo f;                 
+  cout << f.Get();	       	       	       f.num = 87;
+  return 0;		               return 0;              
+}      	       	       	             }                        
+    				                           
+   ^^^^^^^^^^   		      ^^^^^^^^^^^^ 
+  Why all this?               Instead of just this?
+
+
+
+
+
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:	     	              public:                 
+   int Get() { return _num; }  	        int num;         
+ private:                      	     };                   
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	             int main()               
+{          	     	             {                        
+  Foo f;             	               Foo f;                 
+  cout << f.Get();	       	       cout << f.num;    
+  return 0;		               return 0;              
+}      	       	       	             }                        
+    				                           
+   ^^^^^^^^^^   		      ^^^^^^^^^^^^ 
+  Why all this?               Instead of just this?
+ 	       ^^^^	      
+    .. Because this keeps     
+    control of '_num'         
+    inside of class Foo.      
+       	       	    
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:	     	              public:                 
+   int Get() { return _num; }  	        int num;         
+ private:                      	     };                   
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	             int main()               
+{          	     	             {                        
+  Foo f;             	               Foo f;                 
+  cout << f.Get();	       	       cout << f.num;    
+  return 0;		               return 0;              
+}      	       	       	             }                        
+    				                           
+   ^^^^^^^^^^   		      ^^^^^^^^^^^^ 
+  Why all this?               Instead of just this?
+ 	       ^^^^			    ^^^^
+    .. Because this keeps        .. Whereas this completely
+    control of '_num'   	 gives up control of 'num'.
+    inside of class Foo.      
+       	       	    
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:	     	              public:                 
+   int Get() { return _num; }  	        int num;         
+ private:                      	     };                   
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	             int main()               
+{          	     	             {                        
+  Foo f;             	               Foo f;                 
+  cout << f.Get();	       	       cout << f.num;    
+  return 0;		               return 0;              
+}      	       	       	             }                        
+    				                           
+   ^^^^^^^^^^   		      ^^^^^^^^^^^^ 
+  Why all this?               Instead of just this?
+ 	       ^^^^    	       	       	    ^^^^
+    .. Because this keeps        .. Whereas this completely
+    control of '_num'   	 gives up control of 'num'.
+    inside of class Foo.      
+       	       	       	       	       	       ...well so what?
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:	     	              public:                 
+   int Get() { return _num; }  	        int num;         
+ private:                      	     };                   
+   int _num; 	     	       	                          
+};                   	       	                          
+                     	                                      
+int main() 	     	             int main()               
+{          	     	             {                        
+  Foo f;             	               Foo f;                 
+  cout << f.Get();	       	       cout << f.num;    
+  return 0;		               return 0;              
+}      	       	       	             }                        
+    				                           
+
+
+
+
+
+
+
+PRIVATE MEMBER DATA AND PUBLIC MEMBER FUNCTIONS
+        	   	       		       
+#include <iostream.h>  	             #include <iostream.h>    
+class Foo {                    	     class Foo {          
+ public:       	       	              public:                 
+   int Get() {                 	        int num;         
+     return _num1 * _num2;     	     };                   
+   }                 	       	                          
+ private:            	       	       void Bar() { ... } 
+   int _num1;                                                 
+   int _num2;                        int main()               
+};                   	             {                        
+                     	               Foo f;                 
+int main() {                   	       cout << f.num;    
+  Foo f;        	               return 0;              
+  cout << f.Get();     	             }                        
+  return 0;             	                           
+}
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+class People {
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+class Person {
+public:	    
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+class Person {
+public:	    
+  void Vote(bool yesorno);
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+class Person {
+public:	    
+  void Vote(bool yesorno);
+  bool Vote
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+class Person {
+public:	    
+  void SetVote(bool yesorno);
+  bool GetVote();
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+ People, voting booth..
+
+class Person {
+public:	    
+  void SetVote(bool yesorno);
+  bool GetVote();
+private:
+  bool _myvote;
+
+
+
+
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Person.h---
+#ifndef PERSON_H
+#define PERSON_H
+class Person {	
+public:	      	
+  void SetVote(bool yesorno);
+  bool GetVote();
+private:      	
+  bool _myvote;	
+};	      	
+#endif	      
+---
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Person.h---
+#ifndef PERSON_H
+#define PERSON_H
+class Person {	
+public:	      	
+  void SetVote(bool yn);
+  bool GetVote();
+private:      	
+  bool _myvote;	
+};	      	
+#endif	      
+---
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Person.h---
+#ifndef PERSON_H       	       	
+#define PERSON_H		
+class Person {			
+public:	      			class Booth {     
+  void SetVote(bool yn);       	public:           
+  bool GetVote();		  void Election(); 
+private:      			private:                 	
+  bool _myvote;			
+};     	       	       	       	
+#endif	      
+---
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Person.h---
+#ifndef PERSON_H       	       	
+#define PERSON_H		
+class Person {			
+public:	      			class Booth {     
+  void SetVote(bool yn);	public:           
+  bool GetVote();		  void Election(); 
+private:       	       	    	private:                 	
+  bool _myvote;		    	  Person _voters[100];
+};     	       	       	    
+#endif	      
+---
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Person.h---
+#ifndef PERSON_H       	       	
+#define PERSON_H       	       	 
+class Person {			#include "Person.h"
+public:	      			class Booth {      
+  void SetVote(bool yn);	public:            
+  bool GetVote();		  void Election(); 
+private:       	       	    	private:                 	
+  bool _myvote;		    	  Person _voters[100];
+};     	       	       	    	       	       	   
+#endif	      
+---
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Person.h---		       	---Booth.h---
+#ifndef PERSON_H       	       	#ifndef BOOTH_H
+#define PERSON_H       	       	#define BOOTH_H
+class Person {			#include "Person.h"
+public:	      			class Booth {      
+  void SetVote(bool yn);	public:            
+  bool GetVote();		  void Election(); 
+private:       	       	    	private:                 	
+  bool _myvote;		    	  Person _voters[100];
+};     	       	       	    	};     	       	   
+#endif 	       	       	   	#endif	     
+---				---    	     
+---Person.C---
+#include "Person.h"
+void Person::SetVote(bool yn)
+{ _myvote = yn; } 	    
+bool Person::GetVote()
+{ return _myvote; }
+---
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+
+---Booth.h---  	       	 ---Booth.C---
+#ifndef BOOTH_H		 #include "Booth.h"
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"	       	       	       	 
+class Booth {      
+public:            
+  void Election(); 
+private:                 	
+  Person _voters[100];
+};     	       	   
+#endif	     
+---    	     
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"      
+class Booth {      	 
+public:            	 
+  void Election(); 
+private:                 	
+  Person _voters[100];
+};     	       	   
+#endif	     
+---    	     
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:            	   if (!cin) _Error();
+  void Election(); 
+private:                 	
+  Person _voters[100];
+};     	       	   
+#endif	     
+---    	     
+
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:            	   if (!cin) _Error();
+  void Election();     	  
+private:                  
+  void _Error();	  
+  Person _voters[100];	  
+};     	       	   
+#endif	     
+---    	     
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:            	   if (!cin) _Error();
+  void Election();     	   if (c=='V') {
+private:                     int vnum, vote;
+  void _Error();	     cin >> vnum >> vote;
+  Person _voters[100];	  
+};     	       	   
+#endif	     
+---    	     
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:            	   if (!cin) _Error();
+  void Election();     	   if (c=='V') {
+private:                     int vnum, vote;
+  void _Error();	     cin >> vnum >> vote;
+  Person _voters[100];	     if (vnum<0 || vnum>=100) _Error();
+};     	       	   
+#endif	     
+---    	     
+
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:                	   if (!cin) _Error();
+  void Election();     	   if (c=='V') {
+private:                     int vnum, vote;
+  void _Error();	     cin >> vnum >> vote;
+  enum {_MAXV=100};    	     if (vnum<0 || vnum>=_MAXV) _Error();
+  Person _voters[_MAXV];     
+};     	       	   	     
+#endif	     
+---    	     
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:            	   if (!cin) _Error();
+  void Election();     	   if (c=='V') {      
+private:                     int vnum, vote;  
+  void _Error();	     cin >> vnum >> vote;
+  enum {_MAXV=100};    	     if (vnum<0 || vnum>=_MAXV) _Error();
+  Person _voters[_MAXV];     if (vote!=0 && vote!=1) _Error(); 	 
+};     	       	   	     _voters[vnum].SetVote(vote==1);
+#endif	     		   }
+---    	     
+
+
+
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H		 void Booth::Election() {
+#include "Person.h"        char c;     	       	 
+class Booth {      	   cin >> c;
+public:            	   if (!cin) _Error();
+  void Election();     	   if (c=='V') {      
+private:                     int vnum, vote;  
+  void _Error();	     cin >> vnum >> vote;
+  enum {_MAXV=100};    	     if (vnum<0 || vnum>=_MAXV) _Error();
+  Person _voters[_MAXV];     if (vote!=0 && vote!=1) _Error(); 	 
+};     	       	   	     _voters[vnum].SetVote(vote==1);
+#endif 	       	       	   }
+---    	     		 
+			 hmm.  this is all really about just one
+			 command..  the whole election wants a 	
+			 bunch of commands..  better reorganize..
+
+
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H	       	 void Booth::Election() {
+#include "Person.h"      
+class Booth {      	 
+public:                	 
+  void Election();     	 
+private:              
+  void _Error();       	   char c;                              
+                       	   cin >> c;                             
+                       	   if (!cin) _Error();                   
+  enum {_MAXV=100};    	   if (c=='V') {                  
+  Person _voters[_MAXV];     int vnum, vote;                     
+};     	       	   	     cin >> vnum >> vote;                
+#endif	     		     if (vnum<0 || vnum>=_MAXV) _Error();
+---    	       	       	     if (vote!=0 && vote!=1) _Error();   
+			     _voters[vnum].SetVote(vote==1);     
+			     return true;
+			    }  	       	 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H	       	 void Booth::Election() {
+#include "Person.h"      
+class Booth {      	 
+public:                	 
+  void Election();     	 
+private:                 bool Booth::_ReadVote() {
+  void _Error();       	   char c;                              
+  bool _ReadVote();    	   cin >> c;                             
+                       	   if (!cin) _Error();                   
+  enum {_MAXV=100};    	   if (c=='V') {                  
+  Person _voters[_MAXV];     int vnum, vote;                     
+};     	       	   	     cin >> vnum >> vote;                
+#endif	     		     if (vnum<0 || vnum>=_MAXV) _Error();
+---    	       	       	     if (vote!=0 && vote!=1) _Error();   
+			     _voters[vnum].SetVote(vote==1);     
+			     return true;
+			    }  	       	 
+FINDING THE OBJECTS - Example
+
+Spec: Write an object-oriented program to collect votes.
+      People can change their votes until the 'polls close'.
+                                               V <voternum> <vote>
+---Booth.h---  	       	 ---Booth.C---	       C   
+#ifndef BOOTH_H		 #include "Booth.h"	
+#define BOOTH_H	       	 void Booth::Election() {
+#include "Person.h"         while (_ReadVote()) ; // empty loop
+class Booth {          	    _ReportVote();
+public:                	 }     	       	       	       	       	 
+  void Election();     	 
+private:                 bool Booth::_ReadVote() {
+  void _Error();       	   char c;                              
+  bool _ReadVote();    	   cin >> c;                             
+  void _ReportVote();  	   if (!cin) _Error();                   
+  enum {_MAXV=100};    	   if (c=='V') {                  
+  Person _voters[_MAXV];     int vnum, vote;                     
+};     	       	   	     cin >> vnum >> vote;                
+#endif	     		     if (vnum<0 || vnum>=_MAXV) _Error();
+---    	       	       	     if (vote!=0 && vote!=1) _Error();   
+			     _voters[vnum].SetVote(vote==1);     
+			     return true;
+			    }  	       	 
